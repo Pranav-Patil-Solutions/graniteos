@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { setupCompany } from "@/actions/company";
+import { Button } from "@/components/ui/Button";
 
 export default function SetupPage() {
   const router = useRouter();
@@ -31,10 +33,14 @@ export default function SetupPage() {
   }
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Set up your company</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-2xl font-bold text-white">Set up your company</h1>
+        <p className="mt-1 text-sm text-slate-400">
           One-time setup. You can change these later in settings.
         </p>
       </div>
@@ -46,19 +52,15 @@ export default function SetupPage() {
         <Field name="address" label="Address (optional)" placeholder="Plot 14, GIDC, Jamnagar" />
         <Field name="gstNumber" label="GST number (optional)" placeholder="22AAAAA0000A1Z5" />
         {error && (
-          <div className="rounded-lg bg-red-50 text-red-700 text-sm px-3 py-2 border border-red-100">
+          <div className="rounded-lg bg-red-500/10 text-red-300 text-sm px-3 py-2 border border-red-500/20">
             {error}
           </div>
         )}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded-xl bg-granite-green text-white font-semibold text-base disabled:opacity-60 hover:opacity-95 transition"
-        >
+        <Button type="submit" variant="press" className="w-full" disabled={loading}>
           {loading ? "Creating..." : "Create company"}
-        </button>
+        </Button>
       </form>
-    </div>
+    </motion.div>
   );
 }
 
@@ -77,13 +79,13 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="text-sm font-medium text-slate-700">{label}</span>
+      <span className="text-sm font-medium text-slate-300">{label}</span>
       <input
         name={name}
         type={type}
         required={required}
         placeholder={placeholder}
-        className="mt-1.5 w-full rounded-xl border border-slate-300 px-4 text-base focus:border-granite-green focus:ring-2 focus:ring-granite-green/20 outline-none"
+        className="mt-1.5 w-full text-base focus:border-gold outline-none"
       />
     </label>
   );
