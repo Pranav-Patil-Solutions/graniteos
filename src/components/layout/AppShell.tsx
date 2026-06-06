@@ -41,7 +41,7 @@ export default function AppShell({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const tabs = NAV_TABS_BY_ROLE[role];
+  const tabs = NAV_TABS_BY_ROLE[role] ?? [];
 
   return (
     <div className="min-h-screen flex flex-col bg-[radial-gradient(1200px_600px_at_70%_-10%,#1c2630,#0b0e11_60%)]">
