@@ -31,14 +31,14 @@ export default function AuthScene({ children }: { children: ReactNode }) {
       className="relative min-h-screen overflow-hidden bg-graphite-900"
     >
       {/* parallax marble background */}
-      <motion.div aria-hidden style={{ x: bgX, y: bgY }} className="absolute -inset-12">
+      <motion.div aria-hidden style={{ x: bgX, y: bgY }} className="absolute -inset-16">
         <Image
-          src="/login-bg.png"
+          src="/login-marble.png"
           alt=""
           fill
           priority
           sizes="100vw"
-          className="object-cover"
+          className="object-cover blur-[1px]"
         />
       </motion.div>
       {/* darkening + vignette for contrast */}
