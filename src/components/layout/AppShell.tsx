@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { NAV_TABS_BY_ROLE, TABS, type Role, type TabKey } from "@/lib/roles";
 
 const ICONS: Record<TabKey, React.ReactNode> = {
@@ -43,10 +44,10 @@ export default function AppShell({
   const tabs = NAV_TABS_BY_ROLE[role];
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[radial-gradient(1200px_600px_at_70%_-10%,#1c2630,#0b0e11_60%)]">
       <main className="flex-1 pb-24 overflow-y-auto">{children}</main>
       <nav
-        className="fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 z-50"
+        className="fixed bottom-0 inset-x-0 bg-graphite-900/90 backdrop-blur border-t border-graphite-600 z-50"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="flex justify-around h-16 max-w-lg mx-auto">
@@ -59,9 +60,16 @@ export default function AppShell({
               <Link
                 key={key}
                 href={tab.href}
-                className="flex-1 flex flex-col items-center justify-center gap-1"
-                style={{ color: active ? "#0F4C35" : "#64748B" }}
+                className="relative flex-1 flex flex-col items-center justify-center gap-1"
+                style={{ color: active ? "#c9a24b" : "#5c6470" }}
               >
+                {active && (
+                  <motion.span
+                    layoutId="navpill"
+                    className="absolute top-1 h-1 w-8 rounded-full bg-gold"
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                )}
                 <svg
                   width="22"
                   height="22"
