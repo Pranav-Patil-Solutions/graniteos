@@ -11,8 +11,8 @@ function LoginInner() {
   const params = useSearchParams();
   const redirectTo = params.get("redirectTo");
 
-  const [step, setStep] = useState<"phone" | "otp">("phone");
-  const [phone, setPhone] = useState("");
+  const [step, setStep] = useState<"email" | "otp">("email");
+  const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -21,7 +21,7 @@ function LoginInner() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const res = await sendOtp(phone);
+    const res = await sendOtp(email);
     setLoading(false);
     if (res.error) return setError(res.error);
     setStep("otp");
@@ -31,7 +31,7 @@ function LoginInner() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const res = await verifyOtp(phone, otp);
+    const res = await verifyOtp(email, otp);
     if (res.error) {
       setLoading(false);
       return setError(res.error);
@@ -52,29 +52,30 @@ function LoginInner() {
         </div>
         <h1 className="mt-4 text-2xl font-bold text-white">GraniteOS</h1>
         <p className="mt-1 text-sm text-slate-400">
-          {step === "phone"
+          {step === "email"
             ? "Sign in to your granite business"
-            : `Enter the code sent to ${phone}`}
+            : `Enter the code sent to ${email}`}
         </p>
       </div>
 
-      {step === "phone" ? (
+      {step === "email" ? (
         <form onSubmit={onSendOtp} className="space-y-4">
           <label className="block">
-            <span className="text-sm font-medium text-slate-300">Phone number</span>
+            <span className="text-sm font-medium text-slate-300">Email address</span>
             <input
               suppressHydrationWarning
-              type="tel"
-              inputMode="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+91 99999 99999"
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@email.com"
               className="mt-1.5 w-full text-base focus:border-gold outline-none"
             />
           </label>
           {error && <ErrorPill>{error}</ErrorPill>}
           <Button type="submit" variant="press" className="w-full" disabled={loading}>
-            {loading ? "Sending..." : "Send OTP"}
+            {loading ? "Sending..." : "Send code"}
           </Button>
         </form>
       ) : (
@@ -101,13 +102,13 @@ function LoginInner() {
           <button
             type="button"
             onClick={() => {
-              setStep("phone");
+              setStep("email");
               setOtp("");
               setError("");
             }}
             className="w-full text-sm text-slate-500 hover:text-slate-300"
           >
-            Use a different phone number
+            Use a different email
           </button>
         </form>
       )}
