@@ -7,6 +7,7 @@ import { formatINR, formatINRPrecise } from "@/lib/money";
 import { StoneSwatch } from "@/components/inventory/StoneSwatch";
 import AddSlabForm from "@/components/inventory/AddSlabForm";
 import SlabStatus from "@/components/inventory/SlabStatus";
+import SlabPhoto from "@/components/inventory/SlabPhoto";
 
 type Slab = {
   id: string;
@@ -22,6 +23,7 @@ type Slab = {
   godown: string | null;
   rate_paise: number;
   status: string;
+  photo_path: string | null;
 };
 
 export default async function BlockPage({ params }: { params: Promise<{ id: string }> }) {
@@ -41,7 +43,7 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
   const { data: slabsData } = await supabase
     .from("slabs")
     .select(
-      "id, bundle_no, slab_no, length_in, width_in, sqft, net_sqft, thickness_mm, finish, grade, godown, rate_paise, status",
+      "id, bundle_no, slab_no, length_in, width_in, sqft, net_sqft, thickness_mm, finish, grade, godown, rate_paise, status, photo_path",
     )
     .eq("block_id", id)
     .order("created_at", { ascending: false });
@@ -109,7 +111,14 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
         )}
         {slabs.map((s) => (
           <div key={s.id} className="rounded-2xl border border-graphite-600 bg-white/[0.04] p-3">
-            <div className="flex items-start justify-between gap-2">
+            <SlabPhoto
+              slabId={s.id}
+              blockId={id}
+              photo={s.photo_path}
+              material={block.material}
+              color={block.color}
+            />
+            <div className="mt-2.5 flex items-start justify-between gap-2">
               <div>
                 <p className="font-semibold text-white">
                   {Number(s.sqft).toFixed(2)} sq-ft
