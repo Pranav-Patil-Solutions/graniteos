@@ -161,9 +161,11 @@ export default function ShowcasePage() {
           <div className="flex flex-wrap gap-3">
             <Button variant="press">＋ New GST Bill</Button>
             <Button variant="spring">📲 Send on WhatsApp</Button>
-            <Button variant="morph" onAction={() => new Promise((r) => setTimeout(r, 1100))}>
-              Record Payment
-            </Button>
+            <span data-testid="morph-pay">
+              <Button variant="morph" onAction={() => new Promise((r) => setTimeout(r, 1100))}>
+                Record Payment
+              </Button>
+            </span>
             <Button variant="outline">View Details</Button>
           </div>
         </div>

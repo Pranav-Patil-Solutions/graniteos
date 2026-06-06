@@ -43,16 +43,15 @@ export function Button({
         setState("idle");
       }
     }
+    // Plain <button> with CSS transitions for the morph (loading → ✓) feel.
     return (
-      <motion.button
+      <button
         type={type}
         onClick={run}
         disabled={disabled || state !== "idle"}
-        layout
-        className={`${base} text-white ${
+        className={`${base} text-white transition-all duration-300 ${
           state === "done" ? "bg-green-600" : "bg-granite-green2"
         } ${state !== "idle" ? "!px-3.5 !rounded-full" : ""} ${className}`}
-        transition={{ type: "spring", stiffness: 500, damping: 30 }}
       >
         {state === "loading" ? (
           <span className="block w-5 h-5 rounded-full border-[3px] border-white/40 border-t-white animate-spin" />
@@ -61,7 +60,7 @@ export function Button({
         ) : (
           children
         )}
-      </motion.button>
+      </button>
     );
   }
 
