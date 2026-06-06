@@ -41,11 +41,13 @@ export default async function DashboardPage() {
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-3">
-        <TiltCard>
-          <Boxes className="text-slate-300" />
-          <p className="font-bold text-white mt-2">Inventory</p>
-          <p className="text-xs text-slate-500 mt-1">Slice 3</p>
-        </TiltCard>
+        <Link href="/inventory" className="block">
+          <TiltCard>
+            <Boxes className="text-gold" />
+            <p className="font-bold text-white mt-2">Stock</p>
+            <p className="text-xs text-slate-400 mt-1">Blocks &amp; slabs</p>
+          </TiltCard>
+        </Link>
         <TiltCard>
           <FileText className="text-slate-300" />
           <p className="font-bold text-white mt-2">Orders</p>

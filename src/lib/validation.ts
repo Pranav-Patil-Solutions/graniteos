@@ -38,6 +38,28 @@ export const companySetupSchema = z.object({
   gstNumber: gstSchema.optional().or(z.literal("")),
 });
 
+const numericFromInput = z.coerce.number();
+
+export const blockSchema = z.object({
+  label: z.string().trim().min(1, "Give the block a name").max(80),
+  material: z.string().trim().min(1, "Material is required").max(60),
+  weightTonnes: numericFromInput.positive("Weight must be greater than 0"),
+  supplier: z.string().trim().max(80).optional().or(z.literal("")),
+  costRupees: numericFromInput.min(0).optional(),
+});
+
+export const slabSchema = z.object({
+  blockId: z.string().uuid(),
+  lengthIn: numericFromInput.positive("Length must be greater than 0"),
+  widthIn: numericFromInput.positive("Width must be greater than 0"),
+  thicknessMm: numericFromInput.min(0).optional(),
+  godown: z.string().trim().max(60).optional().or(z.literal("")),
+  rateRupees: numericFromInput.min(0).optional(),
+});
+
+export type BlockInput = z.infer<typeof blockSchema>;
+export type SlabInput = z.infer<typeof slabSchema>;
+
 export const inviteSchema = z.object({
   name: z.string().trim().min(2).max(60),
   phone: phoneSchema,
