@@ -3,25 +3,39 @@
 @tailwind utilities;
 
 :root {
-  --granite-green: #0F4C35;
+  color-scheme: dark;
 }
 
 html,
 body {
   height: 100%;
+  background: #0b0e11;
+  color: #e8e6e1;
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  -webkit-font-smoothing: antialiased;
-  background: #f8fafc;
-  color: #0f172a;
-}
-
-/* Mobile-first: comfortable tap targets */
+/* Inputs on dark surfaces */
 input,
 select,
-button {
+textarea {
   min-height: 52px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid #232a31;
+  color: #e8e6e1;
+  border-radius: 14px;
+  padding: 0 16px;
+}
+input::placeholder {
+  color: #5c6470;
+}
+button {
+  min-height: 44px;
+}
+
+/* Premium scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #232a31;
+  border-radius: 8px;
 }
