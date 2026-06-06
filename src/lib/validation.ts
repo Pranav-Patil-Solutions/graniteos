@@ -10,12 +10,6 @@ export const phoneSchema = z.preprocess(
 
 export const otpSchema = z.string().trim().regex(/^\d{6}$/, "Enter the 6-digit code");
 
-export const emailSchema = z
-  .string()
-  .trim()
-  .toLowerCase()
-  .email("Enter a valid email address");
-
 export const gstSchema = z
   .string()
   .trim()
