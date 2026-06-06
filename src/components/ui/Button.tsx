@@ -46,6 +46,7 @@ export function Button({
     // Plain <button> with CSS transitions for the morph (loading → ✓) feel.
     return (
       <button
+        suppressHydrationWarning
         type={type}
         onClick={run}
         disabled={disabled || state !== "idle"}
@@ -67,6 +68,7 @@ export function Button({
   if (variant === "spring") {
     return (
       <motion.button
+        suppressHydrationWarning
         type={type}
         onClick={onClick}
         disabled={disabled}
@@ -83,6 +85,7 @@ export function Button({
   if (variant === "outline") {
     return (
       <motion.button
+        suppressHydrationWarning
         type={type}
         onClick={onClick}
         disabled={disabled}
@@ -110,6 +113,7 @@ export function Button({
   // default: 3D press
   return (
     <motion.button
+      suppressHydrationWarning
       type={type}
       onClick={onClick}
       disabled={disabled}

@@ -33,9 +33,9 @@ export default function InviteForm() {
     <div className="mt-6 rounded-2xl border border-graphite-600 bg-white/[0.04] p-4">
       <p className="font-bold text-white">Invite a team member</p>
       <form onSubmit={onSubmit} className="mt-3 space-y-3">
-        <input name="name" required placeholder="Name" className="w-full text-base outline-none focus:border-gold" />
-        <input name="phone" type="tel" required placeholder="+91 99999 99999" className="w-full text-base outline-none focus:border-gold" />
-        <select name="role" defaultValue="sales_manager" className="w-full text-base">
+        <input suppressHydrationWarning name="name" required placeholder="Name" className="w-full text-base outline-none focus:border-gold" />
+        <input suppressHydrationWarning name="phone" type="tel" required placeholder="+91 99999 99999" className="w-full text-base outline-none focus:border-gold" />
+        <select suppressHydrationWarning name="role" defaultValue="sales_manager" className="w-full text-base">
           <option value="sales_manager">Sales Manager</option>
           <option value="store_manager">Store Manager</option>
           <option value="fabrication_supervisor">Fabrication Supervisor</option>

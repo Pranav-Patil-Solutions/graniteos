@@ -81,6 +81,7 @@ function Field({
     <label className="block">
       <span className="text-sm font-medium text-slate-300">{label}</span>
       <input
+        suppressHydrationWarning
         name={name}
         type={type}
         required={required}

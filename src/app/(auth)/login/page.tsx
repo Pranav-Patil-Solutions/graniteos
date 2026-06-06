@@ -63,6 +63,7 @@ function LoginInner() {
           <label className="block">
             <span className="text-sm font-medium text-slate-300">Phone number</span>
             <input
+              suppressHydrationWarning
               type="tel"
               inputMode="tel"
               value={phone}
@@ -81,6 +82,7 @@ function LoginInner() {
           <label className="block">
             <span className="text-sm font-medium text-slate-300">Verification code</span>
             <input
+              suppressHydrationWarning
               type="text"
               inputMode="numeric"
               autoComplete="one-time-code"
