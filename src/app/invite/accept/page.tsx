@@ -22,12 +22,14 @@ export default async function AcceptInvitePage({
   const res = await acceptInvite(token);
   if (res.error) {
     return (
-      <div className="max-w-lg mx-auto px-4 pt-16 text-center">
-        <h1 className="text-xl font-bold text-slate-900">Invite problem</h1>
-        <p className="mt-2 text-sm text-red-600">{res.error}</p>
-        <a href="/login" className="mt-6 inline-block text-sm text-granite-green underline">
-          Back to sign in
-        </a>
+      <div className="min-h-screen grid place-items-center px-5 bg-graphite-900">
+        <div className="max-w-sm text-center">
+          <h1 className="text-xl font-bold text-white">Invite problem</h1>
+          <p className="mt-2 text-sm text-red-300">{res.error}</p>
+          <a href="/login" className="mt-6 inline-block text-sm text-gold underline">
+            Back to sign in
+          </a>
+        </div>
       </div>
     );
   }

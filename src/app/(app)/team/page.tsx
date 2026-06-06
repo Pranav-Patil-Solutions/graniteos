@@ -25,26 +25,26 @@ export default async function TeamPage() {
 
   return (
     <div className="max-w-lg mx-auto px-4 pt-12">
-      <h1 className="text-2xl font-bold text-slate-900">Team</h1>
-      <p className="text-sm text-slate-500">{list.length} member(s)</p>
+      <h1 className="text-2xl font-bold text-white">Team</h1>
+      <p className="text-sm text-slate-400">{list.length} member(s)</p>
 
       <div className="mt-5 space-y-2">
         {list.map((m) => (
           <div
             key={m.id}
-            className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3"
+            className="flex items-center gap-3 rounded-2xl border border-graphite-600 bg-white/[0.04] p-3"
           >
-            <div className="w-10 h-10 rounded-full bg-granite-green text-white flex items-center justify-center font-semibold">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-granite-green to-granite-green2 text-white grid place-items-center font-bold">
               {m.name.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1">
-              <p className="font-medium text-slate-800">{m.name}</p>
-              <p className="text-xs text-slate-400">{m.phone ?? "—"}</p>
+              <p className="font-medium text-white">{m.name}</p>
+              <p className="text-xs text-slate-500">{m.phone ?? "—"}</p>
             </div>
             <div className="text-right">
-              <span className="text-xs text-slate-500">{ROLE_LABELS[m.role]}</span>
+              <span className="text-xs text-slate-400">{ROLE_LABELS[m.role]}</span>
               {m.status === "invited" && (
-                <p className="text-[11px] text-amber-600 font-medium">Pending</p>
+                <p className="text-[11px] text-amber-400 font-medium">Pending</p>
               )}
             </div>
           </div>
