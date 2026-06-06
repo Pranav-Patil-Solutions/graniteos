@@ -1,10 +1,10 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { phoneSchema, emailSchema, otpSchema } from "@/lib/validation";
+import { phoneSchema, emailSchema, otpSchema, passwordSchema } from "@/lib/validation";
 import { getCurrentUser } from "@/lib/auth";
 
-export type Channel = "phone" | "email";
+export type Channel = "phone" | "email" | "password";
 
 export async function sendOtp(channel: Channel, value: string) {
   const supabase = await createClient();
@@ -51,6 +51,47 @@ export async function verifyOtp(channel: Channel, value: string, token: string) 
       type: "sms",
     });
     if (error) return { error: error.message };
+  }
+
+  const user = await getCurrentUser();
+  return { ok: true as const, next: user ? "/dashboard" : "/setup" };
+}
+
+export async function signInPassword(email: string, password: string) {
+  const e = emailSchema.safeParse(email);
+  const p = passwordSchema.safeParse(password);
+  if (!e.success) return { error: e.error.issues[0].message };
+  if (!p.success) return { error: p.error.issues[0].message };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword({
+    email: e.data,
+    password: p.data,
+  });
+  if (error) return { error: error.message };
+
+  const user = await getCurrentUser();
+  return { ok: true as const, next: user ? "/dashboard" : "/setup" };
+}
+
+export async function signUpPassword(email: string, password: string) {
+  const e = emailSchema.safeParse(email);
+  const p = passwordSchema.safeParse(password);
+  if (!e.success) return { error: e.error.issues[0].message };
+  if (!p.success) return { error: p.error.issues[0].message };
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signUp({
+    email: e.data,
+    password: p.data,
+  });
+  if (error) return { error: error.message };
+
+  // If email confirmation is required, Supabase returns no session.
+  if (!data.session) {
+    return {
+      error: "Account created. Confirm it via the email link, then sign in.",
+    };
   }
 
   const user = await getCurrentUser();

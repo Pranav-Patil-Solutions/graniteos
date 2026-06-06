@@ -16,6 +16,11 @@ export const emailSchema = z
   .toLowerCase()
   .email("Enter a valid email address");
 
+export const passwordSchema = z
+  .string()
+  .min(6, "Password must be at least 6 characters")
+  .max(72, "Password is too long");
+
 export const gstSchema = z
   .string()
   .trim()
