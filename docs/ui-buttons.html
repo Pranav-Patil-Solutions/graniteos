@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GraniteOS — Interactive Buttons</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--green:#0F4C35;--green2:#1f8a5b;--gold:#c9a24b;}
+  body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+       background:radial-gradient(1200px 600px at 70% -10%,#1c2630,#0b0e11 60%);color:#e8e6e1;min-height:100vh;padding:30px 18px}
+  .wrap{max-width:980px;margin:0 auto}
+  h1{font-size:23px}.lead{color:#9aa0a6;font-size:14px;margin:4px 0 26px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+  .demo{background:rgba(255,255,255,.03);border:1px solid #1c2228;border-radius:18px;padding:22px;display:flex;flex-direction:column;align-items:center;gap:14px;min-height:150px;justify-content:center}
+  .name{font-size:12px;color:var(--gold);font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+  .sub{font-size:11px;color:#5c6470;text-align:center}
+  button{font-family:inherit;font-size:15px;font-weight:700;border:none;cursor:pointer;color:#fff;border-radius:14px;padding:14px 26px}
+
+  /* 1 · 3D PRESS */
+  .b-press{background:var(--green2);box-shadow:0 6px 0 #0c5236,0 10px 18px rgba(0,0,0,.4);transition:transform .06s, box-shadow .06s}
+  .b-press:active{transform:translateY(5px);box-shadow:0 1px 0 #0c5236,0 4px 10px rgba(0,0,0,.4)}
+
+  /* 2 · RIPPLE */
+  .b-ripple{position:relative;overflow:hidden;background:var(--green2)}
+  .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:rip .6s linear;pointer-events:none}
+  @keyframes rip{to{transform:scale(4);opacity:0}}
+
+  /* 3 · SHINE / GLOW */
+  .b-shine{position:relative;overflow:hidden;background:linear-gradient(135deg,#0F4C35,#1f8a5b);box-shadow:0 0 0 rgba(31,138,91,0);transition:box-shadow .3s,transform .15s}
+  .b-shine:hover{box-shadow:0 0 26px rgba(31,138,91,.6);transform:translateY(-2px)}
+  .b-shine::after{content:'';position:absolute;top:0;left:-120%;width:60%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg)}
+  .b-shine:hover::after{animation:shine .8s}
+  @keyframes shine{to{left:130%}}
+
+  /* 4 · MAGNETIC */
+  .b-mag{background:var(--gold);color:#1a1407;transition:transform .12s ease}
+
+  /* 5 · GRADIENT SLIDE */
+  .b-grad{background:linear-gradient(90deg,#0F4C35,#1f8a5b,#c9a24b,#1f8a5b,#0F4C35);background-size:300% 100%;background-position:0% 50%;transition:background-position .6s,transform .15s}
+  .b-grad:hover{background-position:100% 50%;transform:translateY(-2px)}
+
+  /* 6 · MORPH (click → loading → done) */
+  .b-morph{background:var(--green2);min-width:190px;transition:background .3s, min-width .4s;position:relative}
+  .b-morph.loading{min-width:54px;border-radius:50%;padding:14px;color:transparent}
+  .b-morph.loading::after{content:'';position:absolute;inset:0;margin:auto;width:20px;height:20px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+  .b-morph.done{background:#16a34a;min-width:54px;border-radius:50%;color:#fff}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* 7 · GOLD SPRING (whatsapp-style) */
+  .b-spring{background:#25D366;color:#06351a;transition:transform .12s cubic-bezier(.34,1.56,.64,1)}
+  .b-spring:active{transform:scale(.9)}
+  .b-spring:hover{transform:scale(1.06)}
+
+  /* 8 · OUTLINE → FILL */
+  .b-fill{background:transparent;border:2px solid var(--gold);color:var(--gold);position:relative;z-index:0;overflow:hidden;transition:color .3s}
+  .b-fill::before{content:'';position:absolute;inset:0;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .3s;z-index:-1}
+  .b-fill:hover{color:#1a1407}.b-fill:hover::before{transform:scaleX(1)}
+
+  .note{margin-top:26px;text-align:center;color:#5c6470;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Interactive buttons — click &amp; feel them 👆</h1>
+  <p class="lead">Real micro-interactions. Tell me which one(s) feel right and I'll make every button in the app behave like it.</p>
+
+  <div class="grid">
+    <div class="demo"><span class="name">1 · 3D Press</span><button class="b-press">＋ New GST Bill</button><span class="sub">physically presses down — very satisfying tap</span></div>
+    <div class="demo"><span class="name">2 · Ripple</span><button class="b-ripple" id="ripple">Confirm Order</button><span class="sub">water ripple from where you tap (Material style)</span></div>
+    <div class="demo"><span class="name">3 · Shine + Glow</span><button class="b-shine">Send Quote</button><span class="sub">light sweeps across + glows on hover</span></div>
+    <div class="demo"><span class="name">4 · Magnetic</span><button class="b-mag" id="mag">Add Slab</button><span class="sub">button leans toward your cursor</span></div>
+    <div class="demo"><span class="name">5 · Gradient Slide</span><button class="b-grad">Save</button><span class="sub">colour flows green→gold on hover</span></div>
+    <div class="demo"><span class="name">6 · Morph → Done</span><button class="b-morph" id="morph">Record Payment</button><span class="sub">click: spins, then ✓ — feels "real"</span></div>
+    <div class="demo"><span class="name">7 · Spring (WhatsApp)</span><button class="b-spring">📲 Send on WhatsApp</button><span class="sub">bouncy springy press</span></div>
+    <div class="demo"><span class="name">8 · Outline → Fill</span><button class="b-fill">View Details</button><span class="sub">gold fills in from the left — elegant secondary</span></div>
+  </div>
+
+  <p class="note">My pick for a stone-owner app: <b style="color:#c9a24b">#1 (3D Press)</b> for main actions + <b style="color:#c9a24b">#7 (Spring)</b> for WhatsApp + <b style="color:#c9a24b">#8 (Outline→Fill)</b> for secondary. But it's your call.</p>
+</div>
+
+<script>
+/* ripple */
+document.getElementById('ripple').addEventListener('click',function(e){
+  const r=this.getBoundingClientRect();const s=document.createElement('span');s.className='ripple';
+  const d=Math.max(r.width,r.height);s.style.width=s.style.height=d+'px';
+  s.style.left=(e.clientX-r.left-d/2)+'px';s.style.top=(e.clientY-r.top-d/2)+'px';
+  this.appendChild(s);setTimeout(()=>s.remove(),600);
+});
+/* magnetic */
+const mag=document.getElementById('mag');
+mag.addEventListener('pointermove',e=>{const r=mag.getBoundingClientRect();mag.style.transform=`translate(${(e.clientX-r.left-r.width/2)*0.3}px,${(e.clientY-r.top-r.height/2)*0.3}px)`;});
+mag.addEventListener('pointerleave',()=>mag.style.transform='');
+/* morph */
+const m=document.getElementById('morph');
+m.addEventListener('click',function(){
+  if(this.classList.contains('loading')||this.classList.contains('done'))return;
+  this.classList.add('loading');
+  setTimeout(()=>{this.classList.remove('loading');this.classList.add('done');this.textContent='✓';
+    setTimeout(()=>{this.classList.remove('done');this.textContent='Record Payment';},1300);},1100);
+});
+</script>
+</body>
+</html>

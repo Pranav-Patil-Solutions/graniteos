@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GraniteOS — Rival Threat Board (Round 2)</title>
+<style>
+  :root{--green:#0F4C35;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f4f7f6;
+        --red:#b91c1c;--redbg:#fef2f2;--amber:#b45309;--amberbg:#fef3c7;--greenbg:#e7f0ec;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.55;padding:30px 20px}
+  .wrap{max-width:1080px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:44px;height:44px;border-radius:13px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px}
+  h1{margin:0;font-size:25px}.tagline{color:var(--muted);margin:2px 0 6px;font-size:14px}
+  .stamp{font-size:12px;color:var(--muted)}
+  .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;margin:20px 0}
+  h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin:0 0 4px}
+  .h2sub{color:var(--muted);font-size:13px;margin:0 0 18px}
+  .verdict{background:var(--green);color:#fff;border:none}
+  .verdict h2{color:#bfe3d4}.verdict p{margin:6px 0 0;font-size:15px}
+  .big{font-size:19px;font-weight:700;margin:0}
+  /* threat rows */
+  .threat{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+  .rk{width:34px;height:34px;border-radius:9px;color:#fff;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;flex:0 0 34px}
+  .r1{background:#dc2626}.r2{background:#ea580c}.r3{background:#d97706}.r4{background:#65a30d}.r5{background:#0891b2}
+  .threat .nm{font-weight:700;font-size:15px}
+  .threat .meta{font-size:12.5px;color:#334155;margin-top:3px}
+  .threat .why{font-size:12px;color:var(--muted);margin-top:4px}
+  .lvl{font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;white-space:nowrap;margin-left:auto;align-self:center}
+  .l-hi{background:var(--amberbg);color:var(--amber)}.l-md{background:#e0f2fe;color:#0369a1}.l-lo{background:var(--greenbg);color:var(--green)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700}
+  td.name{font-weight:700}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap}
+  .no{background:var(--redbg);color:var(--red)}.yes{background:var(--greenbg);color:var(--green)}.part{background:var(--amberbg);color:var(--amber)}
+  .steal{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+  .steal .st{font-weight:700;font-size:14px}.steal .sd{font-size:13px;color:#334155;margin-top:3px}
+  .note{font-size:12.5px;color:var(--muted);background:#fafafa;border:1px solid var(--line);border-radius:10px;padding:12px}
+  .legend{font-size:11px;color:var(--muted);margin-top:8px}
+  .kill{background:#fff7f7;border:1px solid #fecaca;border-radius:10px;padding:12px;font-size:13px;color:#7f1d1d;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="logo">G</div>
+    <div>
+      <h1>Rival Threat Board — Round 2</h1>
+      <div class="tagline">DONOZ verified · distributor/importer segment · is the niche already taken?</div>
+      <div class="stamp">Fact-checked deep research · 19 sources · 20 claims confirmed, 5 killed · June 2026</div>
+    </div>
+  </div>
+
+  <!-- VERDICT -->
+  <div class="card verdict">
+    <h2>The verdict</h2>
+    <p class="big">The window is OPEN. The slab-ERP problem is brilliantly solved — but every proven winner is abroad (US/EU), none is in India, none is truly mobile-first, none is in ₹. Your closest lookalike, DONOZ, turned out to be a young marketing site with no app, no reviews, and no proven customers. Nobody owns your exact box yet — but DONOZ circling means: move with urgency.</p>
+  </div>
+
+  <!-- DONOZ SPOTLIGHT -->
+  <div class="card">
+    <h2>1 · DONOZ — your "closest rival" — busted open</h2>
+    <p class="h2sub">We dug hard. Here's what's real vs marketing.</p>
+    <table>
+      <tr><th>Claim on their site</th><th>What we found</th></tr>
+      <tr><td>"Behaves like a mobile app"</td><td><span class="tag no">Not a native app</span> — it's a web dashboard (PWA). No Google Play or Apple listing exists.</td></tr>
+      <tr><td>"1,500+ industrial units"</td><td><span class="tag no">Not customers</span> — their own wording is units "in scope" (the whole Kishangarh market), i.e. market-sizing, not installed base.</td></tr>
+      <tr><td>"4.9 ★ rating"</td><td><span class="tag no">Self-published</span> — a schema tag on their own site. Zero reviews on G2 / Capterra / Trustpilot / LinkedIn.</td></tr>
+      <tr><td>"Understands the Stone Language" (block→slab→recovery)</td><td><span class="tag part">Unproven</span> — fact-checkers could NOT confirm these workflows are really built (site blocked direct inspection). Vendor claim only — not disproven, but not proven.</td></tr>
+    </table>
+    <div class="kill">Bottom line: DONOZ is a <b>positioning rival, not a proven incumbent.</b> Same idea as you, same town, same architecture — but early and unvalidated. The door it's standing in front of is still open.</div>
+  </div>
+
+  <!-- THREAT RANKING -->
+  <div class="card">
+    <h2>2 · Threat ranking — who's closest to your box</h2>
+    <p class="h2sub">"Your box" = India-native + mobile-first + ₹-priced + SMB + speaks stone. Nobody hits all four.</p>
+
+    <div class="threat"><div class="rk r1">1</div><div><div class="nm">DONOZ <span style="font-weight:400;color:var(--muted)">· Kishangarh, India</span></div>
+      <div class="meta">Same niche, same country, same phone-web architecture.</div>
+      <div class="why">…but unproven: no app store, no reviews, no confirmed customers. The one to watch &amp; out-execute.</div></div>
+      <span class="lvl l-hi">WATCH</span></div>
+
+    <div class="threat"><div class="rk r2">2</div><div><div class="nm">VavaStone <span style="font-weight:400;color:var(--muted)">· USA</span></div>
+      <div class="meta">"The OS for natural stone distributors" — per-slab digital identity, 100+ customers.</div>
+      <div class="why">…but North America / Europe / LatAm only — <b>India absent</b>, not mobile-first-native, not ₹.</div></div>
+      <span class="lvl l-md">DISTANT</span></div>
+
+    <div class="threat"><div class="rk r3">3</div><div><div class="nm">SlabWare <span style="font-weight:400;color:var(--muted)">· USA</span></div>
+      <div class="meta">Most complete: Fabricator/Distributor/Exporter versions, real iOS+Android apps, QR slab scan, container tracking.</div>
+      <div class="why">…but US, web-first, USD. (Telling: its iOS app sits at 1★ with 3 reviews — even the pros struggle with mobile adoption.)</div></div>
+      <span class="lvl l-md">DISTANT</span></div>
+
+    <div class="threat"><div class="rk r4">4</div><div><div class="nm">Stone Profit System · VISCO <span style="font-weight:400;color:var(--muted)">· USA</span></div>
+      <div class="meta">Deep distributor/importer ERPs — consignment, slab/bundle inventory, landed-cost-per-slab.</div>
+      <div class="why">…but US enterprise, desktop/web. Powerful but heavy and irrelevant to an Indian SMB.</div></div>
+      <span class="lvl l-lo">NOT YOUR MARKET</span></div>
+
+    <div class="threat"><div class="rk r5">5</div><div><div class="nm">eStone (eNoah iSolution) <span style="font-weight:400;color:var(--muted)">· India</span></div>
+      <div class="meta">A REAL, established India stone ERP (20-yr ISO-certified IT firm behind it).</div>
+      <div class="why">…but enterprise-oriented (large/medium processing units), not mobile-first SMB. Different customer than yours.</div></div>
+      <span class="lvl l-lo">DIFFERENT SEGMENT</span></div>
+
+    <div class="legend">Not threats: <b>SalesBinder</b> (generic inventory, zero stone features) · <b>Moraware Inventory</b> (fabricator-only — Ordered/Cut/Remnant, no distributor flow).</div>
+  </div>
+
+  <!-- STEAL THESE -->
+  <div class="card">
+    <h2>3 · Proven ideas worth stealing from the pros</h2>
+    <p class="h2sub">These are validated abroad — bring the best of them to India, on a phone, in ₹.</p>
+    <div class="steal"><div class="st">🔖 Per-slab digital identity (VavaStone)</div><div class="sd">Every slab gets a photo + dimensions + lot + location + status, tracked container-to-customer. Pairs perfectly with your phone-camera slab catalog.</div></div>
+    <div class="steal"><div class="st">📱 QR / barcode slab scan (SlabWare)</div><div class="sd">Scan a slab's code to see its details and status. Cheap to build, feels magic on a godown floor.</div></div>
+    <div class="steal"><div class="st">📦 Landed-cost-per-slab (VISCO)</div><div class="sd">Spread freight/duty/handling across a lot to show TRUE cost &amp; profit per slab. This is the cousin of your Recovery-Rate Radar — owners love "real profit per slab."</div></div>
+  </div>
+
+  <!-- HONESTY -->
+  <div class="card">
+    <h2>4 · Still unknown (be honest)</h2>
+    <div class="note">
+      • DONOZ's real INR pricing, founding team, launch date, and true customer count are still unknown — worth a 10-minute demo/trial signup to see the actual product.<br><br>
+      • <b>FabSuite, ThanoSphere, Caesar, StonemontQC</b> — named but still un-profiled.<br><br>
+      • Other India granite-belt startups (Morbi tiles, Hyderabad granite exporters, Gujarat) didn't surface — doesn't prove they don't exist.<br><br>
+      • All evidence is vendor marketing pages; customer counts are self-reported. Several sites (SlabWare, DONOZ) blocked direct inspection (HTTP 403), so we relied on cached snippets.
+    </div>
+  </div>
+
+  <div class="legend" style="text-align:center;margin-bottom:30px">
+    Round 2: 5 angles · 19 sources fetched · 88 claims · 25 verified · 20 confirmed · 5 killed · 101 research agents.
+  </div>
+
+</div>
+</body>
+</html>

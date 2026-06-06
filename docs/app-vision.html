@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GraniteOS — What's in your app</title>
+<style>
+  :root{--green:#0F4C35;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#eef2f1;
+        --amber:#b45309;--amberbg:#fef3c7;--greenbg:#e7f0ec;--blue:#1d4ed8;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);padding:28px 18px}
+  .wrap{max-width:1120px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+  .logo{width:44px;height:44px;border-radius:13px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px}
+  h1{margin:0;font-size:24px}.lead{color:var(--muted);font-size:14px;margin:2px 0 18px}
+  .key{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-bottom:20px;flex-wrap:wrap}
+  .k{display:flex;align-items:center;gap:6px}
+  .chip{font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px}
+  .c-built{background:var(--greenbg);color:var(--green)}.c-soon{background:var(--amberbg);color:var(--amber)}.c-wow{background:#fde68a;color:#92400e}
+  .grid{display:flex;gap:22px;flex-wrap:wrap}
+  .phone{width:262px;background:#fff;border:1px solid var(--line);border-radius:30px;box-shadow:0 16px 36px rgba(15,76,53,.10);overflow:hidden}
+  .cap{font-size:12px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.04em;text-align:center;padding:9px;background:#f1f7f4;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:6px}
+  .view{height:520px;display:flex;flex-direction:column}
+  .pad{padding:18px 16px;flex:1;overflow:auto}
+  .muted{color:var(--muted);font-size:12px}.bold{font-weight:800}
+  .h{font-size:18px;font-weight:800;margin:0}
+  .stat{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+  .stat .l{font-size:13px;color:#334155}.stat .v{font-weight:800;font-size:14px}
+  .up{color:#15803d}.down{color:#b91c1c}
+  .tile{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:8px}
+  .tile .tt{font-weight:700;font-size:13px}.tile .ts{font-size:11px;color:var(--muted);margin-top:2px}
+  .pillrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  .pill{font-size:10px;background:#f1f5f9;border-radius:7px;padding:2px 7px;color:#475569}
+  .btn{background:var(--green);color:#fff;border-radius:11px;text-align:center;padding:11px;font-weight:700;font-size:13px;margin-top:10px}
+  .nav{height:54px;border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;background:#fff;font-size:9px;color:#94a3b8}
+  .nav .on{color:var(--green);font-weight:700}
+  .nav .ic{width:18px;height:18px;border:2px solid currentColor;border-radius:5px;margin:0 auto 2px}
+  /* slab card */
+  .slab{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:8px}
+  .slabimg{height:62px;background:linear-gradient(135deg,#6b7280,#9ca3af,#d1d5db,#6b7280);position:relative}
+  .slabimg span{position:absolute;bottom:4px;left:6px;background:rgba(0,0,0,.5);color:#fff;font-size:9px;padding:1px 6px;border-radius:5px}
+  .slabmeta{padding:7px 9px;font-size:11px}.slabmeta .nm{font-weight:700}
+  /* bars */
+  .bar{margin:8px 0}
+  .bar .lab{display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px}
+  .track{height:9px;background:#eef2f1;border-radius:6px;overflow:hidden}
+  .fill{height:100%;border-radius:6px}
+  .badge-wow{position:absolute;top:10px;right:12px;background:#fde68a;color:#92400e;font-size:9px;font-weight:800;padding:2px 7px;border-radius:999px}
+  .shock{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:9px;font-size:11px;color:#9a3412;margin-top:8px}
+  /* map */
+  .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;margin-top:26px}
+  .card h2{font-size:13px;letter-spacing:.07em;text-transform:uppercase;color:var(--green);margin:0 0 14px}
+  .modules{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+  .mod{border:1px solid var(--line);border-radius:13px;padding:13px}
+  .mod .mh{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
+  .mod .md{font-size:12px;color:#475569;margin-top:5px}
+  .mod .tag{font-size:9px;font-weight:800;padding:2px 7px;border-radius:999px;margin-left:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand"><div class="logo">G</div>
+    <div><h1>What's in your app</h1>
+      <div class="lead">GraniteOS — the phone app an Indian granite/marble owner opens every morning to run his whole business.</div>
+    </div>
+  </div>
+  <div class="key">
+    <div class="k"><span class="chip c-built">BUILT</span> working now (the front door)</div>
+    <div class="k"><span class="chip c-soon">NEXT</span> the daily-use rooms</div>
+    <div class="k"><span class="chip c-wow">⭐ MAGIC</span> the part that hooks him — nobody else has it</div>
+  </div>
+
+  <div class="grid">
+
+    <!-- MORNING DASHBOARD -->
+    <div class="phone">
+      <div class="cap"><span class="chip c-soon">NEXT</span> Morning Card</div>
+      <div class="view">
+        <div class="pad">
+          <div class="muted">Good morning,</div>
+          <div class="h">Ramesh Sharma</div>
+          <div class="muted">Sharma Stone Industries</div>
+          <div style="margin-top:12px">
+            <div class="stat"><span class="l">💰 Cash in today</span><span class="v up">+ ₹2,40,000</span></div>
+            <div class="stat"><span class="l">💸 Paid out</span><span class="v down">− ₹85,000</span></div>
+            <div class="stat"><span class="l">📕 Udhaar pending</span><span class="v">₹6,10,000</span></div>
+            <div class="stat"><span class="l">📦 Slabs in godown</span><span class="v">412</span></div>
+            <div class="stat"><span class="l">🧾 GST due (12 days)</span><span class="v">₹1,18,000</span></div>
+          </div>
+          <div class="shock">⭐ This month's recovery is up 4% — ₹1.9L saved vs last month.</div>
+        </div>
+        <div class="nav"><div class="on"><div class="ic"></div>Home</div><div><div class="ic"></div>Stock</div><div><div class="ic"></div>Bills</div><div><div class="ic"></div>Khata</div><div><div class="ic"></div>More</div></div>
+      </div>
+    </div>
+
+    <!-- STOCK / GODOWN -->
+    <div class="phone">
+      <div class="cap"><span class="chip c-soon">NEXT</span> Stock · Godown</div>
+      <div class="view">
+        <div class="pad">
+          <div class="h" style="font-size:16px">Stock</div>
+          <div class="muted">Blocks → Slabs → Godown</div>
+          <div class="tile"><div class="tt">🪨 Block #BLK-2024-118</div><div class="ts">Black Galaxy · 18.4 tonnes · Supplier: Patel Stone</div>
+            <div class="pillrow"><span class="pill">→ 26 slabs cut</span><span class="pill">1,840 sq-ft</span><span class="pill">Recovery 71%</span></div></div>
+          <div class="tile"><div class="tt">🪨 Block #BLK-2024-117</div><div class="ts">Steel Grey · 15.1 tonnes</div>
+            <div class="pillrow"><span class="pill">→ 19 slabs</span><span class="pill">1,310 sq-ft</span><span class="pill">Recovery 63%</span></div></div>
+          <div class="tile"><div class="tt">🪨 Block #BLK-2024-116</div><div class="ts">Tan Brown · 20.0 tonnes</div>
+            <div class="pillrow"><span class="pill">In sawing</span></div></div>
+          <div class="btn">+ Add block / log slabs</div>
+        </div>
+        <div class="nav"><div><div class="ic"></div>Home</div><div class="on"><div class="ic"></div>Stock</div><div><div class="ic"></div>Bills</div><div><div class="ic"></div>Khata</div><div><div class="ic"></div>More</div></div>
+      </div>
+    </div>
+
+    <!-- GST BILL -->
+    <div class="phone">
+      <div class="cap"><span class="chip c-soon">NEXT</span> New GST Bill</div>
+      <div class="view">
+        <div class="pad">
+          <div class="h" style="font-size:16px">New Bill</div>
+          <div class="muted">Auto GST · e-way bill ready</div>
+          <div class="tile"><div class="tt">Polished Black Galaxy</div><div class="ts">120 sq-ft × ₹185</div>
+            <div class="stat" style="border:0;padding:4px 0"><span class="l">Taxable</span><span class="v">₹22,200</span></div>
+            <div class="stat" style="border:0;padding:4px 0"><span class="l">GST @18% (HSN 6802)</span><span class="v">₹3,996</span></div></div>
+          <div class="tile" style="background:#f1f7f4;border-color:#bfe3d4"><div class="tt">Raw Marble Block</div><div class="ts">HSN 2515</div>
+            <div class="stat" style="border:0;padding:4px 0"><span class="l">GST @5%</span><span class="v">auto</span></div></div>
+          <div class="stat"><span class="l bold">Total</span><span class="v">₹26,196</span></div>
+          <div class="btn">📲 Send on WhatsApp + UPI link</div>
+        </div>
+        <div class="nav"><div><div class="ic"></div>Home</div><div><div class="ic"></div>Stock</div><div class="on"><div class="ic"></div>Bills</div><div><div class="ic"></div>Khata</div><div><div class="ic"></div>More</div></div>
+      </div>
+    </div>
+
+    <!-- SLAB CATALOG -->
+    <div class="phone">
+      <div class="cap"><span class="chip c-soon">NEXT</span> Slab Catalog</div>
+      <div class="view">
+        <div class="pad">
+          <div class="h" style="font-size:16px">Live Catalog</div>
+          <div class="muted">Snap → tag → share link with buyer</div>
+          <div class="slab"><div class="slabimg"><span>QR · SLB-118-07</span></div><div class="slabmeta"><div class="nm">Black Galaxy · Polished</div>65 sq-ft · ₹185/sq-ft · Godown A</div></div>
+          <div class="slab"><div class="slabimg" style="background:linear-gradient(135deg,#78716c,#a8a29e,#e7e5e4,#78716c)"><span>QR · SLB-117-03</span></div><div class="slabmeta"><div class="nm">Steel Grey</div>58 sq-ft · ₹150/sq-ft · Godown A</div></div>
+          <div class="btn">📷 Add slab photo</div>
+        </div>
+        <div class="nav"><div><div class="ic"></div>Home</div><div class="on"><div class="ic"></div>Stock</div><div><div class="ic"></div>Bills</div><div><div class="ic"></div>Khata</div><div><div class="ic"></div>More</div></div>
+      </div>
+    </div>
+
+    <!-- UDHAAR / KHATA -->
+    <div class="phone">
+      <div class="cap"><span class="chip c-soon">NEXT</span> Udhaar · Khata</div>
+      <div class="view">
+        <div class="pad">
+          <div class="h" style="font-size:16px">Who owes me</div>
+          <div class="muted">₹6,10,000 pending</div>
+          <div class="stat"><span class="l">Verma Builders<br><span class="muted">42 days overdue</span></span><span class="v down">₹2,80,000</span></div>
+          <div class="stat"><span class="l">Khan Interiors<br><span class="muted">11 days</span></span><span class="v">₹1,90,000</span></div>
+          <div class="stat"><span class="l">Local walk-in<br><span class="muted">5 days</span></span><span class="v">₹1,40,000</span></div>
+          <div class="btn">📲 Send WhatsApp reminders</div>
+          <div class="shock">Auto-nudge sent to 3 customers this week → ₹3.1L collected.</div>
+        </div>
+        <div class="nav"><div><div class="ic"></div>Home</div><div><div class="ic"></div>Stock</div><div><div class="ic"></div>Bills</div><div class="on"><div class="ic"></div>Khata</div><div><div class="ic"></div>More</div></div>
+      </div>
+    </div>
+
+    <!-- RECOVERY RADAR -->
+    <div class="phone" style="position:relative">
+      <div class="cap"><span class="chip c-wow">⭐ MAGIC</span> Recovery Radar</div>
+      <div class="view">
+        <div class="pad">
+          <div class="h" style="font-size:16px">Profit & Recovery</div>
+          <div class="muted">What each block & machine really earns you</div>
+          <div class="bar"><div class="lab"><span>Machine #1</span><span class="bold up">74%</span></div><div class="track"><div class="fill" style="width:74%;background:#15803d"></div></div></div>
+          <div class="bar"><div class="lab"><span>Machine #2</span><span class="bold down">66%</span></div><div class="track"><div class="fill" style="width:66%;background:#dc2626"></div></div></div>
+          <div class="bar"><div class="lab"><span>Supplier: Patel</span><span class="bold up">71%</span></div><div class="track"><div class="fill" style="width:71%;background:#15803d"></div></div></div>
+          <div class="bar"><div class="lab"><span>Supplier: Mehta</span><span class="bold down">59%</span></div><div class="track"><div class="fill" style="width:59%;background:#dc2626"></div></div></div>
+          <div class="shock"><b>😲 Machine #2 wastes 8% more stone than #1 — ₹3.2 lakh/year.</b> True profit per slab after freight + polish: <b>₹142/sq-ft</b>.</div>
+        </div>
+        <div class="nav"><div><div class="ic"></div>Home</div><div><div class="ic"></div>Stock</div><div><div class="ic"></div>Bills</div><div><div class="ic"></div>Khata</div><div class="on"><div class="ic"></div>More</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FULL MODULE MAP -->
+  <div class="card">
+    <h2>The full app — every room</h2>
+    <div class="modules">
+      <div class="mod"><div class="mh">🔑 Login &amp; team <span class="tag c-built">BUILT</span></div><div class="md">Phone OTP login, company setup, invite staff, who-can-see-what by role.</div></div>
+      <div class="mod"><div class="mh">🏠 Morning card <span class="tag c-soon">NEXT</span></div><div class="md">Cash, udhaar, stock, GST-due — the whole business in one 30-second glance.</div></div>
+      <div class="mod"><div class="mh">📦 Stock / godown <span class="tag c-soon">NEXT</span></div><div class="md">Blocks → slabs → godown, by sq-ft. The way an owner actually thinks.</div></div>
+      <div class="mod"><div class="mh">🧾 GST billing <span class="tag c-soon">NEXT</span></div><div class="md">Auto 5% raw / 18% polished, e-way bill, send on WhatsApp + UPI link.</div></div>
+      <div class="mod"><div class="mh">📕 Udhaar / khata <span class="tag c-soon">NEXT</span></div><div class="md">Who owes you, how old, auto WhatsApp reminders to collect faster.</div></div>
+      <div class="mod"><div class="mh">📸 Slab catalog <span class="tag c-soon">NEXT</span></div><div class="md">Snap each slab, QR tag, share a live "what's in stock" link with buyers.</div></div>
+      <div class="mod"><div class="mh">📄 Quotes &amp; orders <span class="tag c-soon">NEXT</span></div><div class="md">Build a quote with slab photos, confirm to order in one tap.</div></div>
+      <div class="mod"><div class="mh">🏭 Fabrication / QC <span class="tag c-soon">NEXT</span></div><div class="md">Track cutting, polishing, quality — for owners who also fabricate.</div></div>
+      <div class="mod"><div class="mh">⭐ Recovery &amp; profit radar <span class="tag c-wow">MAGIC</span></div><div class="md">What each block, machine &amp; supplier really earns or wastes you. Nobody else gives an Indian owner this.</div></div>
+      <div class="mod"><div class="mh">💰 Payments &amp; reports <span class="tag c-soon">NEXT</span></div><div class="md">Money in/out, GST returns, simple owner reports — no accountant-speak.</div></div>
+    </div>
+  </div>
+
+  <div style="text-align:center;color:var(--muted);font-size:12px;margin:22px 0 8px">
+    Screens are a faithful vision — exact colours &amp; layout as the real app. “Built” = working now; the rest snap onto it slice by slice, magic-first.
+  </div>
+
+</div>
+</body>
+</html>

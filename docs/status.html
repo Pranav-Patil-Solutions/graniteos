@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GraniteOS — Build Status</title>
+<style>
+  :root{
+    --green:#0F4C35; --green-soft:#e7f0ec; --line:#e2e8f0; --ink:#0f172a;
+    --muted:#64748b; --amber:#b45309; --amber-soft:#fef3c7;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+       background:#f8fafc;color:var(--ink);line-height:1.5;padding:28px}
+  .wrap{max-width:1000px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+  .logo{width:46px;height:46px;border-radius:14px;background:var(--green);color:#fff;
+        display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px}
+  h1{margin:0;font-size:26px}
+  .sub{color:var(--muted);margin:2px 0 24px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:22px}
+  .card h2{margin:0 0 16px;font-size:17px}
+  .pill{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px}
+  .done{background:var(--green-soft);color:var(--green)}
+  .now{background:var(--amber-soft);color:var(--amber)}
+  .wait{background:#f1f5f9;color:var(--muted)}
+
+  /* progress steps */
+  .steps{list-style:none;margin:0;padding:0}
+  .steps li{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px dashed var(--line)}
+  .steps li:last-child{border-bottom:0}
+  .dot{width:26px;height:26px;border-radius:50%;flex:0 0 26px;display:flex;align-items:center;
+       justify-content:center;font-size:14px;font-weight:800;color:#fff}
+  .dot.d{background:var(--green)} .dot.n{background:var(--amber)} .dot.w{background:#cbd5e1}
+  .steps .label{flex:1}
+  .steps .you{outline:3px solid var(--amber);outline-offset:6px;border-radius:10px;padding:6px 8px;margin:-6px -8px}
+
+  /* flow */
+  .flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:0}
+  .node{flex:1;min-width:120px;background:var(--green-soft);border:1.5px solid var(--green);
+        border-radius:14px;padding:14px;text-align:center}
+  .node .t{font-weight:800;color:var(--green);font-size:14px}
+  .node .d{font-size:12px;color:#3f6f5c;margin-top:4px}
+  .arrow{display:flex;align-items:center;justify-content:center;color:var(--green);font-size:22px;padding:0 6px}
+
+  /* roles */
+  table{width:100%;border-collapse:collapse}
+  td,th{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);font-size:14px}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  .role{font-weight:700}
+  .tabs span{display:inline-block;background:#f1f5f9;border-radius:8px;padding:2px 8px;margin:2px 3px 2px 0;font-size:12px}
+
+  /* arch */
+  .arch{display:flex;flex-direction:column;align-items:center;gap:0}
+  .box{width:100%;max-width:520px;border-radius:14px;padding:16px;text-align:center}
+  .box.app{background:#fff;border:2px solid var(--green)}
+  .box.db{background:var(--green);color:#fff;border:2px solid var(--green)}
+  .box .bt{font-weight:800;font-size:15px}
+  .box .bd{font-size:13px;color:var(--muted);margin-top:4px}
+  .box.db .bd{color:#cfe6dc}
+  .vline{width:2px;height:26px;background:var(--green)}
+  .vlabel{font-size:12px;color:var(--muted);margin:4px 0}
+  ul.feat{margin:8px 0 0;padding-left:18px;text-align:left;display:inline-block;font-size:13px}
+  .legend{font-size:12px;color:var(--muted);margin-top:10px}
+  .legend b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="logo">G</div>
+    <div>
+      <h1>GraniteOS</h1>
+      <div class="sub">Foundation — Slice 1 of 7 · build status</div>
+    </div>
+  </div>
+
+  <!-- WHERE WE ARE -->
+  <div class="card">
+    <h2>① Where we are right now</h2>
+    <ul class="steps">
+      <li><span class="dot d">✓</span><span class="label">Plan written</span><span class="pill done">DONE</span></li>
+      <li><span class="dot d">✓</span><span class="label">Database design — 3 tables + security rules</span><span class="pill done">WRITTEN</span></li>
+      <li><span class="dot d">✓</span><span class="label">Phone login + 6-digit code</span><span class="pill done">DONE</span></li>
+      <li><span class="dot d">✓</span><span class="label">Company setup wizard</span><span class="pill done">DONE</span></li>
+      <li><span class="dot d">✓</span><span class="label">Team invites + role menus</span><span class="pill done">DONE</span></li>
+      <li><span class="dot d">✓</span><span class="label">Tests pass · type-check clean · build green</span><span class="pill done">8/8 ✓</span></li>
+      <li class="you"><span class="dot n">★</span><span class="label"><b>YOU: create the Supabase database</b> (≈5 min, no SMS cost)</span><span class="pill now">YOUR TURN</span></li>
+      <li><span class="dot w">·</span><span class="label">I apply the database design</span><span class="pill wait">NEXT</span></li>
+      <li><span class="dot w">·</span><span class="label">Run on localhost — you sign in &amp; approve in your browser</span><span class="pill wait">NEXT</span></li>
+    </ul>
+  </div>
+
+  <!-- FLOW -->
+  <div class="card">
+    <h2>② What you'll click through</h2>
+    <div class="flow">
+      <div class="node"><div class="t">Login</div><div class="d">enter phone #</div></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="t">Code</div><div class="d">6-digit OTP</div></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="t">Set up company</div><div class="d">one time</div></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="t">Dashboard</div><div class="d">+ bottom menu</div></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="t">Invite team</div><div class="d">share a link</div></div>
+    </div>
+  </div>
+
+  <!-- ROLES -->
+  <div class="card">
+    <h2>③ The menu changes by who you are</h2>
+    <table>
+      <tr><th>Role</th><th>Bottom navigation</th></tr>
+      <tr><td class="role">Owner</td><td class="tabs"><span>🏠 Home</span><span>📦 Inventory</span><span>📋 Orders</span><span>📄 Quotes</span><span>💳 Payments</span></td></tr>
+      <tr><td class="role">Sales Manager</td><td class="tabs"><span>🏠 Home</span><span>📦 Inventory</span><span>📋 Orders</span><span>📄 Quotes</span></td></tr>
+      <tr><td class="role">Store Manager</td><td class="tabs"><span>🏠 Home</span><span>📦 Inventory</span><span>📋 Orders</span></td></tr>
+      <tr><td class="role">Fabrication</td><td class="tabs"><span>🏠 Home</span><span>🏭 Fabrication</span><span>📋 Orders</span></td></tr>
+    </table>
+    <div class="legend">Tabs other than Home/Team open a “Coming soon” page in Slice 1 — those modules get built in Slices 2–7.</div>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div class="card">
+    <h2>④ How the pieces fit together</h2>
+    <div class="arch">
+      <div class="box app">
+        <div class="bt">📱 GraniteOS app — the screens you see</div>
+        <div class="bd">Next.js · runs in any phone or browser</div>
+      </div>
+      <div class="vline"></div>
+      <div class="vlabel">asks securely ▼</div>
+      <div class="vline"></div>
+      <div class="box db">
+        <div class="bt">🗄️ Supabase — the database &amp; login <span class="pill now" style="margin-left:6px">YOU CREATE THIS NEXT</span></div>
+        <div class="bd">
+          <ul class="feat">
+            <li>sends the login code (OTP)</li>
+            <li>stores companies &amp; team members</li>
+            <li>locks each company’s data so no one
+                can ever see another company’s info</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend" style="text-align:center">
+    Once the database exists, sign in with <b>+91 99999 99999</b> · code <b>123456</b> to see your own dashboard.
+  </div>
+
+</div>
+</body>
+</html>

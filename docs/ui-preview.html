@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GraniteOS — Screen Preview</title>
+<style>
+  :root{--green:#0F4C35;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--slate50:#f8fafc;}
+  *{box-sizing:border-box;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  body{margin:0;background:#eef2f6;color:var(--ink);padding:26px}
+  h1.page{font-size:22px;margin:0 0 2px;display:flex;align-items:center;gap:10px}
+  .logo{width:34px;height:34px;border-radius:10px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
+  .lead{color:var(--muted);margin:0 0 22px;font-size:14px}
+  .grid{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start}
+  .phone{width:300px;background:#fff;border:1px solid var(--line);border-radius:30px;
+         box-shadow:0 18px 40px rgba(15,76,53,.10);overflow:hidden}
+  .screen-title{font-size:12px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.05em;
+                text-align:center;padding:10px;background:#f1f7f4;border-bottom:1px solid var(--line)}
+  .view{height:560px;position:relative;display:flex;flex-direction:column}
+  .pad{padding:26px 20px;flex:1;overflow:auto}
+  /* shared bits */
+  .glogo{width:54px;height:54px;border-radius:16px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;margin:0 auto}
+  .center{text-align:center}
+  .h2{font-size:22px;font-weight:800;margin:14px 0 2px}
+  .muted{color:var(--muted);font-size:13px}
+  label .lab{font-size:13px;font-weight:600;color:#334155;display:block;margin:14px 0 6px}
+  .input{width:100%;height:50px;border:1px solid #cbd5e1;border-radius:12px;padding:0 14px;font-size:15px;color:#334155;display:flex;align-items:center}
+  .input.ph{color:#94a3b8}
+  .otp{height:60px;text-align:center;letter-spacing:.5em;font-size:24px;color:#334155;justify-content:center}
+  .btn{width:100%;height:50px;background:var(--green);color:#fff;border:none;border-radius:12px;font-weight:700;font-size:15px;margin-top:18px;display:flex;align-items:center;justify-content:center}
+  .link{text-align:center;color:var(--muted);font-size:13px;margin-top:14px}
+  /* dashboard */
+  .row{display:flex;justify-content:space-between;align-items:flex-start}
+  .badge{display:inline-block;background:var(--green);color:#fff;border-radius:999px;padding:4px 12px;font-size:12px;font-weight:700;margin-top:12px}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+  .ccard{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fff}
+  .ccard.team{border-color:rgba(15,76,53,.3);background:rgba(15,76,53,.05)}
+  .ccard .ct{font-weight:700;color:#1e293b}.ccard .cs{font-size:12px;color:#94a3b8;margin-top:4px}
+  .ccard.team .ct{color:var(--green)}.ccard.team .cs{color:rgba(15,76,53,.7)}
+  .note{margin-top:18px;background:rgba(15,76,53,.05);border:1px solid rgba(15,76,53,.2);color:var(--green);border-radius:12px;padding:14px;font-size:12.5px}
+  /* nav */
+  .nav{height:62px;border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;background:#fff}
+  .nav .it{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:600;color:#64748b}
+  .nav .it.on{color:var(--green)}
+  .nav .ic{width:20px;height:20px;border:2px solid currentColor;border-radius:5px}
+  /* team list */
+  .member{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:16px;padding:11px;margin-top:8px}
+  .av{width:38px;height:38px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+  .member .nm{font-weight:600;color:#1e293b;font-size:14px}.member .ph{font-size:11px;color:#94a3b8}
+  .rt{font-size:11px;color:#64748b;text-align:right}.pend{font-size:10px;color:#b45309;font-weight:700}
+  .invite{border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:18px}
+  .invite .it{font-weight:700;color:#1e293b;margin-bottom:8px}
+  .select{height:46px;border:1px solid #cbd5e1;border-radius:12px;padding:0 12px;display:flex;align-items:center;color:#334155;font-size:14px;margin-top:8px;justify-content:space-between}
+  .urlbox{margin-top:12px;background:rgba(15,76,53,.05);border:1px solid rgba(15,76,53,.2);border-radius:10px;padding:10px;font-size:11px;color:var(--green);word-break:break-all;font-family:monospace}
+  .tag{display:inline-block;background:#fff;border:1px dashed #cbd5e1;color:#64748b;border-radius:8px;font-size:11px;padding:2px 8px;margin-left:8px}
+</style>
+</head>
+<body>
+  <h1 class="page"><span class="logo">G</span>GraniteOS — what's built (Slice 1)</h1>
+  <p class="lead">These are the actual screens, with the real layout &amp; brand color. Once the database is connected they’ll run live and look exactly like this. <b>Tell me anything you’d change.</b></p>
+
+  <div class="grid">
+
+    <!-- 1 LOGIN -->
+    <div class="phone">
+      <div class="screen-title">1 · Login</div>
+      <div class="view"><div class="pad">
+        <div class="glogo">G</div>
+        <div class="center"><div class="h2">GraniteOS</div><div class="muted">Sign in to your granite business</div></div>
+        <label><span class="lab">Phone number</span><div class="input ph">+91 99999 99999</div></label>
+        <div class="btn">Send OTP</div>
+      </div></div>
+    </div>
+
+    <!-- 2 OTP -->
+    <div class="phone">
+      <div class="screen-title">2 · Enter code</div>
+      <div class="view"><div class="pad">
+        <div class="glogo">G</div>
+        <div class="center"><div class="h2">GraniteOS</div><div class="muted">Enter the code sent to +91 99999 99999</div></div>
+        <label><span class="lab">Verification code</span><div class="input otp">••••••</div></label>
+        <div class="btn">Verify &amp; continue</div>
+        <div class="link">Use a different phone number</div>
+      </div></div>
+    </div>
+
+    <!-- 3 SETUP -->
+    <div class="phone">
+      <div class="screen-title">3 · Company setup</div>
+      <div class="view"><div class="pad">
+        <div class="h2" style="font-size:20px">Set up your company</div>
+        <div class="muted">One-time setup. You can change these later.</div>
+        <label><span class="lab">Company name</span><div class="input ph">Sharma Stone Industries</div></label>
+        <label><span class="lab">City</span><div class="input ph">Jamnagar</div></label>
+        <label><span class="lab">Your name</span><div class="input ph">Ramesh Sharma</div></label>
+        <label><span class="lab">GST number (optional)</span><div class="input ph">22AAAAA0000A1Z5</div></label>
+        <div class="btn">Create company</div>
+      </div></div>
+    </div>
+
+    <!-- 4 DASHBOARD -->
+    <div class="phone">
+      <div class="screen-title">4 · Dashboard (Owner)</div>
+      <div class="view">
+        <div class="pad">
+          <div class="row">
+            <div><div class="muted">Good morning,</div><div class="h2" style="font-size:20px">Ramesh Sharma</div><div class="muted">Sharma Stone Industries</div></div>
+            <div class="muted" style="font-size:12px">Sign out</div>
+          </div>
+          <div class="badge">Owner</div>
+          <div class="cards">
+            <div class="ccard"><div class="ct">Inventory</div><div class="cs">Slice 3</div></div>
+            <div class="ccard"><div class="ct">Orders</div><div class="cs">Slice 4</div></div>
+            <div class="ccard"><div class="ct">Quotes</div><div class="cs">Slice 4</div></div>
+            <div class="ccard team"><div class="ct">Team</div><div class="cs">Manage &amp; invite</div></div>
+          </div>
+          <div class="note">✅ Foundation — auth, company setup, role-aware navigation, and team management. Business modules land in later slices.</div>
+        </div>
+        <div class="nav">
+          <div class="it on"><div class="ic"></div>Home</div>
+          <div class="it"><div class="ic"></div>Inventory</div>
+          <div class="it"><div class="ic"></div>Orders</div>
+          <div class="it"><div class="ic"></div>Quotes</div>
+          <div class="it"><div class="ic"></div>Payments</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 TEAM -->
+    <div class="phone">
+      <div class="screen-title">5 · Team &amp; invites</div>
+      <div class="view">
+        <div class="pad">
+          <div class="h2" style="font-size:20px">Team</div>
+          <div class="muted">2 member(s)</div>
+          <div class="member"><div class="av">R</div><div style="flex:1"><div class="nm">Ramesh Sharma</div><div class="ph">+91 99999 99999</div></div><div class="rt">Owner</div></div>
+          <div class="member"><div class="av">S</div><div style="flex:1"><div class="nm">Suresh</div><div class="ph">+91 98888 88888</div></div><div><div class="rt">Store Manager</div><div class="pend">Pending</div></div></div>
+          <div class="invite">
+            <div class="it">Invite a team member</div>
+            <div class="input ph">Name</div>
+            <div class="input ph" style="margin-top:8px">+91 99999 99999</div>
+            <div class="select">Sales Manager <span>▾</span></div>
+            <div class="btn" style="margin-top:12px">Send invite</div>
+            <div class="urlbox">http://localhost:3000/invite/accept?token=a1b2c3…</div>
+          </div>
+        </div>
+        <div class="nav">
+          <div class="it on"><div class="ic"></div>Home</div>
+          <div class="it"><div class="ic"></div>Inventory</div>
+          <div class="it"><div class="ic"></div>Orders</div>
+          <div class="it"><div class="ic"></div>Quotes</div>
+          <div class="it"><div class="ic"></div>Payments</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

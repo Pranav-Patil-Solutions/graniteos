@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GraniteOS — Market Research & Strategy</title>
+<style>
+  :root{--green:#0F4C35;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f4f7f6;
+        --red:#b91c1c;--redbg:#fef2f2;--amber:#b45309;--amberbg:#fef3c7;--greenbg:#e7f0ec;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.55;padding:30px 20px}
+  .wrap{max-width:1080px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:44px;height:44px;border-radius:13px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px}
+  h1{margin:0;font-size:25px}.tagline{color:var(--muted);margin:2px 0 6px;font-size:14px}
+  .stamp{font-size:12px;color:var(--muted)}
+  .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;margin:20px 0}
+  h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin:0 0 4px}
+  .h2sub{color:var(--muted);font-size:13px;margin:0 0 18px}
+  .verdict{background:var(--green);color:#fff;border:none}
+  .verdict h2{color:#bfe3d4}.verdict p{margin:6px 0 0;font-size:15px}
+  .big{font-size:19px;font-weight:700;margin:0}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700}
+  td.name{font-weight:700}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap}
+  .no{background:var(--redbg);color:var(--red)} .yes{background:var(--greenbg);color:var(--green)} .part{background:var(--amberbg);color:var(--amber)}
+  .price{font-weight:700;white-space:nowrap}
+  .inr{color:var(--muted);font-weight:400;font-size:11px;display:block}
+  /* quadrant */
+  .quad{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .q{border:1px solid var(--line);border-radius:14px;padding:14px}
+  .q .qt{font-weight:700;font-size:13px;margin-bottom:6px}
+  .q ul{margin:0;padding-left:16px;font-size:12.5px;color:#334155}
+  .q.win{background:var(--green);color:#fff;border:none}.q.win .qt{color:#fff}.q.win ul{color:#dcefe7}
+  /* feasibility */
+  .feas{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .col h3{font-size:13px;margin:0 0 8px}
+  .li{display:flex;gap:8px;align-items:flex-start;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--line)}
+  .dot{width:10px;height:10px;border-radius:50%;margin-top:5px;flex:0 0 10px}
+  .g{background:#16a34a}.a{background:#d97706}.r{background:#dc2626}
+  /* features */
+  .feat{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+  .feat .ft{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .rank{width:24px;height:24px;border-radius:7px;background:var(--green);color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 24px}
+  .feat .fd{font-size:13.5px;color:#334155;margin:6px 0 0}
+  .feat .fw{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+  .badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px}
+  .ev{background:var(--greenbg);color:var(--green)}.hyp{background:var(--amberbg);color:var(--amber)}
+  .src{font-size:12px;color:var(--muted);word-break:break-all}
+  .src a{color:var(--green)}
+  .note{font-size:12.5px;color:var(--muted);background:#fafafa;border:1px solid var(--line);border-radius:10px;padding:12px}
+  .legend{font-size:11px;color:var(--muted);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="logo">G</div>
+    <div>
+      <h1>GraniteOS — Market Research &amp; Strategy</h1>
+      <div class="tagline">Stone business software: global players · India startups · the gap · the plan</div>
+      <div class="stamp">Fact-checked deep research · 22 sources · 20 claims confirmed, 5 killed · June 2026</div>
+    </div>
+  </div>
+
+  <!-- VERDICT -->
+  <div class="card verdict">
+    <h2>The one-line verdict</h2>
+    <p class="big">Nobody serves the Indian granite owner well. The global tools are world-class but cost ₹12k–₹33k/month (or ₹12.5 lakh up front) and have zero GST/India fit. The Indian tools are cheap and GST-ready but don't speak "stone." <u>No one product is mobile-first + India-affordable + GST-smart + stone-deep — that exact box is yours.</u></p>
+  </div>
+
+  <!-- MATRIX -->
+  <div class="card">
+    <h2>1 · The competition, with real prices</h2>
+    <p class="h2sub">What they cost, who they're for, and what they DON'T do. (₹ = approx. conversion.)</p>
+    <table>
+      <tr>
+        <th>Product</th><th>Who it's for</th><th>Price</th><th>Mobile-first</th><th>India / GST</th><th>Stone depth</th><th>What it doesn't do</th>
+      </tr>
+      <tr>
+        <td class="name">Moraware<br><span class="inr">Systemize + CounterGo (US)</span></td>
+        <td>US countertop shops</td>
+        <td class="price">$120/user, 3-user min<span class="inr">≈ ₹30,000/mo entry</span></td>
+        <td><span class="tag no">No (browser)</span></td>
+        <td><span class="tag no">None</span></td>
+        <td><span class="tag yes">High</span></td>
+        <td>No GST/INR, no native app, English-only, SMB-unaffordable in India</td>
+      </tr>
+      <tr>
+        <td class="name">ActionFlow<br><span class="inr">(US)</span></td>
+        <td>US fabricators, all sizes</td>
+        <td class="price">$149/mo + setup<span class="inr">≈ ₹12,400/mo; Pro tier +$3,000 setup</span></td>
+        <td><span class="tag part">Partial</span></td>
+        <td><span class="tag no">"US only"</span></td>
+        <td><span class="tag yes">High</span></td>
+        <td>Explicitly "U.S. customers only", USD, no GST</td>
+      </tr>
+      <tr>
+        <td class="name">Slabsmith<br><span class="inr">slab imaging (US)</span></td>
+        <td>Big fabricators</td>
+        <td class="price">$15,000 up front<span class="inr">≈ ₹12.5 lakh + ~₹1.25L/yr</span></td>
+        <td><span class="tag no">No (desktop+dongle)</span></td>
+        <td><span class="tag no">None</span></td>
+        <td><span class="tag yes">Very high</span></td>
+        <td>Enterprise-only, on-premise USB dongles, no cloud/mobile/India</td>
+      </tr>
+      <tr>
+        <td class="name">StoneApp<br><span class="inr">StoneGrid (US)</span></td>
+        <td>US fabricators</td>
+        <td class="price">~$400/mo + $35/user<span class="inr">≈ ₹33,000/mo</span></td>
+        <td><span class="tag yes">Yes</span></td>
+        <td><span class="tag no">None (.usa)</span></td>
+        <td><span class="tag yes">High</span></td>
+        <td>US-only, no GST/INR/area pricing</td>
+      </tr>
+      <tr style="background:#fbfdfc">
+        <td class="name">DONOZ<br><span class="inr">Kishangarh 🇮🇳</span></td>
+        <td>Indian granite factories</td>
+        <td class="price">Not public<span class="inr">vendor site only</span></td>
+        <td><span class="tag yes">Yes</span></td>
+        <td><span class="tag part">India-native</span></td>
+        <td><span class="tag part">Claims "stone language"</span></td>
+        <td>Adoption unverified; specific features not independently confirmed; closest direct rival</td>
+      </tr>
+      <tr style="background:#fbfdfc">
+        <td class="name">Reckon<br><span class="inr">🇮🇳</span></td>
+        <td>Indian marble/granite stores</td>
+        <td class="price">~₹3,000<span class="inr">desktop, one-time-ish</span></td>
+        <td><span class="tag no">No (Windows desktop)</span></td>
+        <td><span class="tag yes">Full GST + e-way bill</span></td>
+        <td><span class="tag part">sq-ft/box/piece pricing</span></td>
+        <td>Desktop-bound, not mobile/cloud, dated UX</td>
+      </tr>
+      <tr style="background:#fbfdfc">
+        <td class="name">MarbleTech<br><span class="inr">🇮🇳</span></td>
+        <td>Marble/tile billing</td>
+        <td class="price">₹399–₹999/mo<span class="inr">₹9,999/yr</span></td>
+        <td><span class="tag part">Web app</span></td>
+        <td><span class="tag part">Area calc; GST claim refuted</span></td>
+        <td><span class="tag no">Calculator-level</span></td>
+        <td>Thin, low-traffic, unproven; "built for marble + GST" claim was fact-check REFUTED</td>
+      </tr>
+      <tr style="background:#fbfdfc">
+        <td class="name">BUSY / Tally / Vyapar<br><span class="inr">🇮🇳 generic accounting</span></td>
+        <td>All Indian SMBs</td>
+        <td class="price">₹0–₹2k/mo<span class="inr">mass-market</span></td>
+        <td><span class="tag part">BUSY/Vyapar yes</span></td>
+        <td><span class="tag yes">Excellent GST</span></td>
+        <td><span class="tag no">Zero stone logic</span></td>
+        <td>No slabs, no block→slab recovery, no godown, no fabrication — pure accounting</td>
+      </tr>
+    </table>
+    <div class="legend">Sources: moraware.com/pricing · actionflow.net/pricing · slabsmith.com/slabsmithpricing · stonegridusa.com · donoz.in · reckonsales.in · calculator-for-marbles.web.app · busy.in/gst-rates/marble</div>
+  </div>
+
+  <!-- GAP QUADRANT -->
+  <div class="card">
+    <h2>2 · The gap map — why the box is empty</h2>
+    <p class="h2sub">Every rival owns part of the picture. None owns all four corners at once.</p>
+    <div class="quad">
+      <div class="q">
+        <div class="qt">🌍 US incumbents (Moraware, Slabsmith, StoneApp)</div>
+        <ul><li>✅ Deep stone features</li><li>✅ Cloud / some mobile</li><li>❌ ₹12k–₹33k/mo or ₹12.5L up front</li><li>❌ No GST / INR / India</li></ul>
+      </div>
+      <div class="q">
+        <div class="qt">🧾 Indian accounting (BUSY, Tally, Vyapar)</div>
+        <ul><li>✅ Great GST + cheap + mobile</li><li>❌ No slabs / blocks / recovery</li><li>❌ No fabrication or godown</li><li>❌ "Doesn't speak stone"</li></ul>
+      </div>
+      <div class="q">
+        <div class="qt">🇮🇳 India stone tools (DONOZ, Reckon, MarbleTech)</div>
+        <ul><li>◑ Each covers <i>part</i> of the box</li><li>Reckon: GST+sqft but desktop</li><li>DONOZ: mobile but unproven</li><li>MarbleTech: cheap but thin</li></ul>
+      </div>
+      <div class="q win">
+        <div class="qt">⭐ GraniteOS — the empty corner</div>
+        <ul><li>Mobile-first (runs from the godown)</li><li>India-affordable in ₹</li><li>GST-smart (5% in / 18% out)</li><li>Speaks stone: block → slab → recovery</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEASIBILITY -->
+  <div class="card">
+    <h2>3 · Can we actually build it? — Yes for v1</h2>
+    <p class="h2sub">Everything that matters first is proven-shippable on our stack. Only the enterprise imaging stuff is hard — and we don't need it.</p>
+    <div class="feas">
+      <div class="col">
+        <h3>🟢 Build now (table-stakes, all shippable)</h3>
+        <div class="li"><span class="dot g"></span><div>GST multi-rate invoicing (5% raw / 18% polished + e-way bill)</div></div>
+        <div class="li"><span class="dot g"></span><div>INR / SMB pricing &amp; sq-ft / area auto-pricing</div></div>
+        <div class="li"><span class="dot g"></span><div>Mobile-first cloud (we're already on Next.js + Supabase)</div></div>
+        <div class="li"><span class="dot g"></span><div>Slab photo catalog from a phone camera</div></div>
+        <div class="li"><span class="dot g"></span><div>UPI / Razorpay payment links, WhatsApp share</div></div>
+        <div class="li"><span class="dot g"></span><div>Udhaar / receivables ledger</div></div>
+      </div>
+      <div class="col">
+        <h3>🟠 Later · 🔴 Skip for v1</h3>
+        <div class="li"><span class="dot a"></span><div>Offline-first sync (nice for weak-signal godowns; phase 2)</div></div>
+        <div class="li"><span class="dot a"></span><div>Block→slab recovery analytics (our wedge — phase 1.5, simple math first)</div></div>
+        <div class="li"><span class="dot r"></span><div>Slab digital imaging + auto-nesting (Slabsmith-grade) — enterprise, $15k-class, <b>not needed</b></div></div>
+        <div class="li"><span class="dot r"></span><div>CNC/machine DXF integration — large fabricators only</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADDICTIVE FEATURES -->
+  <div class="card">
+    <h2>4 · The "wow" features that hook the owner</h2>
+    <p class="h2sub">Each tied to a real, sourced pain — ranked. <span class="badge ev">Evidence</span> = backed by research · <span class="badge hyp">Hypothesis</span> = strong bet, validate with owners.</p>
+
+    <div class="feat">
+      <div class="ft"><span class="rank">1</span> Recovery-Rate Radar — "how much stone am I wasting?" <span class="badge ev">Evidence</span></div>
+      <div class="fd">Log a block in (tonnes) → slabs out (sq-ft) → it shows recovery % per block, per machine, per supplier. The single number every granite owner obsesses over, that NO mainstream tool gives him.</div>
+      <div class="fw">😲 Shock moment: "Machine #2 wastes 8% more stone than #1 — that's ₹3.2 lakh/year." This is the moat — it's the "stone language" DONOZ pioneers and accounting tools can't touch.</div>
+    </div>
+
+    <div class="feat">
+      <div class="ft"><span class="rank">2</span> GST Auto-Pilot + "money the govt owes you" <span class="badge ev">Evidence</span></div>
+      <div class="fd">Buys raw at 5% (HSN 2515/2516), sells polished at 18% (HSN 6802) — the app applies the right rate automatically and tracks the input-tax-credit gap building up in his favour.</div>
+      <div class="fw">😲 Shock moment: "You have ₹1.4 lakh of GST credit sitting unclaimed." Real, current rule (effective 22 Sep 2025). Owners don't realise this themselves.</div>
+    </div>
+
+    <div class="feat">
+      <div class="ft"><span class="rank">3</span> Live Slab Catalog from your phone <span class="badge ev">Evidence</span></div>
+      <div class="fd">Snap each slab, tag block/lot/godown, and your customer browses a live "what's in stock" gallery — the affordable, phone-based cousin of Slabsmith's ₹12.5-lakh system.</div>
+      <div class="fw">😲 Shock moment: send a buyer a live link instead of 40 WhatsApp photos. Closes deals faster; nobody affordable does this in India.</div>
+    </div>
+
+    <div class="feat">
+      <div class="ft"><span class="rank">4</span> Udhaar Radar + auto WhatsApp reminders <span class="badge hyp">Hypothesis</span></div>
+      <div class="fd">Who owes you, how old, auto-nudge on WhatsApp. Khatabook built a unicorn on exactly this behaviour — owners check receivables daily.</div>
+      <div class="fw">The healthy daily habit: 20-second glance at "₹ coming in." (Validate priority with real owners.)</div>
+    </div>
+
+    <div class="feat">
+      <div class="ft"><span class="rank">5</span> Owner's Morning Card <span class="badge hyp">Hypothesis</span></div>
+      <div class="fd">One screen at 9am: cash in/out today · pending udhaar · low stock · GST due. A 30-second pulse of the whole business.</div>
+      <div class="fw">This is the "healthy addiction" — a quick daily check-in that gives control, not a doomscroll.</div>
+    </div>
+
+    <div class="feat">
+      <div class="ft"><span class="rank">6</span> WhatsApp quote → UPI paid in 60 seconds <span class="badge hyp">Hypothesis</span></div>
+      <div class="fd">Build a quote with a slab photo, send on WhatsApp, customer taps a UPI link and pays. Meets Indian buyers exactly where they already are.</div>
+      <div class="fw">Razorpay subscription/UPI rails make this shippable. (Validate against owner workflow.)</div>
+    </div>
+  </div>
+
+  <!-- HONESTY -->
+  <div class="card">
+    <h2>5 · What we DON'T know yet (the honest part)</h2>
+    <div class="note">
+      • The three India rivals (DONOZ, Reckon, MarbleTech) are evidenced <b>only by their own marketing pages</b> — their adoption numbers are self-reported and unverified. DONOZ is the one to watch: same niche, mobile-first, already live.<br><br>
+      • <b>Stone Profit System, FabSuite, ThanoSphere, SalesBinder</b> — named in scope but no claim survived fact-checking; the big-distributor/enterprise segment of the matrix is still incomplete.<br><br>
+      • The India pain points behind features #4–6 (udhaar, WhatsApp, vernacular Hindi/Telugu/Kannada UI) are <b>strong bets, not yet proven by data</b> — worth 5 phone calls to real Kishangarh/Hyderabad owners before we over-invest.<br><br>
+      • All pricing is June 2026 and moves often.
+    </div>
+  </div>
+
+  <div class="legend" style="text-align:center;margin-bottom:30px">
+    Full fact-check: 5 search angles · 22 sources fetched · 94 claims extracted · 25 verified · 20 confirmed · 5 killed · 104 research agents.
+  </div>
+
+</div>
+</body>
+</html>

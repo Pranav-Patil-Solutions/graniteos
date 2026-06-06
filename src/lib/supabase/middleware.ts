@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_PREFIXES = ["/login", "/invite", "/api/auth"];
+const PUBLIC_PREFIXES = ["/login", "/invite", "/api/auth", "/showcase"];
 
 function isPublic(path: string) {
   if (path === "/") return true;
@@ -12,6 +12,14 @@ function isPublic(path: string) {
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
+
+  // Before Supabase is configured, don't guard anything — let the app boot.
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    return response;
+  }
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

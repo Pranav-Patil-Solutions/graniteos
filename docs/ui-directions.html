@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GraniteOS — UI Directions</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#e9edec;color:#0f172a;padding:28px 18px}
+  .wrap{max-width:1140px;margin:0 auto}
+  h1{font-size:23px}.lead{color:#64748b;font-size:14px;margin:4px 0 22px}
+  .row{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start}
+  .col{width:330px}
+  .label{font-weight:800;font-size:15px;margin-bottom:2px}
+  .desc{font-size:12.5px;color:#64748b;margin-bottom:12px;min-height:52px}
+  .best{display:inline-block;font-size:10px;font-weight:800;background:#dcfce7;color:#166534;padding:2px 8px;border-radius:999px;margin-left:6px}
+  .phone{border-radius:30px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.16);height:560px;display:flex;flex-direction:column}
+  .scr{flex:1;overflow:auto;padding:22px 18px}
+  .nav{height:58px;display:flex;justify-content:space-around;align-items:center;font-size:9px}
+  .nav .ic{width:18px;height:18px;border:2px solid currentColor;border-radius:5px;margin:0 auto 3px}
+
+  /* ===== A · PREMIUM STONE ===== */
+  .A{background:#15181c}
+  .A .scr{color:#e8e6e1}
+  .A .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9a8a5f}
+  .A .name{font-family:Georgia,'Times New Roman',serif;font-size:26px;font-weight:600;margin-top:2px}
+  .A .co{color:#8a8madd;color:#9aa0a6;font-size:13px}
+  .A .gold{color:#c9a24b}
+  .A .card{background:#1d2127;border:1px solid #2b3038;border-radius:16px;padding:16px;margin-top:14px}
+  .A .big{font-family:Georgia,serif;font-size:24px;font-weight:600}
+  .A .rowst{display:flex;justify-content:space-between;align-items:center;padding:7px 0}
+  .A .rowst .l{color:#9aa0a6;font-size:13px}
+  .A .badge{display:inline-block;border:1px solid #c9a24b;color:#c9a24b;font-size:11px;font-weight:700;letter-spacing:.08em;padding:3px 12px;border-radius:999px;margin-top:12px;text-transform:uppercase}
+  .A .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .A .tile{background:#1d2127;border:1px solid #2b3038;border-radius:14px;padding:13px}
+  .A .tile .tt{font-weight:600}.A .tile .ts{font-size:11px;color:#9a8a5f;margin-top:3px}
+  .A .nav{background:#101317;border-top:1px solid #2b3038;color:#5c6470}
+  .A .nav .on{color:#c9a24b}
+
+  /* ===== B · BOLD & BIG ===== */
+  .B{background:#f5f7f6}
+  .B .scr{padding:0}
+  .B .hd{background:#0F4C35;color:#fff;padding:22px 18px 26px;border-radius:0 0 24px 24px}
+  .B .hd .g{font-size:13px;opacity:.85}
+  .B .hd .name{font-size:24px;font-weight:800;margin-top:1px}
+  .B .hd .co{font-size:13px;opacity:.85}
+  .B .hd .badge{display:inline-block;background:#fff;color:#0F4C35;font-size:12px;font-weight:800;padding:4px 12px;border-radius:999px;margin-top:12px}
+  .B .body{padding:16px 18px}
+  .B .money{background:#fff;border-radius:18px;border-left:7px solid #16a34a;padding:14px 16px;margin-bottom:10px;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+  .B .money.red{border-left-color:#dc2626}
+  .B .money .l{font-size:13px;color:#475569;font-weight:600}
+  .B .money .v{font-size:26px;font-weight:900;margin-top:2px}
+  .B .money .v.up{color:#15803d}.B .money .v.dn{color:#b91c1c}
+  .B .cta{background:#ea7a1c;color:#fff;text-align:center;font-weight:800;font-size:16px;padding:15px;border-radius:16px;margin-top:6px}
+  .B .nav{background:#fff;border-top:1px solid #e2e8f0;color:#94a3b8}
+  .B .nav .on{color:#0F4C35;font-weight:800}
+
+  /* ===== C · MODERN FINTECH ===== */
+  .C{background:linear-gradient(180deg,#e7f5ef,#f0fbf7 40%,#ffffff)}
+  .C .eyebrow{font-size:12px;color:#0f766e;font-weight:600}
+  .C .name{font-size:23px;font-weight:800;color:#0f172a;margin-top:1px}
+  .C .co{font-size:13px;color:#64748b}
+  .C .badge{display:inline-block;background:rgba(15,118,110,.12);color:#0f766e;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;margin-top:10px}
+  .C .hero{margin-top:14px;border-radius:22px;padding:18px;color:#fff;background:linear-gradient(135deg,#0F4C35,#0f766e);box-shadow:0 12px 26px rgba(15,118,110,.30)}
+  .C .hero .l{font-size:12px;opacity:.85}.C .hero .v{font-size:28px;font-weight:800;margin-top:2px}
+  .C .hero .sub{font-size:12px;opacity:.85;margin-top:6px}
+  .C .glass{background:rgba(255,255,255,.7);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.9);border-radius:18px;padding:14px;margin-top:12px;box-shadow:0 8px 20px rgba(15,76,53,.07)}
+  .C .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  .C .chip{background:#fff;border-radius:16px;padding:13px;box-shadow:0 6px 16px rgba(15,76,53,.06)}
+  .C .chip .tt{font-weight:700;font-size:13px}.C .chip .ts{font-size:11px;color:#94a3b8;margin-top:2px}
+  .C .nav{background:rgba(255,255,255,.8);backdrop-filter:blur(8px);border-top:1px solid #e2e8f0;color:#94a3b8}
+  .C .nav .on{color:#0f766e;font-weight:800}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Three ways your app could look</h1>
+  <p class="lead">Same dashboard, same data — three different "feels." Pick the direction and I'll redesign the real app around it.</p>
+
+  <div class="row">
+
+    <!-- A -->
+    <div class="col">
+      <div class="label">A · Premium Stone</div>
+      <div class="desc">Dark graphite + gold, elegant serif. Feels expensive &amp; high-status — “this is serious software.”</div>
+      <div class="phone A">
+        <div class="scr">
+          <div class="eyebrow">Good morning</div>
+          <div class="name">Ramesh Sharma</div>
+          <div class="co">Sharma Stone Industries</div>
+          <span class="badge">Owner</span>
+          <div class="card">
+            <div class="rowst"><span class="l">Cash today</span><span class="big gold">+₹2,40,000</span></div>
+            <div class="rowst"><span class="l">Udhaar pending</span><span style="font-weight:600">₹6,10,000</span></div>
+          </div>
+          <div class="tiles">
+            <div class="tile"><div class="tt">Stock</div><div class="ts">412 slabs</div></div>
+            <div class="tile"><div class="tt gold">Recovery ⭐</div><div class="ts">71% avg</div></div>
+            <div class="tile"><div class="tt">Bills</div><div class="ts">GST ready</div></div>
+            <div class="tile"><div class="tt">Khata</div><div class="ts">3 due</div></div>
+          </div>
+        </div>
+        <div class="nav A"><div class="on"><div class="ic"></div>Home</div><div><div class="ic"></div>Stock</div><div><div class="ic"></div>Bills</div><div><div class="ic"></div>Khata</div></div>
+      </div>
+    </div>
+
+    <!-- B -->
+    <div class="col">
+      <div class="label">B · Bold &amp; Big <span class="best">easiest for owners</span></div>
+      <div class="desc">Big numbers, high contrast, large buttons. Built for a 45-year-old owner in bright sunlight — fast &amp; obvious.</div>
+      <div class="phone B">
+        <div class="scr">
+          <div class="hd">
+            <div class="g">Good morning,</div>
+            <div class="name">Ramesh Sharma</div>
+            <div class="co">Sharma Stone Industries</div>
+            <span class="badge">OWNER</span>
+          </div>
+          <div class="body">
+            <div class="money"><div class="l">Cash in today</div><div class="v up">+ ₹2,40,000</div></div>
+            <div class="money red"><div class="l">Udhaar pending</div><div class="v dn">₹6,10,000</div></div>
+            <div class="cta">＋ New GST Bill</div>
+          </div>
+        </div>
+        <div class="nav B"><div class="on"><div class="ic"></div>Home</div><div><div class="ic"></div>Stock</div><div><div class="ic"></div>Bills</div><div><div class="ic"></div>Khata</div></div>
+      </div>
+    </div>
+
+    <!-- C -->
+    <div class="col">
+      <div class="label">C · Modern Fintech</div>
+      <div class="desc">Airy, glassy cards, soft gradients. Feels like a slick new-age money app (Cred / Jupiter style) — modern &amp; trustworthy.</div>
+      <div class="phone C">
+        <div class="scr">
+          <div class="eyebrow">Good morning</div>
+          <div class="name">Ramesh Sharma</div>
+          <div class="co">Sharma Stone Industries</div>
+          <span class="badge">Owner</span>
+          <div class="hero">
+            <div class="l">Cash in today</div>
+            <div class="v">+ ₹2,40,000</div>
+            <div class="sub">⭐ Recovery up 4% — ₹1.9L saved this month</div>
+          </div>
+          <div class="glass">
+            <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#64748b">Udhaar pending</span><b>₹6,10,000</b></div>
+          </div>
+          <div class="grid">
+            <div class="chip"><div class="tt">📦 Stock</div><div class="ts">412 slabs</div></div>
+            <div class="chip"><div class="tt">⭐ Recovery</div><div class="ts">71% avg</div></div>
+          </div>
+        </div>
+        <div class="nav C"><div class="on"><div class="ic"></div>Home</div><div><div class="ic"></div>Stock</div><div><div class="ic"></div>Bills</div><div><div class="ic"></div>Khata</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
