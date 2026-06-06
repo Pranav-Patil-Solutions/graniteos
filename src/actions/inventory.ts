@@ -19,7 +19,12 @@ export async function addBlock(input: unknown) {
       company_id: me.company_id,
       label: v.label,
       material: v.material,
-      weight_tonnes: v.weightTonnes,
+      color: v.color || null,
+      length_cm: v.lengthCm ?? null,
+      width_cm: v.widthCm ?? null,
+      height_cm: v.heightCm ?? null,
+      weight_tonnes: v.weightTonnes ?? null,
+      origin: v.origin || null,
       supplier: v.supplier || null,
       cost_paise: v.costRupees ? rupeesToPaise(v.costRupees) : 0,
     })
@@ -41,9 +46,14 @@ export async function addSlab(input: unknown) {
   const { error } = await supabase.from("slabs").insert({
     company_id: me.company_id,
     block_id: v.blockId,
+    bundle_no: v.bundleNo || null,
+    slab_no: v.slabNo ?? null,
     length_in: v.lengthIn,
     width_in: v.widthIn,
+    net_sqft: v.netSqft ?? null,
     thickness_mm: v.thicknessMm ?? null,
+    finish: v.finish || null,
+    grade: v.grade || null,
     godown: v.godown || null,
     rate_paise: v.rateRupees ? rupeesToPaise(v.rateRupees) : 0,
   });

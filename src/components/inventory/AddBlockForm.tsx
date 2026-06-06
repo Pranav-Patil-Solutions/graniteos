@@ -11,6 +11,14 @@ export default function AddBlockForm() {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [l, setL] = useState("");
+  const [w, setW] = useState("");
+  const [h, setH] = useState("");
+
+  const cbm =
+    Number(l) > 0 && Number(w) > 0 && Number(h) > 0
+      ? (Number(l) * Number(w) * Number(h)) / 1_000_000
+      : 0;
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -20,13 +28,21 @@ export default function AddBlockForm() {
     const res = await addBlock({
       label: fd.get("label"),
       material: fd.get("material"),
-      weightTonnes: fd.get("weightTonnes"),
+      color: fd.get("color") ?? "",
+      lengthCm: fd.get("lengthCm") || undefined,
+      widthCm: fd.get("widthCm") || undefined,
+      heightCm: fd.get("heightCm") || undefined,
+      weightTonnes: fd.get("weightTonnes") || undefined,
+      origin: fd.get("origin") ?? "",
       supplier: fd.get("supplier") ?? "",
       costRupees: fd.get("costRupees") || undefined,
     });
     setLoading(false);
     if (res.error) return setError(res.error);
     (e.target as HTMLFormElement).reset();
+    setL("");
+    setW("");
+    setH("");
     setOpen(false);
     router.refresh();
   }
@@ -48,13 +64,31 @@ export default function AddBlockForm() {
       className="rounded-2xl border border-graphite-600 bg-white/[0.04] p-4 space-y-3"
     >
       <p className="font-bold text-white">New block</p>
-      <Field name="label" label="Block name / number" placeholder="Black Galaxy #1" required />
-      <Field name="material" label="Material" placeholder="Black Galaxy granite" required />
+      <Field name="label" label="Block no. / name" placeholder="BL-118 / Black Galaxy #1" required />
       <div className="grid grid-cols-2 gap-3">
-        <Field name="weightTonnes" label="Weight (tonnes)" placeholder="18.4" type="number" step="0.01" required />
-        <Field name="costRupees" label="Cost (₹, optional)" placeholder="120000" type="number" />
+        <Field name="material" label="Material" placeholder="Black Galaxy" required />
+        <Field name="color" label="Colour (opt.)" placeholder="Black w/ gold" />
       </div>
-      <Field name="supplier" label="Supplier (optional)" placeholder="Patel Stone" />
+
+      <p className="text-xs font-semibold text-slate-400 pt-1">Block size (cm) → CBM</p>
+      <div className="grid grid-cols-3 gap-2">
+        <Field name="lengthCm" label="Length" placeholder="280" num value={l} onChange={setL} />
+        <Field name="widthCm" label="Width" placeholder="180" num value={w} onChange={setW} />
+        <Field name="heightCm" label="Height" placeholder="160" num value={h} onChange={setH} />
+      </div>
+      <div className="rounded-lg bg-gold/[0.06] border border-[#3a3320] px-3 py-2 text-sm text-gold">
+        = <span className="font-bold">{cbm.toFixed(3)}</span> CBM (cubic metres)
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <Field name="weightTonnes" label="Weight t (opt.)" placeholder="18.4" num />
+        <Field name="costRupees" label="Cost ₹ (opt.)" placeholder="120000" num />
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <Field name="supplier" label="Supplier (opt.)" placeholder="Patel Stone" />
+        <Field name="origin" label="Quarry / origin (opt.)" placeholder="Chamarajanagar" />
+      </div>
+
       {error && <ErrorPill>{error}</ErrorPill>}
       <div className="flex gap-2">
         <Button type="submit" variant="press" className="flex-1" disabled={loading}>
@@ -76,16 +110,18 @@ function Field({
   name,
   label,
   placeholder,
-  type = "text",
-  step,
   required,
+  num,
+  value,
+  onChange,
 }: {
   name: string;
   label: string;
   placeholder?: string;
-  type?: string;
-  step?: string;
   required?: boolean;
+  num?: boolean;
+  value?: string;
+  onChange?: (v: string) => void;
 }) {
   return (
     <label className="block">
@@ -93,11 +129,12 @@ function Field({
       <input
         suppressHydrationWarning
         name={name}
-        type={type}
-        step={step}
-        inputMode={type === "number" ? "decimal" : undefined}
+        type={num ? "number" : "text"}
+        step="0.01"
+        inputMode={num ? "decimal" : undefined}
         required={required}
         placeholder={placeholder}
+        {...(onChange ? { value, onChange: (e) => onChange(e.target.value) } : {})}
         className="mt-1 w-full text-base focus:border-gold outline-none"
       />
     </label>

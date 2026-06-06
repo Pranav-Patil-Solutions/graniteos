@@ -40,20 +40,46 @@ export const companySetupSchema = z.object({
 
 const numericFromInput = z.coerce.number();
 
+// Industry-standard option lists for the stone trade.
+export const STONE_FINISHES = [
+  "Polished",
+  "Honed",
+  "Leather",
+  "Flamed",
+  "Brushed",
+  "Sandblasted",
+] as const;
+export const STONE_GRADES = ["Premium", "Standard", "Commercial"] as const;
+export const SLAB_THICKNESSES_MM = [16, 18, 20, 30] as const;
+
+const optText = (max: number) => z.string().trim().max(max).optional().or(z.literal(""));
+
 export const blockSchema = z.object({
-  label: z.string().trim().min(1, "Give the block a name").max(80),
+  label: z.string().trim().min(1, "Give the block a name / number").max(80),
   material: z.string().trim().min(1, "Material is required").max(60),
-  weightTonnes: numericFromInput.positive("Weight must be greater than 0"),
-  supplier: z.string().trim().max(80).optional().or(z.literal("")),
+  color: optText(60),
+  // Block dimensions in cm → CBM (the industry block measure)
+  lengthCm: numericFromInput.min(0).optional(),
+  widthCm: numericFromInput.min(0).optional(),
+  heightCm: numericFromInput.min(0).optional(),
+  weightTonnes: numericFromInput.min(0).optional(),
+  origin: optText(60),
+  supplier: optText(80),
   costRupees: numericFromInput.min(0).optional(),
 });
 
 export const slabSchema = z.object({
   blockId: z.string().uuid(),
+  bundleNo: optText(40),
+  slabNo: numericFromInput.int().min(0).optional(),
+  // gross slab size: length × height (in) → sq-ft
   lengthIn: numericFromInput.positive("Length must be greater than 0"),
-  widthIn: numericFromInput.positive("Width must be greater than 0"),
+  widthIn: numericFromInput.positive("Height must be greater than 0"),
+  netSqft: numericFromInput.min(0).optional(),
   thicknessMm: numericFromInput.min(0).optional(),
-  godown: z.string().trim().max(60).optional().or(z.literal("")),
+  finish: optText(20),
+  grade: optText(20),
+  godown: optText(60),
   rateRupees: numericFromInput.min(0).optional(),
 });
 
