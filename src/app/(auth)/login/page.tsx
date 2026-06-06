@@ -2,7 +2,9 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
 import { sendOtp, verifyOtp } from "@/actions/auth";
+import { Button } from "@/components/ui/Button";
 
 function LoginInner() {
   const router = useRouter();
@@ -39,13 +41,17 @@ function LoginInner() {
   }
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="flex flex-col items-center text-center mb-8">
-        <div className="w-14 h-14 rounded-2xl bg-granite-green text-white flex items-center justify-center text-2xl font-bold">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-granite-green to-granite-green2 text-white grid place-items-center text-2xl font-extrabold shadow-lg shadow-granite-green2/40">
           G
         </div>
-        <h1 className="mt-4 text-2xl font-bold text-slate-900">GraniteOS</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="mt-4 text-2xl font-bold text-white">GraniteOS</h1>
+        <p className="mt-1 text-sm text-slate-400">
           {step === "phone"
             ? "Sign in to your granite business"
             : `Enter the code sent to ${phone}`}
@@ -55,25 +61,25 @@ function LoginInner() {
       {step === "phone" ? (
         <form onSubmit={onSendOtp} className="space-y-4">
           <label className="block">
-            <span className="text-sm font-medium text-slate-700">Phone number</span>
+            <span className="text-sm font-medium text-slate-300">Phone number</span>
             <input
               type="tel"
               inputMode="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+91 99999 99999"
-              className="mt-1.5 w-full rounded-xl border border-slate-300 px-4 text-base focus:border-granite-green focus:ring-2 focus:ring-granite-green/20 outline-none"
+              className="mt-1.5 w-full text-base focus:border-gold outline-none"
             />
           </label>
           {error && <ErrorPill>{error}</ErrorPill>}
-          <PrimaryButton loading={loading}>
+          <Button type="submit" variant="press" className="w-full" disabled={loading}>
             {loading ? "Sending..." : "Send OTP"}
-          </PrimaryButton>
+          </Button>
         </form>
       ) : (
         <form onSubmit={onVerifyOtp} className="space-y-4">
           <label className="block">
-            <span className="text-sm font-medium text-slate-700">Verification code</span>
+            <span className="text-sm font-medium text-slate-300">Verification code</span>
             <input
               type="text"
               inputMode="numeric"
@@ -83,13 +89,13 @@ function LoginInner() {
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
               placeholder="••••••"
               style={{ height: 64 }}
-              className="mt-1.5 w-full rounded-xl border border-slate-300 px-4 text-center text-2xl tracking-[0.5em] focus:border-granite-green focus:ring-2 focus:ring-granite-green/20 outline-none"
+              className="mt-1.5 w-full text-center text-2xl tracking-[0.5em] focus:border-gold outline-none"
             />
           </label>
           {error && <ErrorPill>{error}</ErrorPill>}
-          <PrimaryButton loading={loading}>
+          <Button type="submit" variant="press" className="w-full" disabled={loading}>
             {loading ? "Verifying..." : "Verify & continue"}
-          </PrimaryButton>
+          </Button>
           <button
             type="button"
             onClick={() => {
@@ -97,13 +103,13 @@ function LoginInner() {
               setOtp("");
               setError("");
             }}
-            className="w-full text-sm text-slate-500 hover:text-slate-700"
+            className="w-full text-sm text-slate-500 hover:text-slate-300"
           >
             Use a different phone number
           </button>
         </form>
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -115,21 +121,9 @@ export default function LoginPage() {
   );
 }
 
-function PrimaryButton({ children, loading }: { children: React.ReactNode; loading?: boolean }) {
-  return (
-    <button
-      type="submit"
-      disabled={loading}
-      className="w-full rounded-xl bg-granite-green text-white font-semibold text-base disabled:opacity-60 hover:opacity-95 transition"
-    >
-      {children}
-    </button>
-  );
-}
-
 function ErrorPill({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-lg bg-red-50 text-red-700 text-sm px-3 py-2 border border-red-100">
+    <div className="rounded-lg bg-red-500/10 text-red-300 text-sm px-3 py-2 border border-red-500/20">
       {children}
     </div>
   );
