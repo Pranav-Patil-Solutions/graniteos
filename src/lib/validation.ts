@@ -1,9 +1,12 @@
 import { z } from "zod";
 
-export const phoneSchema = z
-  .string()
-  .trim()
-  .regex(/^\+?[1-9]\d{7,14}$/, "Enter a valid phone number");
+// Accepts any country (E.164), e.g. +91… or +49…. Spaces, dashes and brackets
+// are stripped so users can type "+49 151 2345 6789" naturally; the cleaned
+// value (e.g. "+4915123456789") is what gets sent to Supabase.
+export const phoneSchema = z.preprocess(
+  (v) => (typeof v === "string" ? v.replace(/[\s\-()]/g, "") : v),
+  z.string().regex(/^\+?[1-9]\d{7,14}$/, "Enter a valid phone number"),
+);
 
 export const otpSchema = z.string().trim().regex(/^\d{6}$/, "Enter the 6-digit code");
 

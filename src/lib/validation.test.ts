@@ -5,6 +5,14 @@ describe("phoneSchema", () => {
   it("accepts E.164-ish numbers", () => {
     expect(phoneSchema.safeParse("+919999999999").success).toBe(true);
   });
+  it("accepts a German (+49) number", () => {
+    expect(phoneSchema.safeParse("+4915123456789").success).toBe(true);
+  });
+  it("accepts numbers typed with spaces/dashes and cleans them", () => {
+    const r = phoneSchema.safeParse("+49 151 2345-6789");
+    expect(r.success).toBe(true);
+    if (r.success) expect(r.data).toBe("+4915123456789");
+  });
   it("rejects junk", () => {
     expect(phoneSchema.safeParse("abc").success).toBe(false);
   });
