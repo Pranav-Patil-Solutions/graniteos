@@ -1,10 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useEffect, useState } from "react";
 import { Box, Star, FileText } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { TiltCard } from "@/components/ui/TiltCard";
+import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 
 const SlabViewer = dynamic(() => import("@/components/three/SlabViewer"), {
   ssr: false,
@@ -15,75 +16,23 @@ const SlabViewer = dynamic(() => import("@/components/three/SlabViewer"), {
   ),
 });
 
-/* count-up hook */
-function useCountUp(target: number, dur = 1400, delay = 300) {
-  const [v, setV] = useState(0);
+export default function ShowcasePage() {
+  // The recovery ring drives a CSS conic-gradient angle, so it needs the raw
+  // animating number (AnimatedNumber only renders text).
+  const [recovery, setRecovery] = useState(0);
   useEffect(() => {
     let raf = 0;
     const t0 = performance.now();
+    const dur = 1400;
+    const delay = 700;
     const tick = (now: number) => {
       const t = Math.min(1, (now - t0 - delay) / dur);
-      if (t > 0) setV(Math.round(target * (1 - Math.pow(1 - t, 3))));
+      if (t > 0) setRecovery(Math.round(71 * (1 - Math.pow(1 - t, 3))));
       if (t < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [target, dur, delay]);
-  return v;
-}
-
-function TiltCard({
-  icon,
-  title,
-  sub,
-  wow,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  sub: string;
-  wow?: boolean;
-}) {
-  const rx = useSpring(useMotionValue(0), { stiffness: 200, damping: 15 });
-  const ry = useSpring(useMotionValue(0), { stiffness: 200, damping: 15 });
-  const ref = useRef<HTMLDivElement>(null);
-  return (
-    <motion.div
-      ref={ref}
-      onPointerMove={(e) => {
-        const r = ref.current!.getBoundingClientRect();
-        ry.set(((e.clientX - r.left) / r.width - 0.5) * 18);
-        rx.set((0.5 - (e.clientY - r.top) / r.height) * 18);
-      }}
-      onPointerLeave={() => {
-        rx.set(0);
-        ry.set(0);
-      }}
-      style={{ rotateX: rx, rotateY: ry, transformStyle: "preserve-3d" }}
-      className={`rounded-2xl p-4 border ${
-        wow
-          ? "border-[#3a3320] bg-gradient-to-br from-[#1c1810] to-graphite-800"
-          : "border-graphite-500 bg-gradient-to-br from-graphite-700 to-graphite-800"
-      }`}
-    >
-      <div style={{ transform: "translateZ(30px)" }} className={wow ? "text-gold" : "text-graphite-200"}>
-        {icon}
-      </div>
-      <p
-        style={{ transform: "translateZ(22px)" }}
-        className={`font-bold mt-2 ${wow ? "text-gold" : "text-white"}`}
-      >
-        {title}
-      </p>
-      <p style={{ transform: "translateZ(14px)" }} className="text-xs text-slate-400 mt-1">
-        {sub}
-      </p>
-    </motion.div>
-  );
-}
-
-export default function ShowcasePage() {
-  const cash = useCountUp(240000);
-  const recovery = useCountUp(71, 1400, 700);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_70%_-10%,#1c2630,#0b0e11_60%)] text-[#e8e6e1] px-5 py-7">
@@ -116,9 +65,11 @@ export default function ShowcasePage() {
             <div className="text-slate-400 text-sm">Sharma Stone Industries</div>
             <div className="mt-4 rounded-2xl bg-white/[0.04] border border-graphite-600 p-5 backdrop-blur">
               <div className="text-xs text-slate-400">Cash in today</div>
-              <div className="text-3xl font-extrabold text-gold mt-0.5">
-                ₹{cash.toLocaleString("en-IN")}
-              </div>
+              <AnimatedNumber
+                value={240000}
+                prefix="₹"
+                className="block text-3xl font-extrabold text-gold mt-0.5"
+              />
               <div className="mt-2 text-xs text-granite-green2">
                 ▲ Recovery up 4% — ₹1.9L saved this month
               </div>
@@ -126,11 +77,41 @@ export default function ShowcasePage() {
           </div>
         </div>
 
-        {/* tilt cards */}
+        {/* tilt cards (shared TiltCard primitive) */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3.5 mt-6" style={{ perspective: 1000 }}>
-          <TiltCard icon={<Box />} title="Stock" sub="412 slabs · 18 blocks" />
-          <TiltCard icon={<Star />} title="Recovery Radar" sub="71% avg yield" wow />
-          <TiltCard icon={<FileText />} title="GST Bills" sub="auto 5% / 18%" />
+          <TiltCard>
+            <div style={{ transform: "translateZ(30px)" }} className="text-graphite-200">
+              <Box />
+            </div>
+            <p style={{ transform: "translateZ(22px)" }} className="font-bold mt-2 text-white">
+              Stock
+            </p>
+            <p style={{ transform: "translateZ(14px)" }} className="text-xs text-slate-400 mt-1">
+              412 slabs · 18 blocks
+            </p>
+          </TiltCard>
+          <TiltCard wow>
+            <div style={{ transform: "translateZ(30px)" }} className="text-gold">
+              <Star />
+            </div>
+            <p style={{ transform: "translateZ(22px)" }} className="font-bold mt-2 text-gold">
+              Recovery Radar
+            </p>
+            <p style={{ transform: "translateZ(14px)" }} className="text-xs text-slate-400 mt-1">
+              71% avg yield
+            </p>
+          </TiltCard>
+          <TiltCard>
+            <div style={{ transform: "translateZ(30px)" }} className="text-graphite-200">
+              <FileText />
+            </div>
+            <p style={{ transform: "translateZ(22px)" }} className="font-bold mt-2 text-white">
+              GST Bills
+            </p>
+            <p style={{ transform: "translateZ(14px)" }} className="text-xs text-slate-400 mt-1">
+              auto 5% / 18%
+            </p>
+          </TiltCard>
         </div>
 
         {/* recovery gauge */}
