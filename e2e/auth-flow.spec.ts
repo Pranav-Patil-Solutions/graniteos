@@ -11,7 +11,7 @@ test.describe("Auth → company → dashboard", () => {
   test("a phone login lands on setup or dashboard", async ({ page }) => {
     await page.goto("/login");
     await page.getByPlaceholder("+91 99999 99999").fill(TEST_PHONE);
-    await page.getByRole("button", { name: /Send OTP/i }).click();
+    await page.getByRole("button", { name: /Send code/i }).click();
 
     await page.getByPlaceholder("••••••").fill(TEST_OTP);
     await page.getByRole("button", { name: /Verify & continue/i }).click();
