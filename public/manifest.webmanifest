@@ -1,0 +1,9 @@
+{
+  "name": "GraniteOS",
+  "short_name": "GraniteOS",
+  "description": "Operating system for granite & marble businesses",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0F4C35"
+}
