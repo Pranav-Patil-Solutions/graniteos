@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { Boxes, FileText, Receipt, Users } from "lucide-react";
 import { requireSession } from "@/lib/auth";
-import { ROLE_LABELS, ROLE_BADGE } from "@/lib/roles";
 import { createClient } from "@/lib/supabase/server";
 import { can } from "@/lib/permissions";
+import { RoleBadge } from "@/components/ui/RoleBadge";
+import { TiltCard } from "@/components/ui/TiltCard";
 import SignOutButton from "@/components/auth/SignOutButton";
 
 function greeting() {
@@ -24,54 +26,57 @@ export default async function DashboardPage() {
   const isOwner = can(user.role, "inviteTeamMember");
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12">
+    <div className="max-w-lg mx-auto px-4 pt-12" style={{ perspective: 1000 }}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-slate-500">{greeting()},</p>
-          <h1 className="text-2xl font-bold text-slate-900">{user.name}</h1>
-          <p className="text-sm text-slate-500">{company?.name ?? ""}</p>
+          <p className="text-sm text-slate-400">{greeting()},</p>
+          <h1 className="text-2xl font-bold text-white">{user.name}</h1>
+          <p className="text-sm text-slate-400">{company?.name ?? ""}</p>
         </div>
         <SignOutButton />
       </div>
 
       <div className="mt-3">
-        <span
-          className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${ROLE_BADGE[user.role]}`}
-        >
-          {ROLE_LABELS[user.role]}
-        </span>
+        <RoleBadge role={user.role} />
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-3">
-        <Card title="Inventory" sub="Slice 3" />
-        <Card title="Orders" sub="Slice 4" />
-        <Card title="Quotes" sub="Slice 4" />
+        <TiltCard>
+          <Boxes className="text-slate-300" />
+          <p className="font-bold text-white mt-2">Inventory</p>
+          <p className="text-xs text-slate-500 mt-1">Slice 3</p>
+        </TiltCard>
+        <TiltCard>
+          <FileText className="text-slate-300" />
+          <p className="font-bold text-white mt-2">Orders</p>
+          <p className="text-xs text-slate-500 mt-1">Slice 4</p>
+        </TiltCard>
+        <TiltCard>
+          <Receipt className="text-slate-300" />
+          <p className="font-bold text-white mt-2">Quotes</p>
+          <p className="text-xs text-slate-500 mt-1">Slice 4</p>
+        </TiltCard>
         {isOwner ? (
-          <Link
-            href="/team"
-            className="rounded-2xl border border-granite-green/30 bg-granite-green/5 p-4 block"
-          >
-            <p className="font-semibold text-granite-green">Team</p>
-            <p className="text-xs text-granite-green/70 mt-1">Manage &amp; invite</p>
+          <Link href="/team" className="block">
+            <TiltCard wow>
+              <Users className="text-gold" />
+              <p className="font-bold text-gold mt-2">Team</p>
+              <p className="text-xs text-gold/70 mt-1">Manage &amp; invite</p>
+            </TiltCard>
           </Link>
         ) : (
-          <Card title="Payments" sub="Slice 6" />
+          <TiltCard>
+            <Receipt className="text-slate-300" />
+            <p className="font-bold text-white mt-2">Payments</p>
+            <p className="text-xs text-slate-500 mt-1">Slice 6</p>
+          </TiltCard>
         )}
       </div>
 
-      <div className="mt-6 rounded-xl bg-granite-green/5 border border-granite-green/20 p-4 text-sm text-granite-green">
-        ✅ Foundation (Slice 1) — auth, company setup, role-aware navigation, and
-        team management. Business modules land in later slices.
+      <div className="mt-6 rounded-2xl bg-gold/[0.06] border border-[#3a3320] p-4 text-sm text-gold">
+        ✅ Foundation (Slice 1) — auth, company setup, role-aware navigation, and team
+        management. Business modules land in later slices.
       </div>
-    </div>
-  );
-}
-
-function Card({ title, sub }: { title: string; sub: string }) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4">
-      <p className="font-semibold text-slate-800">{title}</p>
-      <p className="text-xs text-slate-400 mt-1">{sub}</p>
     </div>
   );
 }

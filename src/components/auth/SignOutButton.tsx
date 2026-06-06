@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { LogOut } from "lucide-react";
 import { signOutAction } from "@/actions/auth";
 
 export default function SignOutButton() {
@@ -13,9 +14,9 @@ export default function SignOutButton() {
   return (
     <button
       onClick={onClick}
-      className="text-sm text-slate-500 hover:text-slate-700 !min-h-0"
+      className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-200 !min-h-0"
     >
-      Sign out
+      <LogOut className="w-4 h-4" /> Sign out
     </button>
   );
 }
