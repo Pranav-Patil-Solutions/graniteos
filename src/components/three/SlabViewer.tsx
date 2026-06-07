@@ -42,7 +42,14 @@ export default function SlabViewer({
     const mount = mountRef.current;
     if (!mount) return;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch {
+      // WebGL blocked/unavailable (some browsers/extensions) — leave the
+      // CSS stone-swatch fallback showing behind this transparent layer.
+      return;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     const resize = () => renderer.setSize(mount.clientWidth, mount.clientHeight, false);
     resize();

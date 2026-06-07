@@ -5,6 +5,7 @@ import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR, formatINRPrecise } from "@/lib/money";
 import SlabViewer from "@/components/three/SlabViewer";
+import { StoneSwatch } from "@/components/inventory/StoneSwatch";
 import AddSlabForm from "@/components/inventory/AddSlabForm";
 import SlabStatus from "@/components/inventory/SlabStatus";
 import SlabPhoto from "@/components/inventory/SlabPhoto";
@@ -80,7 +81,13 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
       </Link>
 
       <div className="mt-3 relative h-52 rounded-3xl overflow-hidden border border-graphite-600 bg-gradient-to-b from-graphite-800 to-graphite-900 shadow-inner">
-        <SlabViewer material={block.material} color={block.color} className="w-full h-full" />
+        {/* fallback stone texture (shows if WebGL is blocked) */}
+        <StoneSwatch
+          material={block.material}
+          color={block.color}
+          className="absolute inset-0 opacity-30"
+        />
+        <SlabViewer material={block.material} color={block.color} className="absolute inset-0 w-full h-full" />
         <div className="absolute left-4 bottom-3 text-xs text-slate-400">
           👆 spin your <span className="text-gold font-semibold">{block.material}</span> slab
         </div>
