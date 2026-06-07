@@ -147,6 +147,33 @@ export const paymentSchema = z.object({
 });
 export type PaymentInput = z.infer<typeof paymentSchema>;
 
+export const FAB_STAGES = [
+  "queued",
+  "cutting",
+  "polishing",
+  "edging",
+  "qc",
+  "ready",
+  "dispatched",
+] as const;
+export const FAB_MACHINES = [
+  "Gangsaw",
+  "Block Cutter",
+  "Polishing Line",
+  "CNC",
+  "Edge Polisher",
+  "Manual",
+] as const;
+
+export const jobSchema = z.object({
+  title: z.string().trim().min(1, "Job title required").max(120),
+  material: optText(60),
+  qtySqft: numericFromInput.min(0).optional(),
+  machine: optText(40),
+  notes: optText(300),
+});
+export type JobInput = z.infer<typeof jobSchema>;
+
 export const inviteSchema = z.object({
   name: z.string().trim().min(2).max(60),
   phone: phoneSchema,

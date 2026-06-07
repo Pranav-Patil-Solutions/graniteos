@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Boxes, FileText, Receipt, Users, UserRound, Truck, Wallet } from "lucide-react";
+import { Boxes, FileText, Receipt, Users, UserRound, Truck, Wallet, Factory } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { can } from "@/lib/permissions";
@@ -81,6 +81,13 @@ export default async function DashboardPage() {
             <Wallet className="text-gold" />
             <p className="font-bold text-white mt-2">Money</p>
             <p className="text-xs text-slate-400 mt-1">Bills &amp; udhaar</p>
+          </TiltCard>
+        </Link>
+        <Link href="/fabrication" className="block">
+          <TiltCard>
+            <Factory className="text-gold" />
+            <p className="font-bold text-white mt-2">Fabrication</p>
+            <p className="text-xs text-slate-400 mt-1">Production &amp; QC</p>
           </TiltCard>
         </Link>
         {isOwner && (
