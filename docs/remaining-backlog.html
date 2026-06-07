@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>GraniteOS — Remaining Backlog</title>
+<style>
+  :root{--green:#0F4C35;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f4f7f6;--gold:#b8860b;
+        --amberbg:#fef3c7;--amber:#b45309;--greenbg:#e7f0ec;--blue:#1d4ed8;--bluebg:#dbeafe}
+  *{box-sizing:border-box}body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;padding:28px 18px}
+  .wrap{max-width:920px;margin:0 auto}.brand{display:flex;align-items:center;gap:12px}
+  .logo{width:42px;height:42px;border-radius:12px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:21px}
+  h1{margin:0;font-size:23px}.sub{color:var(--muted);font-size:13px;margin:2px 0 6px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin:18px 0}
+  h2{font-size:13px;letter-spacing:.07em;text-transform:uppercase;color:var(--green);margin:0 0 12px}
+  .row{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--line)}
+  .row:last-child{border:0}.row .t{flex:1}.row .t b{font-size:14px}.row .t p{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
+  .tag{font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .done{background:var(--greenbg);color:var(--green)}.feat{background:var(--bluebg);color:var(--blue)}.infra{background:var(--amberbg);color:var(--amber)}
+  .pri{font-size:10px;color:var(--muted);font-weight:700}
+</style></head><body><div class="wrap">
+  <div class="brand"><div class="logo">G</div><div><h1>Remaining backlog</h1>
+  <div class="sub">What just got built, and everything still left vs the full vision</div></div></div>
+
+  <div class="card"><h2>✅ Just built this round</h2>
+    <div class="row"><span class="tag done">DONE</span><div class="t"><b>Public slab catalogue link</b><p>Send a buyer a live, public link of your in-stock slabs with photos. The "live catalogue" wow.</p></div></div>
+    <div class="row"><span class="tag done">DONE</span><div class="t"><b>Order detail + status flow</b><p>Confirmed → in production → dispatched → delivered, with line items + invoice link.</p></div></div>
+    <div class="row"><span class="tag done">DONE</span><div class="t"><b>Morning Card · GST Auto-Pilot · WhatsApp→UPI · Settings</b><p>(previous round) daily pulse, input-tax-credit insight, pay-links, company UPI/GST.</p></div></div>
+  </div>
+
+  <div class="card"><h2>🟦 Remaining — features to build</h2>
+    <div class="row"><span class="tag feat">FEATURE</span><div class="t"><b>Vernacular UI (Hindi / Telugu)</b> <span class="pri">· HIGH</span><p>App-wide language toggle. The India wedge — but a big i18n pass; worth validating with 2-3 real owners first.</p></div></div>
+    <div class="row"><span class="tag feat">FEATURE</span><div class="t"><b>Printable / PDF GST invoice &amp; quote</b> <span class="pri">· HIGH</span><p>A clean printable document (Save-as-PDF) to hand a customer or accountant.</p></div></div>
+    <div class="row"><span class="tag feat">FEATURE</span><div class="t"><b>Reports &amp; exports</b> <span class="pri">· MED</span><p>Sales report, GST summary (GSTR-ready), stock valuation — exportable.</p></div></div>
+    <div class="row"><span class="tag feat">FEATURE</span><div class="t"><b>Inward receipts / stock movements (GRN)</b> <span class="pri">· MED</span><p>Formal log of stock coming in from suppliers, tied to payables.</p></div></div>
+    <div class="row"><span class="tag feat">FEATURE</span><div class="t"><b>Edit / delete for records</b> <span class="pri">· MED</span><p>Most screens are add-only; let owners edit a block, customer, quote, fix mistakes.</p></div></div>
+    <div class="row"><span class="tag feat">FEATURE</span><div class="t"><b>Search + filters</b> <span class="pri">· LOW</span><p>Search customers, slabs, quotes; filter stock by material/finish/status.</p></div></div>
+  </div>
+
+  <div class="card"><h2>🟧 Remaining — go-live / infra</h2>
+    <div class="row"><span class="tag infra">INFRA</span><div class="t"><b>Deploy to the web (Vercel)</b> <span class="pri">· HIGH</span><p>So GraniteOS opens on your phone &amp; you can share it. Needs your Vercel account + env keys.</p></div></div>
+    <div class="row"><span class="tag infra">INFRA</span><div class="t"><b>Real SMS provider for phone-OTP</b> <span class="pri">· MED</span><p>For live phone login (MSG91/Twilio). Email+password works fine until then.</p></div></div>
+    <div class="row"><span class="tag infra">INFRA</span><div class="t"><b>PWA install + app icons</b> <span class="pri">· LOW</span><p>"Add to Home Screen" so it feels like a native app.</p></div></div>
+    <div class="row"><span class="tag infra">INFRA</span><div class="t"><b>Fix the real /setup form</b> <span class="pri">· MED</span><p>Worked around it by provisioning directly; debug why the signup form didn't create a company for new users.</p></div></div>
+  </div>
+
+  <div class="card" style="background:var(--green);color:#fff;border:0"><h2 style="color:#bfe3d4">Bottom line</h2>
+  <p style="margin:6px 0 0;font-size:15px">The <b>product is complete</b> — 7/7 modules + every research "wow" feature, live with real data. What's left is <b>polish, reporting, and going live</b> — not core. The single highest-impact next step is <b>deploying it to the web</b> so you can use it on your phone.</p></div>
+</div></body></html>

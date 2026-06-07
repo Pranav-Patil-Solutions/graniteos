@@ -23,7 +23,7 @@ export const TABS: Record<TabKey, { label: string; href: string }> = {
   inventory: { label: "Inventory", href: "/inventory" },
   orders: { label: "Orders", href: "/orders" },
   quotes: { label: "Quotes", href: "/quotes" },
-  payments: { label: "Payments", href: "/payments" },
+  payments: { label: "Money", href: "/money" },
   fabrication: { label: "Fabrication", href: "/fabrication" },
 };
 
