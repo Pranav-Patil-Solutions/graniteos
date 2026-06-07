@@ -9,6 +9,7 @@ import {
   Wallet,
   Factory,
   Sparkles,
+  Settings,
 } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -16,6 +17,7 @@ import { can } from "@/lib/permissions";
 import { RoleBadge } from "@/components/ui/RoleBadge";
 import { TiltCard } from "@/components/ui/TiltCard";
 import SignOutButton from "@/components/auth/SignOutButton";
+import MorningCard from "@/components/dashboard/MorningCard";
 
 function greeting() {
   const h = new Date().getHours();
@@ -43,12 +45,21 @@ export default async function DashboardPage() {
           <h1 className="text-2xl font-bold text-white">{user.name}</h1>
           <p className="text-sm text-slate-400">{company?.name ?? ""}</p>
         </div>
-        <SignOutButton />
+        <div className="flex items-center gap-3">
+          {isOwner && (
+            <Link href="/settings" className="text-slate-400 hover:text-gold">
+              <Settings className="w-5 h-5" />
+            </Link>
+          )}
+          <SignOutButton />
+        </div>
       </div>
 
       <div className="mt-3">
         <RoleBadge role={user.role} />
       </div>
+
+      <MorningCard companyId={user.company_id} />
 
       <div className="mt-6 grid grid-cols-2 gap-3">
         <Link href="/inventory" className="block">

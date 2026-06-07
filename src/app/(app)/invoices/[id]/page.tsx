@@ -5,11 +5,18 @@ import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR } from "@/lib/money";
 import RecordPaymentForm from "@/components/money/RecordPaymentForm";
+import ShareWhatsApp from "@/components/money/ShareWhatsApp";
 
 export default async function InvoicePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  await requireSession();
+  const me = await requireSession();
   const supabase = await createClient();
+
+  const { data: company } = await supabase
+    .from("companies")
+    .select("name, upi_id")
+    .eq("id", me.company_id)
+    .single();
 
   const { data: invoice } = await supabase
     .from("invoices")
@@ -33,9 +40,22 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
     reference: string | null;
   }[];
 
-  const customer = (invoice as unknown as { parties?: { name: string; city: string | null } }).parties;
+  const customer = (
+    invoice as unknown as { parties?: { name: string; phone: string | null; city: string | null } }
+  ).parties;
   const paid = pays.reduce((n, p) => n + Number(p.amount_paise), 0);
   const outstanding = Number(invoice.total_paise) - paid;
+
+  const upi = company?.upi_id;
+  const upiLink =
+    upi && outstanding > 0
+      ? `\nUPI link: upi://pay?pa=${upi}&pn=${encodeURIComponent(company?.name ?? "")}&am=${Math.round(outstanding / 100)}&cu=INR`
+      : "";
+  const waMessage =
+    `Hello ${customer?.name ?? ""}, invoice ${invoice.invoice_no ?? ""} from ${company?.name ?? ""}.\n` +
+    `Total: ${formatINR(invoice.total_paise)} · Paid: ${formatINR(paid)} · Outstanding: ${formatINR(outstanding)}.` +
+    (upi ? `\n\nPay via UPI: ${upi}${upiLink}` : "") +
+    `\n\nThank you!`;
 
   return (
     <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
@@ -95,6 +115,14 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
           </div>
         </div>
       )}
+
+      <div className="mt-4">
+        <ShareWhatsApp
+          phone={customer?.phone ?? null}
+          label={outstanding > 0 ? "Send bill + UPI on WhatsApp" : "Send receipt on WhatsApp"}
+          message={waMessage}
+        />
+      </div>
 
       <RecordPaymentForm invoiceId={id} outstandingPaise={outstanding} />
     </div>

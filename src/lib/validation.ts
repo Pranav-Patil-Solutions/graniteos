@@ -174,6 +174,14 @@ export const jobSchema = z.object({
 });
 export type JobInput = z.infer<typeof jobSchema>;
 
+export const companySettingsSchema = z.object({
+  name: z.string().trim().min(2, "Company name required").max(100),
+  city: optText(60),
+  gstNumber: optText(20),
+  upiId: optText(60),
+  quoteTerms: optText(300),
+});
+
 export const inviteSchema = z.object({
   name: z.string().trim().min(2).max(60),
   phone: phoneSchema,

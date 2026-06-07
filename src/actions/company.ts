@@ -1,7 +1,10 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { companySetupSchema } from "@/lib/validation";
+import { requireSession } from "@/lib/auth";
+import { can } from "@/lib/permissions";
+import { companySetupSchema, companySettingsSchema } from "@/lib/validation";
 
 export async function setupCompany(input: unknown) {
   const parsed = companySetupSchema.safeParse(input);
@@ -26,5 +29,30 @@ export async function setupCompany(input: unknown) {
     if (error.message.includes("already_setup")) return { error: "Company already set up." };
     return { error: error.message };
   }
+  return { ok: true as const };
+}
+
+export async function updateCompany(input: unknown) {
+  const me = await requireSession();
+  if (!can(me.role, "viewCompanySettings")) return { error: "Only the owner can edit settings." };
+  const parsed = companySettingsSchema.safeParse(input);
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  const v = parsed.data;
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("companies")
+    .update({
+      name: v.name,
+      city: v.city || null,
+      gst_number: v.gstNumber || null,
+      upi_id: v.upiId || null,
+      quote_terms_text: v.quoteTerms || null,
+    })
+    .eq("id", me.company_id);
+  if (error) return { error: error.message };
+
+  revalidatePath("/settings");
+  revalidatePath("/dashboard");
   return { ok: true as const };
 }

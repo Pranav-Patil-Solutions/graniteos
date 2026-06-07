@@ -5,6 +5,7 @@ import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR, formatINRPrecise } from "@/lib/money";
 import QuoteActions from "@/components/quotes/QuoteActions";
+import ShareWhatsApp from "@/components/money/ShareWhatsApp";
 
 type Item = {
   id: string;
@@ -17,8 +18,13 @@ type Item = {
 
 export default async function QuotePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  await requireSession();
+  const me = await requireSession();
   const supabase = await createClient();
+  const { data: company } = await supabase
+    .from("companies")
+    .select("name, upi_id")
+    .eq("id", me.company_id)
+    .single();
 
   const { data: quote } = await supabase
     .from("quotes")
@@ -100,6 +106,20 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
       </div>
 
       {quote.notes && <p className="mt-3 text-xs text-slate-400">Terms: {quote.notes}</p>}
+
+      <div className="mt-4">
+        <ShareWhatsApp
+          phone={customer?.phone ?? null}
+          label="Send quote on WhatsApp"
+          message={
+            `Hello ${customer?.name ?? ""}, here is your quote ${quote.quote_no ?? ""} from ${company?.name ?? ""}.\n` +
+            `Total: ${formatINR(quote.total_paise)} (incl. GST).` +
+            (quote.notes ? `\nTerms: ${quote.notes}` : "") +
+            (company?.upi_id ? `\n\nPay via UPI: ${company.upi_id}` : "") +
+            `\n\nThank you!`
+          }
+        />
+      </div>
 
       <QuoteActions quoteId={id} status={quote.status} hasOrder={!!order} />
     </div>
