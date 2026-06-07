@@ -221,6 +221,18 @@ function LoginInner() {
           </button>
         </form>
       )}
+
+      <p className="mt-6 text-center text-[11px] text-slate-500">
+        By continuing you agree to our{" "}
+        <a href="/terms" className="text-slate-400 hover:text-gold underline">
+          Terms
+        </a>{" "}
+        &amp;{" "}
+        <a href="/privacy" className="text-slate-400 hover:text-gold underline">
+          Privacy
+        </a>
+        .
+      </p>
     </motion.div>
   );
 }

@@ -1,7 +1,16 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_PREFIXES = ["/login", "/invite", "/api/auth", "/showcase", "/catalog", "/s"];
+const PUBLIC_PREFIXES = [
+  "/login",
+  "/invite",
+  "/api/auth",
+  "/showcase",
+  "/catalog",
+  "/s",
+  "/terms",
+  "/privacy",
+];
 
 function isPublic(path: string) {
   if (path === "/") return true;
