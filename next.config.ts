@@ -9,6 +9,10 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Don't ship readable source maps to the browser (harder to reverse-engineer).
+  productionBrowserSourceMaps: false,
+  // Hide the framework fingerprint.
+  poweredByHeader: false,
   experimental: {
     serverActions: {
       allowedOrigins: ["localhost:3000", "graniteos.vercel.app"],
