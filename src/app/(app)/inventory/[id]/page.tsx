@@ -4,7 +4,7 @@ import { ChevronLeft } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR, formatINRPrecise } from "@/lib/money";
-import { StoneSwatch } from "@/components/inventory/StoneSwatch";
+import SlabViewer from "@/components/three/SlabViewer";
 import AddSlabForm from "@/components/inventory/AddSlabForm";
 import SlabStatus from "@/components/inventory/SlabStatus";
 import SlabPhoto from "@/components/inventory/SlabPhoto";
@@ -70,25 +70,25 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
         <ChevronLeft className="w-4 h-4" /> Stock
       </Link>
 
-      <div className="mt-3 flex items-center gap-4">
-        <StoneSwatch
-          material={block.material}
-          color={block.color}
-          className="w-20 h-20 rounded-2xl shrink-0 border border-white/10"
-        />
-        <div className="min-w-0">
-          <h1 className="text-2xl font-bold text-white truncate">{block.label}</h1>
-          <p className="text-sm text-slate-400">
-            {block.material}
-            {block.color ? ` · ${block.color}` : ""}
-          </p>
-          <p className="text-xs text-slate-500">
-            {cbm > 0 ? `${cbm.toFixed(2)} CBM` : ""}
-            {block.weight_tonnes ? ` · ${block.weight_tonnes} t` : ""}
-            {block.origin ? ` · ${block.origin}` : ""}
-            {block.supplier ? ` · ${block.supplier}` : ""}
-          </p>
+      <div className="mt-3 relative h-52 rounded-3xl overflow-hidden border border-graphite-600 bg-gradient-to-b from-graphite-800 to-graphite-900 shadow-inner">
+        <SlabViewer material={block.material} color={block.color} className="w-full h-full" />
+        <div className="absolute left-4 bottom-3 text-xs text-slate-400">
+          👆 spin your <span className="text-gold font-semibold">{block.material}</span> slab
         </div>
+      </div>
+
+      <div className="mt-3">
+        <h1 className="text-2xl font-bold text-white">{block.label}</h1>
+        <p className="text-sm text-slate-400">
+          {block.material}
+          {block.color ? ` · ${block.color}` : ""}
+        </p>
+        <p className="text-xs text-slate-500">
+          {cbm > 0 ? `${cbm.toFixed(2)} CBM` : ""}
+          {block.weight_tonnes ? ` · ${block.weight_tonnes} t` : ""}
+          {block.origin ? ` · ${block.origin}` : ""}
+          {block.supplier ? ` · ${block.supplier}` : ""}
+        </p>
       </div>
 
       <div className="mt-4 grid grid-cols-3 gap-3">

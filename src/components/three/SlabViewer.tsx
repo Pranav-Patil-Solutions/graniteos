@@ -3,12 +3,39 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
-/**
- * A draggable, auto-rotating 3D granite slab with a procedurally generated
- * "Black Galaxy" texture (black with gold + white flecks). Pure Three.js so it
- * stays light and avoids React-19 renderer version churn.
- */
-export default function SlabViewer({ className = "" }: { className?: string }) {
+type Pal = { base: string; flecks: [string, number][] };
+
+// fleck colours are "r,g,b"; numbers are cumulative-ish weights
+const PALETTES: Record<string, Pal> = {
+  black: { base: "#0c0c0e", flecks: [["40,40,46", 0.78], ["201,162,75", 0.18], ["230,230,235", 0.04]] },
+  white: { base: "#e7e6e1", flecks: [["120,120,130", 0.5], ["180,178,172", 0.5]] },
+  grey: { base: "#2a2f37", flecks: [["255,255,255", 0.4], ["10,10,12", 0.6]] },
+  brown: { base: "#2c2017", flecks: [["214,180,120", 0.5], ["20,12,6", 0.5]] },
+  green: { base: "#0e2018", flecks: [["180,210,180", 0.4], ["220,235,220", 0.2], ["8,18,12", 0.4]] },
+  red: { base: "#2a0f0f", flecks: [["240,220,210", 0.3], ["20,6,6", 0.7]] },
+  default: { base: "#15151a", flecks: [["201,162,75", 0.5], ["230,230,235", 0.5]] },
+};
+
+function paletteKey(material?: string, color?: string): string {
+  const s = `${material ?? ""} ${color ?? ""}`.toLowerCase();
+  if (/black|galaxy|absolute|jet/.test(s)) return "black";
+  if (/white|carrara|statuario|makrana|albeta|morwad/.test(s)) return "white";
+  if (/grey|gray|steel|kuppam|cloud|silver/.test(s)) return "grey";
+  if (/brown|tan|coffee|paradiso|kashmir/.test(s)) return "brown";
+  if (/green|forest|fusion|rajnagar/.test(s)) return "green";
+  if (/red|ruby|lakha|jhansi|maroon|pink/.test(s)) return "red";
+  return "default";
+}
+
+export default function SlabViewer({
+  className = "",
+  material,
+  color,
+}: {
+  className?: string;
+  material?: string;
+  color?: string;
+}) {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,31 +54,41 @@ export default function SlabViewer({ className = "" }: { className?: string }) {
     const cam = new THREE.PerspectiveCamera(38, mount.clientWidth / mount.clientHeight, 0.1, 100);
     cam.position.set(0, 1.4, 5);
 
-    // procedural granite texture
+    // procedural texture from the stone palette
+    const pal = PALETTES[paletteKey(material, color)];
     const tc = document.createElement("canvas");
     tc.width = tc.height = 512;
     const g = tc.getContext("2d")!;
-    g.fillStyle = "#0c0c0e";
+    g.fillStyle = pal.base;
     g.fillRect(0, 0, 512, 512);
     for (let i = 0; i < 9000; i++) {
       const r = Math.random();
-      g.fillStyle =
-        r < 0.78
-          ? `rgba(40,40,46,${Math.random() * 0.5})`
-          : r < 0.96
-            ? `rgba(201,162,75,${Math.random() * 0.9})`
-            : `rgba(230,230,235,${Math.random() * 0.8})`;
+      let acc = 0;
+      let chosen = pal.flecks[0][0];
+      for (const [c, w] of pal.flecks) {
+        acc += w;
+        if (r <= acc) {
+          chosen = c;
+          break;
+        }
+      }
+      g.fillStyle = `rgba(${chosen},${Math.random() * 0.7})`;
       const s = Math.random() * 2.4 + 0.4;
       g.beginPath();
       g.arc(Math.random() * 512, Math.random() * 512, s, 0, 7);
       g.fill();
     }
     const tex = new THREE.CanvasTexture(tc);
-    const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.35, metalness: 0.55 });
+    const isLight = paletteKey(material, color) === "white";
+    const mat = new THREE.MeshStandardMaterial({
+      map: tex,
+      roughness: isLight ? 0.5 : 0.35,
+      metalness: isLight ? 0.2 : 0.55,
+    });
     const slab = new THREE.Mesh(new THREE.BoxGeometry(3, 0.16, 2), mat);
     scene.add(slab);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
     const key = new THREE.DirectionalLight(0xfff2d6, 1.5);
     key.position.set(4, 6, 4);
     scene.add(key);
@@ -66,7 +103,6 @@ export default function SlabViewer({ className = "" }: { className?: string }) {
       lastX = 0,
       lastY = 0,
       raf = 0;
-
     const dom = renderer.domElement;
     const down = (e: PointerEvent) => {
       dragging = true;
@@ -91,7 +127,6 @@ export default function SlabViewer({ className = "" }: { className?: string }) {
     dom.addEventListener("pointerdown", down);
     dom.addEventListener("pointermove", move);
     dom.addEventListener("pointerup", up);
-
     const onResize = () => {
       resize();
       cam.aspect = mount.clientWidth / mount.clientHeight;
@@ -120,7 +155,7 @@ export default function SlabViewer({ className = "" }: { className?: string }) {
       renderer.dispose();
       if (dom.parentNode === mount) mount.removeChild(dom);
     };
-  }, []);
+  }, [material, color]);
 
   return <div ref={mountRef} className={className} />;
 }

@@ -54,7 +54,7 @@ export default function ShowcasePage() {
         {/* hero */}
         <div className="grid md:grid-cols-2 gap-5 mt-6 items-center">
           <div className="relative h-[320px] rounded-3xl bg-gradient-to-b from-graphite-800 to-graphite-900 border border-graphite-600 overflow-hidden shadow-inner">
-            <SlabViewer className="w-full h-full" />
+            <SlabViewer material="Black Galaxy" className="w-full h-full" />
             <div className="absolute left-4 bottom-3 text-xs text-slate-400">
               Black Galaxy · <span className="text-gold font-semibold">spin it</span> — your real slabs, in 3D
             </div>
