@@ -1,6 +1,7 @@
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR } from "@/lib/money";
+import OrderInvoiceButton from "@/components/money/OrderInvoiceButton";
 
 const STATUS_STYLE: Record<string, string> = {
   confirmed: "bg-blue-500/15 text-blue-300",
@@ -13,10 +14,13 @@ const STATUS_STYLE: Record<string, string> = {
 export default async function OrdersPage() {
   await requireSession();
   const supabase = await createClient();
-  const { data } = await supabase
-    .from("orders")
-    .select("id, order_no, status, total_paise, created_at, parties(name), quotes(quote_no)")
-    .order("created_at", { ascending: false });
+  const [{ data }, { data: invData }] = await Promise.all([
+    supabase
+      .from("orders")
+      .select("id, order_no, status, total_paise, created_at, parties(name), quotes(quote_no)")
+      .order("created_at", { ascending: false }),
+    supabase.from("invoices").select("id, order_id"),
+  ]);
 
   const orders = (data ?? []) as unknown as {
     id: string;
@@ -26,6 +30,11 @@ export default async function OrdersPage() {
     parties: { name: string } | null;
     quotes: { quote_no: string | null } | null;
   }[];
+  const invoiceForOrder = new Map(
+    ((invData ?? []) as { id: string; order_id: string | null }[])
+      .filter((i) => i.order_id)
+      .map((i) => [i.order_id as string, i.id]),
+  );
 
   return (
     <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
@@ -54,7 +63,12 @@ export default async function OrdersPage() {
                 {o.status.replace("_", " ")}
               </span>
             </div>
-            <div className="font-extrabold text-gold shrink-0">{formatINR(o.total_paise)}</div>
+            <div className="text-right shrink-0">
+              <div className="font-extrabold text-gold">{formatINR(o.total_paise)}</div>
+              <div className="mt-1">
+                <OrderInvoiceButton orderId={o.id} invoiceId={invoiceForOrder.get(o.id) ?? null} />
+              </div>
+            </div>
           </div>
         ))}
       </div>

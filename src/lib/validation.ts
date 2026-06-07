@@ -136,6 +136,17 @@ export const quoteSchema = z.object({
 export type QuoteItemInput = z.infer<typeof quoteItemSchema>;
 export type QuoteInput = z.infer<typeof quoteSchema>;
 
+export const PAYMENT_MODES = ["cash", "upi", "bank", "cheque", "other"] as const;
+
+export const paymentSchema = z.object({
+  invoiceId: z.string().uuid(),
+  amountRupees: numericFromInput.positive("Enter an amount"),
+  mode: z.enum(PAYMENT_MODES),
+  paidOn: optText(20),
+  reference: optText(60),
+});
+export type PaymentInput = z.infer<typeof paymentSchema>;
+
 export const inviteSchema = z.object({
   name: z.string().trim().min(2).max(60),
   phone: phoneSchema,

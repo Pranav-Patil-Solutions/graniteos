@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Boxes, FileText, Receipt, Users, UserRound, Truck } from "lucide-react";
+import { Boxes, FileText, Receipt, Users, UserRound, Truck, Wallet } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { can } from "@/lib/permissions";
@@ -76,7 +76,14 @@ export default async function DashboardPage() {
             <p className="text-xs text-slate-400 mt-1">Confirmed sales</p>
           </TiltCard>
         </Link>
-        {isOwner ? (
+        <Link href="/money" className="block">
+          <TiltCard>
+            <Wallet className="text-gold" />
+            <p className="font-bold text-white mt-2">Money</p>
+            <p className="text-xs text-slate-400 mt-1">Bills &amp; udhaar</p>
+          </TiltCard>
+        </Link>
+        {isOwner && (
           <Link href="/team" className="block">
             <TiltCard wow>
               <Users className="text-gold" />
@@ -84,12 +91,6 @@ export default async function DashboardPage() {
               <p className="text-xs text-gold/70 mt-1">Manage &amp; invite</p>
             </TiltCard>
           </Link>
-        ) : (
-          <TiltCard>
-            <Receipt className="text-slate-300" />
-            <p className="font-bold text-white mt-2">Payments</p>
-            <p className="text-xs text-slate-500 mt-1">Slice 6</p>
-          </TiltCard>
         )}
       </div>
 
