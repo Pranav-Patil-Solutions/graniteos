@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Boxes, FileText, Receipt, Users } from "lucide-react";
+import { Boxes, FileText, Receipt, Users, UserRound, Truck } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { can } from "@/lib/permissions";
@@ -48,15 +48,29 @@ export default async function DashboardPage() {
             <p className="text-xs text-slate-400 mt-1">Blocks &amp; slabs</p>
           </TiltCard>
         </Link>
+        <Link href="/parties" className="block">
+          <TiltCard>
+            <UserRound className="text-gold" />
+            <p className="font-bold text-white mt-2">Customers</p>
+            <p className="text-xs text-slate-400 mt-1">CRM &amp; udhaar</p>
+          </TiltCard>
+        </Link>
+        <Link href="/parties?tab=suppliers" className="block">
+          <TiltCard>
+            <Truck className="text-gold" />
+            <p className="font-bold text-white mt-2">Suppliers</p>
+            <p className="text-xs text-slate-400 mt-1">Quarries &amp; vendors</p>
+          </TiltCard>
+        </Link>
         <TiltCard>
           <FileText className="text-slate-300" />
           <p className="font-bold text-white mt-2">Orders</p>
-          <p className="text-xs text-slate-500 mt-1">Slice 4</p>
+          <p className="text-xs text-slate-500 mt-1">Soon</p>
         </TiltCard>
         <TiltCard>
           <Receipt className="text-slate-300" />
           <p className="font-bold text-white mt-2">Quotes</p>
-          <p className="text-xs text-slate-500 mt-1">Slice 4</p>
+          <p className="text-xs text-slate-500 mt-1">Soon</p>
         </TiltCard>
         {isOwner ? (
           <Link href="/team" className="block">

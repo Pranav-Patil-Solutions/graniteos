@@ -86,6 +86,37 @@ export const slabSchema = z.object({
 export type BlockInput = z.infer<typeof blockSchema>;
 export type SlabInput = z.infer<typeof slabSchema>;
 
+export const CUSTOMER_TYPES = [
+  "Builder",
+  "Architect",
+  "Interior Designer",
+  "Dealer",
+  "Contractor",
+  "Retail",
+] as const;
+export const SUPPLIER_TYPES = [
+  "Quarry",
+  "Block Supplier",
+  "Processor",
+  "Transporter",
+  "Other",
+] as const;
+
+export const partySchema = z.object({
+  kind: z.enum(["customer", "supplier"]),
+  name: z.string().trim().min(1, "Name is required").max(100),
+  partyType: optText(40),
+  phone: optText(20),
+  email: optText(120),
+  city: optText(60),
+  address: optText(200),
+  gstin: optText(20),
+  creditLimitRupees: numericFromInput.min(0).optional(),
+  openingBalanceRupees: numericFromInput.min(0).optional(),
+  notes: optText(300),
+});
+export type PartyInput = z.infer<typeof partySchema>;
+
 export const inviteSchema = z.object({
   name: z.string().trim().min(2).max(60),
   phone: phoneSchema,
