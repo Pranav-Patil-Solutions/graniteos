@@ -117,6 +117,25 @@ export const partySchema = z.object({
 });
 export type PartyInput = z.infer<typeof partySchema>;
 
+export const GST_RATES = [0, 5, 12, 18, 28] as const;
+
+export const quoteItemSchema = z.object({
+  description: z.string().trim().min(1, "Description required").max(140),
+  slabId: z.string().uuid().optional().or(z.literal("")),
+  sqft: numericFromInput.positive("Sq-ft must be greater than 0"),
+  rateRupees: numericFromInput.min(0),
+  gstRate: numericFromInput.min(0).max(28),
+});
+
+export const quoteSchema = z.object({
+  customerId: z.string().uuid("Pick a customer"),
+  validUntil: optText(20),
+  notes: optText(300),
+  items: z.array(quoteItemSchema).min(1, "Add at least one line item"),
+});
+export type QuoteItemInput = z.infer<typeof quoteItemSchema>;
+export type QuoteInput = z.infer<typeof quoteSchema>;
+
 export const inviteSchema = z.object({
   name: z.string().trim().min(2).max(60),
   phone: phoneSchema,

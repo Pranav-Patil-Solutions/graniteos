@@ -62,16 +62,20 @@ export default async function DashboardPage() {
             <p className="text-xs text-slate-400 mt-1">Quarries &amp; vendors</p>
           </TiltCard>
         </Link>
-        <TiltCard>
-          <FileText className="text-slate-300" />
-          <p className="font-bold text-white mt-2">Orders</p>
-          <p className="text-xs text-slate-500 mt-1">Soon</p>
-        </TiltCard>
-        <TiltCard>
-          <Receipt className="text-slate-300" />
-          <p className="font-bold text-white mt-2">Quotes</p>
-          <p className="text-xs text-slate-500 mt-1">Soon</p>
-        </TiltCard>
+        <Link href="/quotes" className="block">
+          <TiltCard>
+            <Receipt className="text-gold" />
+            <p className="font-bold text-white mt-2">Quotes</p>
+            <p className="text-xs text-slate-400 mt-1">GST &amp; pricing</p>
+          </TiltCard>
+        </Link>
+        <Link href="/orders" className="block">
+          <TiltCard>
+            <FileText className="text-gold" />
+            <p className="font-bold text-white mt-2">Orders</p>
+            <p className="text-xs text-slate-400 mt-1">Confirmed sales</p>
+          </TiltCard>
+        </Link>
         {isOwner ? (
           <Link href="/team" className="block">
             <TiltCard wow>
