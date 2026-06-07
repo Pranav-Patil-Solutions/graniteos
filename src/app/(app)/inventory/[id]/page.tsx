@@ -89,7 +89,8 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
         />
         <SlabViewer material={block.material} color={block.color} className="absolute inset-0 w-full h-full" />
         <div className="absolute left-4 bottom-3 text-xs text-slate-400">
-          👆 spin your <span className="text-gold font-semibold">{block.material}</span> slab
+          👆 drag — or 📱 tilt your phone — to spin your{" "}
+          <span className="text-gold font-semibold">{block.material}</span>
         </div>
       </div>
 

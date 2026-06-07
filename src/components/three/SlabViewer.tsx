@@ -109,8 +109,23 @@ export default function SlabViewer({
       auto = true,
       lastX = 0,
       lastY = 0,
-      raf = 0;
+      raf = 0,
+      gyro = false,
+      gTargetY = ry,
+      gTargetX = rx,
+      askedPerm = false;
     const dom = renderer.domElement;
+
+    // phone gyroscope → slab rotation
+    const onOrient = (e: DeviceOrientationEvent) => {
+      if (e.gamma == null || e.beta == null) return;
+      gyro = true;
+      auto = false;
+      gTargetY = 0.5 + (e.gamma / 90) * 1.3; // left-right tilt → yaw
+      gTargetX = Math.max(-1, Math.min(1, ((e.beta - 45) / 50) * 0.7)); // front-back → pitch
+    };
+    window.addEventListener("deviceorientation", onOrient);
+
     const down = (e: PointerEvent) => {
       dragging = true;
       auto = false;
@@ -118,6 +133,18 @@ export default function SlabViewer({
       lastY = e.clientY;
       dom.setPointerCapture(e.pointerId);
       dom.style.cursor = "grabbing";
+      // iOS 13+ needs an explicit motion permission, granted on a user gesture
+      const DOE = window.DeviceOrientationEvent as unknown as {
+        requestPermission?: () => Promise<string>;
+      };
+      if (!askedPerm && DOE && typeof DOE.requestPermission === "function") {
+        askedPerm = true;
+        DOE.requestPermission()
+          .then((s) => {
+            if (s === "granted") window.addEventListener("deviceorientation", onOrient);
+          })
+          .catch(() => {});
+      }
     };
     const move = (e: PointerEvent) => {
       if (!dragging) return;
@@ -142,7 +169,14 @@ export default function SlabViewer({
     window.addEventListener("resize", onResize);
 
     const loop = () => {
-      if (auto) ry += 0.005;
+      if (dragging) {
+        // ry/rx are driven directly by the drag handler
+      } else if (gyro) {
+        ry += (gTargetY - ry) * 0.08;
+        rx += (gTargetX - rx) * 0.08;
+      } else if (auto) {
+        ry += 0.005;
+      }
       slab.rotation.y = ry;
       slab.rotation.x = rx;
       renderer.render(scene, cam);
@@ -153,6 +187,7 @@ export default function SlabViewer({
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("deviceorientation", onOrient);
       dom.removeEventListener("pointerdown", down);
       dom.removeEventListener("pointermove", move);
       dom.removeEventListener("pointerup", up);
