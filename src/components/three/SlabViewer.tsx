@@ -2,6 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
+import { haptic } from "@/lib/haptics";
 
 type Pal = { base: string; flecks: [string, number][] };
 
@@ -56,10 +59,18 @@ export default function SlabViewer({
     mount.appendChild(renderer.domElement);
     renderer.domElement.style.cursor = "grab";
     renderer.domElement.style.touchAction = "none";
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     const scene = new THREE.Scene();
     const cam = new THREE.PerspectiveCamera(38, mount.clientWidth / mount.clientHeight, 0.1, 100);
     cam.position.set(0, 1.4, 5);
+
+    // studio environment so polished stone reflects light realistically
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environment = envTex;
 
     // procedural texture from the stone palette
     const pal = PALETTES[paletteKey(material, color)];
@@ -86,13 +97,19 @@ export default function SlabViewer({
       g.fill();
     }
     const tex = new THREE.CanvasTexture(tc);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
     const isLight = paletteKey(material, color) === "white";
-    const mat = new THREE.MeshStandardMaterial({
+    // polished-stone look: clear-coat over the speckled surface, reflecting the env
+    const mat = new THREE.MeshPhysicalMaterial({
       map: tex,
-      roughness: isLight ? 0.5 : 0.35,
-      metalness: isLight ? 0.2 : 0.55,
+      roughness: isLight ? 0.4 : 0.28,
+      metalness: 0,
+      clearcoat: 0.7,
+      clearcoatRoughness: isLight ? 0.35 : 0.18,
+      envMapIntensity: 1,
     });
-    const slab = new THREE.Mesh(new THREE.BoxGeometry(3, 0.16, 2), mat);
+    const slab = new THREE.Mesh(new RoundedBoxGeometry(3, 0.16, 2, 6, 0.03), mat);
     scene.add(slab);
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.5));
@@ -133,6 +150,7 @@ export default function SlabViewer({
       lastY = e.clientY;
       dom.setPointerCapture(e.pointerId);
       dom.style.cursor = "grabbing";
+      haptic("tap");
       // iOS 13+ needs an explicit motion permission, granted on a user gesture
       const DOE = window.DeviceOrientationEvent as unknown as {
         requestPermission?: () => Promise<string>;
@@ -194,6 +212,8 @@ export default function SlabViewer({
       tex.dispose();
       mat.dispose();
       slab.geometry.dispose();
+      envTex.dispose();
+      pmrem.dispose();
       renderer.dispose();
       if (dom.parentNode === mount) mount.removeChild(dom);
     };

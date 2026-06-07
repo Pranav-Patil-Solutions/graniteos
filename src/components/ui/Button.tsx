@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
+import { haptic } from "@/lib/haptics";
 
 type Variant = "press" | "spring" | "outline" | "morph";
 
@@ -34,10 +35,12 @@ export function Button({
   if (variant === "morph") {
     async function run() {
       if (state !== "idle") return;
+      haptic("tap");
       setState("loading");
       try {
         await onAction?.();
         setState("done");
+        haptic("success");
         setTimeout(() => setState("idle"), 1300);
       } catch {
         setState("idle");
@@ -72,6 +75,7 @@ export function Button({
         type={type}
         onClick={onClick}
         disabled={disabled}
+        onTapStart={() => haptic("tap")}
         whileHover={{ scale: 1.06 }}
         whileTap={{ scale: 0.9 }}
         transition={{ type: "spring", stiffness: 400, damping: 12 }}
@@ -89,6 +93,7 @@ export function Button({
         type={type}
         onClick={onClick}
         disabled={disabled}
+        onTapStart={() => haptic("tap")}
         whileTap={{ scale: 0.97 }}
         className={`${base} relative overflow-hidden border-2 border-gold text-gold ${className}`}
         initial="rest"
@@ -117,6 +122,7 @@ export function Button({
       type={type}
       onClick={onClick}
       disabled={disabled}
+      onTapStart={() => haptic("tap")}
       whileTap={{ y: 5 }}
       transition={{ type: "spring", stiffness: 800, damping: 20 }}
       className={`${base} bg-granite-green2 text-white ${className}`}
