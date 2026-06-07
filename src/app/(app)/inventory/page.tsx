@@ -7,6 +7,7 @@ import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { StoneSwatch } from "@/components/inventory/StoneSwatch";
 import { formatINR } from "@/lib/money";
 import AddBlockForm from "@/components/inventory/AddBlockForm";
+import ShareCatalog from "@/components/inventory/ShareCatalog";
 
 type Block = {
   id: string;
@@ -29,7 +30,7 @@ function cbmOf(b: Block): number {
 }
 
 export default async function InventoryPage() {
-  await requireSession();
+  const me = await requireSession();
   const supabase = await createClient();
 
   const [{ data: blocksData }, { data: slabsData }] = await Promise.all([
@@ -75,8 +76,13 @@ export default async function InventoryPage() {
 
   return (
     <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
-      <h1 className="text-2xl font-bold text-white">Stock</h1>
-      <p className="text-sm text-slate-400">Blocks → slabs → godown</p>
+      <div className="flex items-center justify-between gap-2">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Stock</h1>
+          <p className="text-sm text-slate-400">Blocks → slabs → godown</p>
+        </div>
+        <ShareCatalog companyId={me.company_id} />
+      </div>
 
       <div className="mt-5 grid grid-cols-3 gap-3">
         <Card className="p-3 text-center">

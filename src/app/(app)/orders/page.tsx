@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR } from "@/lib/money";
@@ -52,7 +53,7 @@ export default async function OrdersPage() {
             key={o.id}
             className="flex items-center gap-3 rounded-2xl border border-graphite-600 bg-white/[0.04] p-4"
           >
-            <div className="flex-1 min-w-0">
+            <Link href={`/orders/${o.id}`} className="flex-1 min-w-0">
               <p className="font-bold text-white truncate">
                 {o.order_no ?? "Order"}{" "}
                 <span className="font-normal text-slate-400">· {o.parties?.name ?? "—"}</span>
@@ -62,7 +63,7 @@ export default async function OrdersPage() {
               >
                 {o.status.replace("_", " ")}
               </span>
-            </div>
+            </Link>
             <div className="text-right shrink-0">
               <div className="font-extrabold text-gold">{formatINR(o.total_paise)}</div>
               <div className="mt-1">

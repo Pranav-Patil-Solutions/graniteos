@@ -85,6 +85,19 @@ export async function setQuoteStatus(
   return { ok: true as const };
 }
 
+export async function setOrderStatus(
+  orderId: string,
+  status: "confirmed" | "in_production" | "dispatched" | "delivered" | "cancelled",
+) {
+  await requireSession();
+  const supabase = await createClient();
+  const { error } = await supabase.from("orders").update({ status }).eq("id", orderId);
+  if (error) return { error: error.message };
+  revalidatePath(`/orders/${orderId}`);
+  revalidatePath("/orders");
+  return { ok: true as const };
+}
+
 export async function confirmOrder(quoteId: string) {
   const me = await requireSession();
   const supabase = await createClient();
