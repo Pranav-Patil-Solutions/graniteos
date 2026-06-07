@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>GraniteOS — Product Brochure</title>
+<style>
+  :root{--green:#0F4C35;--green2:#1f8a5b;--gold:#c9a24b;--ink:#11151a;--muted:#5b6470;--line:#e7e3da;--cream:#faf8f3}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:#e9e6df;line-height:1.55;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .page{max-width:900px;margin:0 auto;background:var(--cream)}
+  .pad{padding:36px 44px}
+  /* hero */
+  .hero{background:radial-gradient(900px 500px at 75% -10%,#1d2630,#0b0e11 65%);color:#ece8df;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;inset:0;background:
+     radial-gradient(circle at 20% 30%,rgba(201,162,75,.10),transparent 40%),
+     radial-gradient(circle at 80% 70%,rgba(31,138,91,.10),transparent 40%)}
+  .hero .pad{position:relative;z-index:1;padding:48px 44px}
+  .brandrow{display:flex;align-items:center;gap:14px}
+  .logo{width:54px;height:54px;border-radius:15px;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:28px;color:#fff;box-shadow:0 10px 26px rgba(31,138,91,.4)}
+  .bn{font-size:26px;font-weight:800}.bt{font-size:12px;color:var(--gold);letter-spacing:.16em;text-transform:uppercase}
+  h1.head{font-size:38px;line-height:1.1;font-weight:800;margin-top:26px;max-width:660px}
+  h1.head .g{color:var(--gold)}
+  .lead{margin-top:14px;font-size:17px;color:#c3c8cf;max-width:600px}
+  .pills{margin-top:20px;display:flex;flex-wrap:wrap;gap:8px}
+  .pill{font-size:12px;font-weight:700;border:1px solid #2c3540;border-radius:999px;padding:6px 13px;color:#dfe3e8}
+  .pill.gold{border-color:#3a3320;color:var(--gold);background:rgba(201,162,75,.08)}
+  /* sections */
+  h2{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:800}
+  .prob{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:14px;font-size:16px}
+  .prob b{color:var(--green)}
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:14px}
+  @media(max-width:680px){.grid{grid-template-columns:1fr 1fr}}
+  .mod{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+  .mod .ic{font-size:24px}.mod b{display:block;margin-top:8px;font-size:15px}.mod p{font-size:12.5px;color:var(--muted);margin-top:3px}
+  .why{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  @media(max-width:680px){.why{grid-template-columns:1fr}}
+  .wcard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+  .wcard b{color:var(--green)}.wcard p{font-size:13px;color:var(--muted);margin-top:4px}
+  .compare{margin-top:14px;background:var(--green);color:#eafff5;border-radius:16px;padding:22px;font-size:15.5px}
+  .compare b{color:var(--gold)}
+  .feat{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  @media(max-width:680px){.feat{grid-template-columns:1fr}}
+  .frow{display:flex;gap:10px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px}
+  .frow .e{font-size:20px}.frow b{font-size:14px}.frow p{font-size:12px;color:var(--muted);margin-top:2px}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:14px;font-size:12.5px;font-weight:700}
+  .step{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+  .arr{color:var(--gold)}
+  /* pricing */
+  .price{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:14px}
+  @media(max-width:680px){.price{grid-template-columns:1fr}}
+  .tier{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px}
+  .tier.best{border:2px solid var(--gold);position:relative}
+  .tier.best::before{content:"POPULAR";position:absolute;top:-10px;right:14px;background:var(--gold);color:#1a1407;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px}
+  .tier .nm{font-weight:800;color:var(--green)}.tier .amt{font-size:26px;font-weight:800;margin:6px 0}.tier .amt span{font-size:13px;color:var(--muted);font-weight:500}
+  .tier ul{margin:8px 0 0;padding-left:16px;font-size:12.5px;color:#3a4250}
+  .cta{background:radial-gradient(700px 300px at 80% 0%,#1d2630,#0b0e11);color:#ece8df;border-radius:18px;padding:26px;margin-top:18px;text-align:center}
+  .cta h3{font-size:22px}.cta .url{display:inline-block;margin-top:10px;background:var(--gold);color:#1a1407;font-weight:800;padding:11px 22px;border-radius:12px;text-decoration:none}
+  .foot{font-size:11px;color:var(--muted);text-align:center;padding:18px}
+  @media print{body{background:#fff}.page{max-width:100%}}
+</style></head><body><div class="page">
+
+  <!-- HERO -->
+  <div class="hero"><div class="pad">
+    <div class="brandrow"><div class="logo">G</div><div><div class="bn">GraniteOS</div><div class="bt">for granite &amp; marble businesses</div></div></div>
+    <h1 class="head">Run your <span class="g">entire stone business</span> from your phone.</h1>
+    <p class="lead">Stock, billing, GST, udhaar, fabrication and marketing — one app, built for India's granite &amp; marble trade. In ₹. In your language. That actually understands blocks, slabs and recovery.</p>
+    <div class="pills"><span class="pill gold">📱 Mobile-first</span><span class="pill gold">🧾 GST-ready</span><span class="pill gold">₹ Made for India</span><span class="pill">⭐ Recovery Radar</span><span class="pill">✨ AI marketing</span></div>
+  </div></div>
+
+  <!-- PROBLEM -->
+  <div class="pad" style="padding-bottom:8px">
+    <h2>The problem</h2>
+    <div class="prob">Still running your shop on a <b>paper register, Excel, Tally and 40 WhatsApp photos?</b> You lose track of slabs, forget who owes you <b>udhaar</b>, send quotes by hand, and never really know your <b>true profit per block</b>. The world-class stone software is built for the West — and costs a fortune.</div>
+  </div>
+
+  <!-- MODULES -->
+  <div class="pad" style="padding-top:18px;padding-bottom:8px">
+    <h2>One app — your whole business</h2>
+    <div class="grid">
+      <div class="mod"><div class="ic">📦</div><b>Stock</b><p>Blocks → slabs → godown. CBM, bundles, finish, grade. Real slab photos.</p></div>
+      <div class="mod"><div class="ic">👥</div><b>Customers &amp; Suppliers</b><p>CRM, GSTIN, credit limits, udhaar &amp; payables.</p></div>
+      <div class="mod"><div class="ic">📄</div><b>Quotes &amp; Orders</b><p>Slab-area pricing, auto-GST, quote → order in a tap.</p></div>
+      <div class="mod"><div class="ic">💰</div><b>Money</b><p>GST invoices, payments, Udhaar Radar with WhatsApp reminders.</p></div>
+      <div class="mod"><div class="ic">🏭</div><b>Fabrication</b><p>Cut → polish → edge → QC → ready. Machines &amp; quality.</p></div>
+      <div class="mod"><div class="ic">✨</div><b>Marketing AI</b><p>AI writes your WhatsApp posts &amp; catalogue copy — in Hinglish.</p></div>
+    </div>
+  </div>
+
+  <!-- WHY DIFFERENT -->
+  <div class="pad" style="padding-top:18px;padding-bottom:8px">
+    <h2>Why GraniteOS is different</h2>
+    <div class="why">
+      <div class="wcard"><b>📱 Mobile-first</b><p>Run it from the godown floor, not a desktop in the office.</p></div>
+      <div class="wcard"><b>₹ Built for India</b><p>Rupees, GST (5% raw / 18% polished), udhaar, UPI, WhatsApp — natively.</p></div>
+      <div class="wcard"><b>🪨 It speaks stone</b><p>Blocks, slabs, bundles, CBM, recovery — not generic "products" like accounting apps.</p></div>
+      <div class="wcard"><b>💸 A fraction of the cost</b><p>Affordable monthly pricing — not ₹12,000–₹33,000/month like the foreign tools.</p></div>
+    </div>
+    <div class="compare">World-class stone software costs <b>₹12,000–₹33,000 a month</b> and has zero GST or India fit. Generic Indian apps (Tally, Vyapar) are cheap but <b>don't understand a single slab</b>. <b>GraniteOS is the only one that's both</b> — stone-deep <i>and</i> made for India, on your phone.</div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="pad" style="padding-top:18px;padding-bottom:8px">
+    <h2>Features owners love</h2>
+    <div class="feat">
+      <div class="frow"><span class="e">⭐</span><div><b>Recovery Radar</b><p>See which block &amp; machine really earns or wastes you — sq-ft per CBM.</p></div></div>
+      <div class="frow"><span class="e">📕</span><div><b>Udhaar Radar</b><p>Who owes you, biggest first — one tap to remind on WhatsApp.</p></div></div>
+      <div class="frow"><span class="e">🧾</span><div><b>GST Auto-Pilot</b><p>Auto 5%/18%, plus the input-tax credit most owners leave unclaimed.</p></div></div>
+      <div class="frow"><span class="e">📸</span><div><b>Slab catalogue + QR</b><p>Snap slabs, share a live link, print QR labels buyers can scan.</p></div></div>
+      <div class="frow"><span class="e">📦</span><div><b>True profit per slab</b><p>Landed cost spread per slab → real margin, not guesswork.</p></div></div>
+      <div class="frow"><span class="e">💸</span><div><b>WhatsApp + UPI</b><p>Send a quote or bill on WhatsApp with a UPI pay-link.</p></div></div>
+    </div>
+  </div>
+
+  <!-- FLOW -->
+  <div class="pad" style="padding-top:18px;padding-bottom:8px">
+    <h2>How it flows</h2>
+    <div class="flow">
+      <span class="step">🪨 Block</span><span class="arr">→</span>
+      <span class="step">📐 Slab</span><span class="arr">→</span>
+      <span class="step">👤 Customer</span><span class="arr">→</span>
+      <span class="step">📄 GST Quote</span><span class="arr">→</span>
+      <span class="step">📦 Order</span><span class="arr">→</span>
+      <span class="step">🏭 Fabricate</span><span class="arr">→</span>
+      <span class="step">🧾 Invoice</span><span class="arr">→</span>
+      <span class="step">💰 Payment</span>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <div class="pad" style="padding-top:18px;padding-bottom:8px">
+    <h2>Simple pricing <span style="color:var(--muted);text-transform:none;font-weight:500">· introductory</span></h2>
+    <div class="price">
+      <div class="tier"><div class="nm">Starter</div><div class="amt">₹499<span>/month</span></div><ul><li>1 user</li><li>Stock, customers, billing</li><li>GST quotes &amp; invoices</li></ul></div>
+      <div class="tier best"><div class="nm">Business</div><div class="amt">₹999<span>/month</span></div><ul><li>Up to 5 users + roles</li><li>Everything in Starter</li><li>Fabrication + Recovery Radar</li><li>AI marketing + catalogue</li></ul></div>
+      <div class="tier"><div class="nm">Enterprise</div><div class="amt">Custom</div><ul><li>Unlimited users &amp; units</li><li>Priority support</li><li>Custom domain &amp; onboarding</li></ul></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="pad" style="padding-top:14px">
+    <div class="cta">
+      <h3>See your business on GraniteOS</h3>
+      <p style="color:#c3c8cf;margin-top:6px">Live demo — no install. Open it on your phone.</p>
+      <a class="url" href="https://graniteos.vercel.app">graniteos.vercel.app</a>
+      <p style="font-size:12px;color:#9aa0a6;margin-top:12px">📞 +91 ____ ______ &nbsp;·&nbsp; ✉ hello@graniteos.in</p>
+    </div>
+  </div>
+
+  <div class="foot">GraniteOS — the operating system for granite &amp; marble businesses. © 2026</div>
+</div></body></html>
