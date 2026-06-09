@@ -22,6 +22,14 @@ export function AnimatedNumber({
 }) {
   const [shown, setShown] = useState(0);
   useEffect(() => {
+    // Honour reduced-motion: skip the count-up entirely.
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setShown(value);
+      return;
+    }
     let raf = 0;
     const t0 = performance.now();
     const tick = (now: number) => {
@@ -30,7 +38,14 @@ export function AnimatedNumber({
       if (now - t0 < delay + duration) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    // Guarantee the final value even if rAF is throttled or paused (e.g. a
+    // background tab, where requestAnimationFrame never fires): setTimeout
+    // still runs, so the number always lands on its target.
+    const settle = setTimeout(() => setShown(value), delay + duration + 100);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(settle);
+    };
   }, [value, duration, delay]);
   return (
     <span className={className}>
