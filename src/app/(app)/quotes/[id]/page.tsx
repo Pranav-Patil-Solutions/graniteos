@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Pencil } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR, formatINRPrecise } from "@/lib/money";
@@ -65,9 +65,19 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
             {customer?.city ? ` · ${customer.city}` : ""}
           </p>
         </div>
-        <span className="text-xs font-semibold rounded-md px-2 py-1 bg-white/[0.06] text-slate-300 capitalize">
-          {quote.status}
-        </span>
+        <div className="flex items-center gap-2">
+          {!order && quote.status !== "accepted" && (
+            <Link
+              href={`/quotes/${id}/edit`}
+              className="inline-flex items-center gap-1 rounded-md border border-graphite-500 px-2.5 py-1 text-xs font-semibold text-slate-200 hover:border-gold hover:text-gold"
+            >
+              <Pencil className="w-3.5 h-3.5" /> Edit
+            </Link>
+          )}
+          <span className="text-xs font-semibold rounded-md px-2 py-1 bg-white/[0.06] text-slate-300 capitalize">
+            {quote.status}
+          </span>
+        </div>
       </div>
 
       {order && (

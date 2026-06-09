@@ -61,8 +61,10 @@ export async function createQuote(input: unknown) {
     const lineTax = tax.cgst + tax.sgst + tax.igst;
     return {
       slab_id: it.slabId || null,
+      product_id: it.productId || null,
       description: it.description,
       hsn_code: it.hsn || DEFAULT_HSN,
+      uom: it.uom || "SQF",
       sqft: it.sqft,
       rate_paise: ratePaise,
       gst_rate: it.gstRate,
@@ -113,6 +115,108 @@ export async function createQuote(input: unknown) {
 
   revalidatePath("/quotes");
   return { ok: true as const, id: quote.id as string };
+}
+
+export async function updateQuote(quoteId: string, input: unknown) {
+  const me = await requireSession();
+  const parsed = quoteSchema.safeParse(input);
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  const v = parsed.data;
+
+  const supabase = await createClient();
+
+  // Editable only while it's still a draft/sent quote with no confirmed order.
+  const { data: head } = await supabase
+    .from("quotes")
+    .select("id, status")
+    .eq("id", quoteId)
+    .single();
+  if (!head) return { error: "Quote not found." };
+  const { data: order } = await supabase
+    .from("orders")
+    .select("id")
+    .eq("quote_id", quoteId)
+    .maybeSingle();
+  if (order) return { error: "This quote is already confirmed as an order and can't be edited." };
+  if (head.status === "accepted")
+    return { error: "An accepted quote can't be edited." };
+
+  // ── Place of supply: seller state vs customer state → intra/inter ──
+  const { data: company } = await supabase
+    .from("companies")
+    .select("gst_state_code, gst_number")
+    .eq("id", me.company_id)
+    .single();
+  const sellerState =
+    company?.gst_state_code || parseStateFromGstin(company?.gst_number) || null;
+  const { data: cust } = await supabase
+    .from("parties")
+    .select("gst_state_code, gstin")
+    .eq("id", v.customerId)
+    .single();
+  const customerState = cust?.gst_state_code || parseStateFromGstin(cust?.gstin) || null;
+  const placeOfSupply = customerState || sellerState;
+  const type: SupplyType =
+    sellerState && placeOfSupply ? resolveSupplyType(sellerState, placeOfSupply) : "intra";
+
+  const items = v.items.map((it) => {
+    const ratePaise = rupeesToPaise(it.rateRupees);
+    const subtotal = Math.round(it.sqft * ratePaise);
+    const tax = splitLineTax(subtotal, it.gstRate, type);
+    const lineTax = tax.cgst + tax.sgst + tax.igst;
+    return {
+      slab_id: it.slabId || null,
+      product_id: it.productId || null,
+      description: it.description,
+      hsn_code: it.hsn || DEFAULT_HSN,
+      uom: it.uom || "SQF",
+      sqft: it.sqft,
+      rate_paise: ratePaise,
+      gst_rate: it.gstRate,
+      line_subtotal_paise: subtotal,
+      line_cgst_paise: tax.cgst,
+      line_sgst_paise: tax.sgst,
+      line_igst_paise: tax.igst,
+      line_gst_paise: lineTax,
+      line_total_paise: subtotal + lineTax,
+    };
+  });
+  const subtotal = items.reduce((n, i) => n + i.line_subtotal_paise, 0);
+  const cgst = items.reduce((n, i) => n + i.line_cgst_paise, 0);
+  const sgst = items.reduce((n, i) => n + i.line_sgst_paise, 0);
+  const igst = items.reduce((n, i) => n + i.line_igst_paise, 0);
+  const gst = cgst + sgst + igst;
+  const { roundedTotalPaise, roundOffPaise } = computeRoundOff(subtotal + gst);
+
+  const { error: uErr } = await supabase
+    .from("quotes")
+    .update({
+      customer_id: v.customerId,
+      valid_until: v.validUntil || null,
+      notes: v.notes || null,
+      subtotal_paise: subtotal,
+      gst_paise: gst,
+      total_paise: roundedTotalPaise,
+      place_of_supply: placeOfSupply,
+      supply_type: type,
+      cgst_paise: cgst,
+      sgst_paise: sgst,
+      igst_paise: igst,
+      round_off_paise: roundOffPaise,
+    })
+    .eq("id", quoteId);
+  if (uErr) return { error: uErr.message };
+
+  // Replace line items wholesale.
+  await supabase.from("quote_items").delete().eq("quote_id", quoteId);
+  const { error: iErr } = await supabase.from("quote_items").insert(
+    items.map((i) => ({ ...i, company_id: me.company_id, quote_id: quoteId })),
+  );
+  if (iErr) return { error: iErr.message };
+
+  revalidatePath(`/quotes/${quoteId}`);
+  revalidatePath("/quotes");
+  return { ok: true as const, id: quoteId };
 }
 
 export async function setQuoteStatus(

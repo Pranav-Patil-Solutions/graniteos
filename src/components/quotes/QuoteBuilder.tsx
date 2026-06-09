@@ -3,27 +3,46 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
-import { createQuote } from "@/actions/quotes";
+import { createQuote, updateQuote } from "@/actions/quotes";
 import { Button } from "@/components/ui/Button";
 import { formatINR } from "@/lib/money";
-import { GST_RATES } from "@/lib/validation";
+import { GST_RATES, UOM, DEFAULT_UOM } from "@/lib/validation";
 import { DEFAULT_HSN } from "@/lib/gst";
 
 type Customer = { id: string; name: string };
 type Slab = { id: string; label: string; sqft: number; rateRupees: number };
+export type Product = {
+  id: string;
+  name: string;
+  hsn: string | null;
+  uom: string;
+  rateRupees: number;
+  gstRate: number;
+};
 type Item = {
   description: string;
   slabId: string;
+  productId: string;
   hsn: string;
+  uom: string;
   sqft: string;
   rateRupees: string;
   gstRate: string;
 };
 
+export type QuoteInitial = {
+  customerId: string;
+  validUntil: string;
+  notes: string;
+  items: Item[];
+};
+
 const blank = (): Item => ({
   description: "",
   slabId: "",
+  productId: "",
   hsn: DEFAULT_HSN,
+  uom: DEFAULT_UOM,
   sqft: "",
   rateRupees: "",
   gstRate: "18",
@@ -32,15 +51,24 @@ const blank = (): Item => ({
 export default function QuoteBuilder({
   customers,
   slabs,
+  products = [],
+  quoteId,
+  initial,
 }: {
   customers: Customer[];
   slabs: Slab[];
+  products?: Product[];
+  quoteId?: string;
+  initial?: QuoteInitial;
 }) {
   const router = useRouter();
-  const [customerId, setCustomerId] = useState("");
-  const [validUntil, setValidUntil] = useState("");
-  const [notes, setNotes] = useState("");
-  const [items, setItems] = useState<Item[]>([blank()]);
+  const editing = !!quoteId;
+  const [customerId, setCustomerId] = useState(initial?.customerId ?? "");
+  const [validUntil, setValidUntil] = useState(initial?.validUntil ?? "");
+  const [notes, setNotes] = useState(initial?.notes ?? "");
+  const [items, setItems] = useState<Item[]>(
+    initial?.items?.length ? initial.items : [blank()],
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -52,13 +80,22 @@ export default function QuoteBuilder({
     if (!s) return;
     setItems((arr) => [
       ...arr,
+      { ...blank(), description: s.label, slabId: s.id, sqft: String(s.sqft), rateRupees: String(s.rateRupees) },
+    ]);
+  }
+  function addFromProduct(productId: string) {
+    const p = products.find((x) => x.id === productId);
+    if (!p) return;
+    setItems((arr) => [
+      ...arr,
       {
-        description: s.label,
-        slabId: s.id,
-        hsn: DEFAULT_HSN,
-        sqft: String(s.sqft),
-        rateRupees: String(s.rateRupees),
-        gstRate: "18",
+        ...blank(),
+        description: p.name,
+        productId: p.id,
+        hsn: p.hsn || DEFAULT_HSN,
+        uom: p.uom || DEFAULT_UOM,
+        rateRupees: p.rateRupees ? String(p.rateRupees) : "",
+        gstRate: String(p.gstRate ?? 18),
       },
     ]);
   }
@@ -75,19 +112,22 @@ export default function QuoteBuilder({
   async function onSave() {
     setError("");
     setLoading(true);
-    const res = await createQuote({
+    const payload = {
       customerId,
       validUntil,
       notes,
       items: items.map((it) => ({
         description: it.description,
         slabId: it.slabId,
+        productId: it.productId,
         hsn: it.hsn,
+        uom: it.uom || DEFAULT_UOM,
         sqft: it.sqft,
         rateRupees: it.rateRupees || "0",
         gstRate: it.gstRate || "0",
       })),
-    });
+    };
+    const res = editing ? await updateQuote(quoteId!, payload) : await createQuote(payload);
     if (res.error) {
       setLoading(false);
       return setError(res.error);
@@ -98,7 +138,7 @@ export default function QuoteBuilder({
 
   return (
     <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
-      <h1 className="text-2xl font-bold text-white">New quote</h1>
+      <h1 className="text-2xl font-bold text-white">{editing ? "Edit quote" : "New quote"}</h1>
 
       <label className="block mt-4">
         <span className="text-xs font-medium text-slate-300">Customer</span>
@@ -146,9 +186,24 @@ export default function QuoteBuilder({
                 </button>
               )}
             </div>
-            <div className="grid grid-cols-3 gap-2">
-              <NumCell label="sq-ft" value={it.sqft} onChange={(v) => setItem(i, { sqft: v })} />
-              <NumCell label="₹/sq-ft" value={it.rateRupees} onChange={(v) => setItem(i, { rateRupees: v })} />
+            <div className="grid grid-cols-2 gap-2">
+              <NumCell label="Qty" value={it.sqft} onChange={(v) => setItem(i, { sqft: v })} />
+              <label className="block">
+                <span className="text-[10px] text-slate-400">Unit</span>
+                <select
+                  suppressHydrationWarning
+                  value={it.uom}
+                  onChange={(e) => setItem(i, { uom: e.target.value })}
+                  className="mt-0.5 w-full !min-h-0 !py-1.5 text-sm bg-white/[0.04]"
+                >
+                  {UOM.map((u) => (
+                    <option key={u.code} value={u.code}>
+                      {u.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <NumCell label="Rate ₹ / unit" value={it.rateRupees} onChange={(v) => setItem(i, { rateRupees: v })} />
               <label className="block">
                 <span className="text-[10px] text-slate-400">GST %</span>
                 <select
@@ -179,6 +234,24 @@ export default function QuoteBuilder({
         >
           <Plus className="w-4 h-4" /> Add line
         </button>
+        {products.length > 0 && (
+          <select
+            suppressHydrationWarning
+            value=""
+            onChange={(e) => {
+              if (e.target.value) addFromProduct(e.target.value);
+              e.target.value = "";
+            }}
+            className="rounded-lg border border-graphite-500 !min-h-0 !py-2 text-sm bg-white/[0.04] text-slate-300"
+          >
+            <option value="">+ Add product…</option>
+            {products.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
+            ))}
+          </select>
+        )}
         {slabs.length > 0 && (
           <select
             suppressHydrationWarning
@@ -236,7 +309,7 @@ export default function QuoteBuilder({
         </div>
       )}
       <Button variant="press" className="w-full mt-4" disabled={loading} onClick={onSave}>
-        {loading ? "Saving..." : "Save quote"}
+        {loading ? "Saving..." : editing ? "Update quote" : "Save quote"}
       </Button>
     </div>
   );
