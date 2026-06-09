@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { haptic } from "@/lib/haptics";
+import { StoneSwatch } from "@/components/inventory/StoneSwatch";
 
 type Pal = { base: string; flecks: [string, number][] };
 
@@ -40,19 +41,47 @@ export default function SlabViewer({
   color?: string;
 }) {
   const mountRef = useRef<HTMLDivElement>(null);
+  // When WebGL is blocked (privacy/CSP extensions, hardware-accel off, weak
+  // phones) we must never show an empty box — fall back to a premium stone
+  // surface so the slab still "reads" on any device.
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
 
+    // Pre-flight: deterministically detect blocked/unavailable WebGL (privacy
+    // extensions, hardware-accel off, weak phones) before touching three.js.
+    const webglOk = (() => {
+      try {
+        const c = document.createElement("canvas");
+        return !!(
+          c.getContext("webgl2") ||
+          c.getContext("webgl") ||
+          c.getContext("experimental-webgl")
+        );
+      } catch {
+        return false;
+      }
+    })();
+    if (!webglOk) {
+      setFailed(true);
+      return;
+    }
+
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      if (!renderer.getContext()) throw new Error("no-webgl-context");
     } catch {
-      // WebGL blocked/unavailable (some browsers/extensions) — leave the
-      // CSS stone-swatch fallback showing behind this transparent layer.
+      setFailed(true);
       return;
     }
+    const onLost = (e: Event) => {
+      e.preventDefault();
+      setFailed(true);
+    };
+    renderer.domElement.addEventListener("webglcontextlost", onLost);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     const resize = () => renderer.setSize(mount.clientWidth, mount.clientHeight, false);
     resize();
@@ -206,6 +235,7 @@ export default function SlabViewer({
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("deviceorientation", onOrient);
+      dom.removeEventListener("webglcontextlost", onLost);
       dom.removeEventListener("pointerdown", down);
       dom.removeEventListener("pointermove", move);
       dom.removeEventListener("pointerup", up);
@@ -219,5 +249,16 @@ export default function SlabViewer({
     };
   }, [material, color]);
 
-  return <div ref={mountRef} className={className} />;
+  // Add a positioning context only when the caller hasn't already set one,
+  // so the absolute mount + fallback layers fill the box without conflicts.
+  const positioned = /(?:^|\s)(?:absolute|fixed|relative)(?:\s|$)/.test(className);
+
+  return (
+    <div className={`${positioned ? "" : "relative"} ${className}`}>
+      <div ref={mountRef} className="absolute inset-0" />
+      {failed && (
+        <StoneSwatch material={material ?? "Stone"} color={color} className="absolute inset-0" />
+      )}
+    </div>
+  );
 }

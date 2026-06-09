@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { StoneSwatch } from "@/components/inventory/StoneSwatch";
+import Slab3D from "@/components/catalog/Slab3D";
+import StoneVisualizer from "@/components/catalog/StoneVisualizer";
 
 export const dynamic = "force-dynamic";
 
@@ -44,12 +45,21 @@ export default async function SlabPage({ params }: { params: Promise<{ id: strin
           {company?.name ?? "Slab"} · slab passport
         </div>
 
-        <div className="mt-3 rounded-3xl overflow-hidden border border-graphite-600">
+        <div className="relative mt-3 h-56 rounded-3xl overflow-hidden border border-graphite-600 bg-gradient-to-b from-graphite-800 to-graphite-900">
           {slab.photo_path ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={slab.photo_path} alt="slab" className="w-full h-56 object-cover" />
           ) : (
-            <StoneSwatch material={block?.material ?? "Stone"} color={block?.color} className="w-full h-56" />
+            <>
+              <Slab3D
+                material={block?.material ?? "Stone"}
+                color={block?.color ?? undefined}
+                className="absolute inset-0"
+              />
+              <div className="absolute left-3 bottom-2 text-[11px] text-slate-300">
+                <span className="text-gold font-semibold">spin it</span> · 3D preview
+              </div>
+            </>
           )}
         </div>
 
@@ -60,6 +70,21 @@ export default async function SlabPage({ params }: { params: Promise<{ id: strin
           </span>
         </div>
         {block?.color && <p className="text-sm text-slate-400">{block.color}</p>}
+
+        <div className="mt-4">
+          <StoneVisualizer
+            materials={[
+              {
+                label: block?.material ?? "Stone",
+                material: block?.material ?? "Stone",
+                color: block?.color ?? null,
+                photo_path: slab.photo_path,
+              },
+            ]}
+            triggerLabel={`See ${block?.material ?? "this stone"} in your space`}
+            triggerClassName="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gold px-4 py-3 text-sm font-bold text-[#0b0e11] hover:brightness-110"
+          />
+        </div>
 
         <div className="mt-4 rounded-2xl border border-graphite-600 bg-white/[0.04] px-4 py-1">
           {spec("Size", `${Number(slab.sqft).toFixed(2)} sq-ft (${slab.length_in}″ × ${slab.width_in}″)`)}

@@ -45,10 +45,14 @@ export function StoneSwatch({
   className?: string;
 }) {
   const bg = PALETTES[stoneKey(material, color)];
+  // Only add `relative` when the caller hasn't already set a position — passing
+  // e.g. `absolute inset-0` otherwise collides with `relative` and the swatch
+  // collapses to zero height.
+  const positioned = /(?:^|\s)(?:absolute|fixed|relative|sticky)(?:\s|$)/.test(className);
   return (
     <div
       aria-hidden
-      className={`relative overflow-hidden ${className}`}
+      className={`${positioned ? "" : "relative"} overflow-hidden ${className}`}
       style={{ background: bg, backgroundSize: "14px 14px, 14px 14px, 14px 14px, cover" }}
     >
       {/* polished sheen */}
