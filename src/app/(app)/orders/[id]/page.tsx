@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Pencil } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR } from "@/lib/money";
 import OrderStatus from "@/components/orders/OrderStatus";
+import OrderInvoiceButton from "@/components/money/OrderInvoiceButton";
 
 export default async function OrderPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -68,16 +69,25 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
       </div>
 
       {invoice ? (
-        <Link
-          href={`/invoices/${invoice.id}`}
-          className="mt-4 block text-center rounded-xl border border-graphite-500 py-2.5 text-sm font-semibold text-slate-200 hover:border-gold hover:text-gold"
-        >
-          View invoice {invoice.invoice_no}
-        </Link>
+        <div className="mt-4 flex gap-2">
+          <Link
+            href={`/invoices/${invoice.id}`}
+            className="flex-1 text-center rounded-xl border border-graphite-500 py-2.5 text-sm font-semibold text-slate-200 hover:border-gold hover:text-gold"
+          >
+            View invoice {invoice.invoice_no}
+          </Link>
+          <Link
+            href={`/invoices/${invoice.id}/edit`}
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-graphite-500 px-4 py-2.5 text-sm font-semibold text-slate-200 hover:border-gold hover:text-gold"
+          >
+            <Pencil className="w-4 h-4" /> Edit
+          </Link>
+        </div>
       ) : (
-        <p className="mt-4 text-center text-xs text-slate-500">
-          No invoice yet — create one from the Orders list.
-        </p>
+        <div className="mt-4 flex items-center justify-between rounded-xl border border-graphite-600 bg-white/[0.04] px-4 py-3">
+          <span className="text-sm text-slate-300">No invoice yet</span>
+          <OrderInvoiceButton orderId={id} invoiceId={null} />
+        </div>
       )}
     </div>
   );

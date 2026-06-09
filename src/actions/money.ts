@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireSession } from "@/lib/auth";
-import { paymentSchema } from "@/lib/validation";
+import { paymentSchema, invoiceEditSchema } from "@/lib/validation";
 import { rupeesToPaise } from "@/lib/money";
 import {
   supplyType as resolveSupplyType,
@@ -157,6 +157,90 @@ export async function createInvoiceFromOrder(orderId: string) {
   revalidatePath("/invoices");
   revalidatePath("/orders");
   return { ok: true as const, id: inv.id as string };
+}
+
+export async function updateInvoice(invoiceId: string, input: unknown) {
+  const me = await requireSession();
+  const parsed = invoiceEditSchema.safeParse(input);
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  const v = parsed.data;
+
+  const supabase = await createClient();
+  const { data: inv } = await supabase
+    .from("invoices")
+    .select("id, supply_type, total_paise")
+    .eq("id", invoiceId)
+    .single();
+  if (!inv) return { error: "Invoice not found." };
+
+  // Don't let totals drift out from under recorded money.
+  const { data: pays } = await supabase
+    .from("payments")
+    .select("amount_paise")
+    .eq("invoice_id", invoiceId);
+  const paid = (pays ?? []).reduce((n, p) => n + Number(p.amount_paise), 0);
+  if (paid > 0)
+    return { error: "This invoice already has payments — edit it after reversing the payment." };
+
+  // Keep the invoice's settled supply type (the customer doesn't change on edit).
+  const type: SupplyType = (inv.supply_type as SupplyType) || "intra";
+
+  let subtotal = 0;
+  let cgst = 0;
+  let sgst = 0;
+  let igst = 0;
+  const itemRows = v.items.map((it) => {
+    const ratePaise = rupeesToPaise(it.rateRupees);
+    const sub = Math.round(it.sqft * ratePaise);
+    const tax = splitLineTax(sub, it.gstRate, type);
+    subtotal += sub;
+    cgst += tax.cgst;
+    sgst += tax.sgst;
+    igst += tax.igst;
+    return {
+      company_id: me.company_id,
+      invoice_id: invoiceId,
+      slab_id: it.slabId || null,
+      product_id: it.productId || null,
+      description: it.description,
+      hsn_code: it.hsn || DEFAULT_HSN,
+      uom: it.uom || "SQF",
+      sqft: it.sqft,
+      rate_paise: ratePaise,
+      gst_rate: it.gstRate,
+      line_subtotal_paise: sub,
+      line_cgst_paise: tax.cgst,
+      line_sgst_paise: tax.sgst,
+      line_igst_paise: tax.igst,
+      line_total_paise: sub + tax.cgst + tax.sgst + tax.igst,
+    };
+  });
+
+  const taxTotal = cgst + sgst + igst;
+  const { roundedTotalPaise, roundOffPaise } = computeRoundOff(subtotal + taxTotal);
+
+  const { error: uErr } = await supabase
+    .from("invoices")
+    .update({
+      subtotal_paise: subtotal,
+      gst_paise: taxTotal,
+      total_paise: roundedTotalPaise,
+      cgst_paise: cgst,
+      sgst_paise: sgst,
+      igst_paise: igst,
+      round_off_paise: roundOffPaise,
+    })
+    .eq("id", invoiceId);
+  if (uErr) return { error: uErr.message };
+
+  await supabase.from("invoice_items").delete().eq("invoice_id", invoiceId);
+  const { error: iErr } = await supabase.from("invoice_items").insert(itemRows);
+  if (iErr) return { error: iErr.message };
+
+  revalidatePath(`/invoices/${invoiceId}`);
+  revalidatePath(`/invoices/${invoiceId}/tax-invoice`);
+  revalidatePath("/invoices");
+  return { ok: true as const, id: invoiceId };
 }
 
 export async function recordPayment(input: unknown) {

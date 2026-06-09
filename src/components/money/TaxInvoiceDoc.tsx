@@ -1,9 +1,11 @@
 import { formatINRPrecise } from "@/lib/money";
 import { stateLabel, amountInWords, DEFAULT_HSN } from "@/lib/gst";
+import { uomUqc } from "@/lib/validation";
 
 export type InvoiceLine = {
   description: string;
   hsn_code: string | null;
+  uom?: string | null;
   sqft: number;
   rate_paise: number;
   gst_rate: number;
@@ -136,7 +138,8 @@ export default function TaxInvoiceDoc({ data }: { data: TaxInvoiceData }) {
             <th className="l">#</th>
             <th className="l">Description</th>
             <th>HSN/SAC</th>
-            <th>Qty (sqft)</th>
+            <th>Qty</th>
+            <th>UQC</th>
             <th>Rate ₹</th>
             <th>Taxable ₹</th>
             {intra ? (
@@ -152,6 +155,7 @@ export default function TaxInvoiceDoc({ data }: { data: TaxInvoiceData }) {
           <tr className="sub">
             <th className="l"></th>
             <th className="l"></th>
+            <th></th>
             <th></th>
             <th></th>
             <th></th>
@@ -179,6 +183,7 @@ export default function TaxInvoiceDoc({ data }: { data: TaxInvoiceData }) {
               <td className="l">{ln.description}</td>
               <td>{ln.hsn_code || DEFAULT_HSN}</td>
               <td>{ln.sqft ? Number(ln.sqft).toFixed(2) : "—"}</td>
+              <td>{uomUqc(ln.uom)}</td>
               <td>{inr(ln.rate_paise)}</td>
               <td>{inr(ln.line_subtotal_paise)}</td>
               {intra ? (
@@ -200,7 +205,7 @@ export default function TaxInvoiceDoc({ data }: { data: TaxInvoiceData }) {
         </tbody>
         <tfoot>
           <tr>
-            <td className="l" colSpan={6}>
+            <td className="l" colSpan={7}>
               Total
             </td>
             {intra ? (

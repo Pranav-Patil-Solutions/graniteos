@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft, FileText } from "lucide-react";
+import { ChevronLeft, FileText, Pencil } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR } from "@/lib/money";
@@ -79,12 +79,22 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
         </span>
       </div>
 
-      <Link
-        href={`/invoices/${id}/tax-invoice`}
-        className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-gold/90 px-4 py-2.5 text-sm font-semibold text-graphite-900 hover:bg-gold"
-      >
-        <FileText className="w-4 h-4" /> View / Print GST Tax Invoice
-      </Link>
+      <div className="mt-4 flex gap-2">
+        <Link
+          href={`/invoices/${id}/tax-invoice`}
+          className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gold/90 px-4 py-2.5 text-sm font-semibold text-graphite-900 hover:bg-gold"
+        >
+          <FileText className="w-4 h-4" /> View / Print Tax Invoice
+        </Link>
+        {paid === 0 && (
+          <Link
+            href={`/invoices/${id}/edit`}
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-graphite-500 px-4 py-2.5 text-sm font-semibold text-slate-200 hover:border-gold hover:text-gold"
+          >
+            <Pencil className="w-4 h-4" /> Edit
+          </Link>
+        )}
+      </div>
 
       <div className="mt-4 rounded-2xl border border-graphite-600 bg-white/[0.04] p-4 space-y-1.5">
         <Row label="Taxable value" value={formatINR(invoice.subtotal_paise)} />

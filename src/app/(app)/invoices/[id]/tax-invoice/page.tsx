@@ -43,7 +43,7 @@ export default async function TaxInvoicePage({
   const { data: itemData } = await supabase
     .from("invoice_items")
     .select(
-      "description, hsn_code, sqft, rate_paise, gst_rate, line_subtotal_paise, line_cgst_paise, line_sgst_paise, line_igst_paise, line_total_paise",
+      "description, hsn_code, uom, sqft, rate_paise, gst_rate, line_subtotal_paise, line_cgst_paise, line_sgst_paise, line_igst_paise, line_total_paise",
     )
     .eq("invoice_id", id)
     .order("created_at", { ascending: true });
@@ -78,6 +78,7 @@ export default async function TaxInvoicePage({
       {
         description: "Stone supply",
         hsn_code: DEFAULT_HSN,
+        uom: "SQF",
         sqft: 0,
         rate_paise: sub,
         gst_rate: sub > 0 ? Math.round((tax / sub) * 100) : 18,
