@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { Search, X } from "lucide-react";
 import { StoneSwatch } from "@/components/inventory/StoneSwatch";
 import StoneVisualizer, { type VizMaterial } from "@/components/catalog/StoneVisualizer";
 
@@ -22,6 +23,7 @@ export type CatalogSlab = {
 };
 
 type Company = { id: string; name: string; city: string | null; phone: string | null };
+type Sort = "featured" | "large" | "small" | "az";
 
 export default function CatalogView({
   company,
@@ -39,7 +41,6 @@ export default function CatalogView({
     [slabs],
   );
 
-  // distinct materials for the "see it in your space" visualizer
   const vizMaterials = useMemo<VizMaterial[]>(() => {
     const seen = new Map<string, VizMaterial>();
     for (const s of slabs) {
@@ -54,15 +55,38 @@ export default function CatalogView({
     return [...seen.values()];
   }, [slabs]);
 
+  const [query, setQuery] = useState("");
   const [material, setMaterial] = useState<string>("");
   const [finish, setFinish] = useState<string>("");
+  const [sort, setSort] = useState<Sort>("featured");
 
-  const filtered = slabs.filter(
-    (s) => (!material || s.material === material) && (!finish || s.finish === finish),
-  );
-  const hero = filtered[0] ?? slabs[0];
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const list = slabs.filter((s) => {
+      if (material && s.material !== material) return false;
+      if (finish && s.finish !== finish) return false;
+      if (q) {
+        const hay = `${s.material} ${s.color ?? ""} ${s.finish ?? ""}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+    const sorted = [...list];
+    if (sort === "large") sorted.sort((a, b) => b.sqft - a.sqft);
+    else if (sort === "small") sorted.sort((a, b) => a.sqft - b.sqft);
+    else if (sort === "az") sorted.sort((a, b) => a.material.localeCompare(b.material));
+    return sorted;
+  }, [slabs, query, material, finish, sort]);
 
+  const hero = slabs[0];
   const wa = company.phone ? company.phone.replace(/\D/g, "") : "";
+  const hasFilters = !!query || !!material || !!finish;
+
+  function clearAll() {
+    setQuery("");
+    setMaterial("");
+    setFinish("");
+  }
 
   return (
     <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_70%_-10%,#1c2630,#0b0e11_60%)] text-[#e8e6e1]">
@@ -72,10 +96,10 @@ export default function CatalogView({
           <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-granite-green to-granite-green2 grid place-items-center font-extrabold text-white text-xl">
             {(company.name ?? "G").charAt(0)}
           </div>
-          <div>
-            <h1 className="text-xl font-bold text-white">{company.name ?? "Stock catalogue"}</h1>
+          <div className="min-w-0">
+            <h1 className="text-xl font-bold text-white truncate">{company.name ?? "Stock catalogue"}</h1>
             <p className="text-xs text-slate-400">
-              Live stock{company.city ? ` · ${company.city}` : ""} · {slabs.length} slabs available
+              Live stock{company.city ? ` · ${company.city}` : ""} · {slabs.length} slabs · {materials.length} stones
             </p>
           </div>
         </div>
@@ -100,21 +124,58 @@ export default function CatalogView({
           </div>
         )}
 
-        {/* filters */}
-        {(materials.length > 1 || finishes.length > 1) && (
-          <div className="mt-5 space-y-2">
-            {materials.length > 1 && (
-              <Chips label="Material" value={material} onChange={setMaterial} options={materials} />
-            )}
-            {finishes.length > 1 && (
-              <Chips label="Finish" value={finish} onChange={setFinish} options={finishes} />
-            )}
+        {/* sticky controls: search + sort + filters */}
+        <div className="sticky top-0 z-20 -mx-4 mt-5 bg-[#0b0e11]/85 backdrop-blur px-4 pt-3 pb-2 border-b border-graphite-700">
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search stone, colour, finish…"
+                className="w-full rounded-xl border border-graphite-600 bg-white/[0.04] pl-9 pr-8 py-2 text-sm text-white placeholder:text-slate-500 focus:border-gold outline-none"
+              />
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value as Sort)}
+              className="rounded-xl border border-graphite-600 bg-white/[0.04] px-2 py-2 text-sm text-slate-300 focus:border-gold outline-none"
+            >
+              <option value="featured">Featured</option>
+              <option value="large">Largest</option>
+              <option value="small">Smallest</option>
+              <option value="az">A–Z</option>
+            </select>
           </div>
-        )}
 
-        <p className="mt-4 text-sm text-gold">
-          ✨ {filtered.length} in stock — tap a slab for details, or message us to enquire.
-        </p>
+          {(materials.length > 1 || finishes.length > 1) && (
+            <div className="mt-2 space-y-1.5">
+              {materials.length > 1 && (
+                <Chips label="Stone" value={material} onChange={setMaterial} options={materials} />
+              )}
+              {finishes.length > 1 && (
+                <Chips label="Finish" value={finish} onChange={setFinish} options={finishes} />
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="mt-3 flex items-center justify-between">
+          <p className="text-sm text-gold">✨ {filtered.length} in stock</p>
+          {hasFilters && (
+            <button onClick={clearAll} className="text-xs text-slate-400 hover:text-white underline">
+              Clear filters
+            </button>
+          )}
+        </div>
 
         {/* grid */}
         <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -122,29 +183,43 @@ export default function CatalogView({
             <Link
               key={s.id}
               href={`/s/${s.id}`}
-              className="group rounded-2xl border border-graphite-600 bg-white/[0.04] overflow-hidden hover:border-gold/50 transition-colors"
+              className="group rounded-2xl border border-graphite-600 bg-white/[0.04] overflow-hidden hover:border-gold/50 hover:-translate-y-0.5 transition-all"
             >
-              {s.photo_path ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={s.photo_path} alt={s.material} className="w-full h-32 object-cover" />
-              ) : (
-                <StoneSwatch material={s.material} color={s.color} className="w-full h-32" />
-              )}
+              <div className="relative">
+                {s.photo_path ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={s.photo_path} alt={s.material} className="w-full h-32 object-cover" />
+                ) : (
+                  <StoneSwatch material={s.material} color={s.color} className="w-full h-32" />
+                )}
+                {s.finish && (
+                  <span className="absolute top-2 left-2 rounded-full bg-black/55 backdrop-blur px-2 py-0.5 text-[10px] font-semibold text-white">
+                    {s.finish}
+                  </span>
+                )}
+              </div>
               <div className="p-3">
                 <p className="font-bold text-white text-sm truncate">{s.material}</p>
-                <p className="text-xs text-slate-400">
-                  {Number(s.sqft).toFixed(0)} sq-ft
-                  {s.thickness_mm ? ` · ${s.thickness_mm}mm` : ""}
-                  {s.finish ? ` · ${s.finish}` : ""}
-                </p>
-                <p className="mt-1 text-[11px] text-gold/80">Price on request →</p>
+                <div className="mt-1 flex flex-wrap gap-1">
+                  <Badge>{Number(s.sqft).toFixed(0)} sq-ft</Badge>
+                  {s.thickness_mm ? <Badge>{s.thickness_mm}mm</Badge> : null}
+                </div>
+                <p className="mt-2 text-[11px] text-gold/80 group-hover:text-gold">Price on request →</p>
               </div>
             </Link>
           ))}
           {filtered.length === 0 && (
-            <p className="col-span-full text-center text-sm text-slate-500 py-10">
-              No slabs match that filter.
-            </p>
+            <div className="col-span-full text-center py-12">
+              <p className="text-sm text-slate-400">No slabs match your search.</p>
+              {hasFilters && (
+                <button
+                  onClick={clearAll}
+                  className="mt-3 rounded-lg border border-graphite-500 px-4 py-2 text-xs font-semibold text-slate-200 hover:border-gold hover:text-gold"
+                >
+                  Clear filters
+                </button>
+              )}
+            </div>
           )}
         </div>
 
@@ -153,7 +228,7 @@ export default function CatalogView({
             href={`https://wa.me/${wa}?text=${encodeURIComponent(`Hi ${company.name}, I'd like to enquire about your stock.`)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="fixed bottom-5 right-5 inline-flex items-center gap-2 rounded-full bg-[#25D366] text-[#06351a] px-5 py-3 font-bold shadow-lg"
+            className="fixed bottom-5 right-5 inline-flex items-center gap-2 rounded-full bg-[#25D366] text-[#06351a] px-5 py-3 font-bold shadow-lg hover:brightness-105"
           >
             💬 Enquire
           </a>
@@ -161,6 +236,12 @@ export default function CatalogView({
         <p className="mt-8 text-center text-[11px] text-graphite-500">Powered by GraniteOS</p>
       </div>
     </div>
+  );
+}
+
+function Badge({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="rounded-md bg-white/[0.06] px-1.5 py-0.5 text-[10px] text-slate-300">{children}</span>
   );
 }
 
