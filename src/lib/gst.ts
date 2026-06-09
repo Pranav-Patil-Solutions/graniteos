@@ -114,12 +114,15 @@ export function splitLineTax(
   type: SupplyType,
 ): { cgst: number; sgst: number; igst: number } {
   if (!gstRatePct) return { cgst: 0, sgst: 0, igst: 0 };
+  // Round the whole line tax first, then split — so CGST+SGST always equals the
+  // intended tax and an intra-state line totals the same as the inter-state one
+  // (avoids a 1-paise drift from rounding each half independently).
+  const total = Math.round((taxablePaise * gstRatePct) / 100);
   if (type === "intra") {
-    const half = Math.round((taxablePaise * gstRatePct) / 200);
-    return { cgst: half, sgst: half, igst: 0 };
+    const cgst = Math.floor(total / 2);
+    return { cgst, sgst: total - cgst, igst: 0 };
   }
-  const igst = Math.round((taxablePaise * gstRatePct) / 100);
-  return { cgst: 0, sgst: 0, igst };
+  return { cgst: 0, sgst: 0, igst: total };
 }
 
 /** Round a total to the nearest rupee; returns the signed round-off (paise). */
@@ -165,7 +168,7 @@ function indianWords(n: number): string {
   n %= 1000;
   const hundred = n;
   const parts: string[] = [];
-  if (crore) parts.push(threeDigits(crore) + " Crore");
+  if (crore) parts.push(indianWords(crore) + " Crore");
   if (lakh) parts.push(twoDigits(lakh) + " Lakh");
   if (thousand) parts.push(twoDigits(thousand) + " Thousand");
   if (hundred) parts.push(threeDigits(hundred));

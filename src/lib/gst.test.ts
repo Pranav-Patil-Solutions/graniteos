@@ -52,11 +52,12 @@ describe("supplyType", () => {
 });
 
 describe("splitLineTax", () => {
-  it("splits intra-state equally into CGST + SGST", () => {
-    // ₹22,662.50 taxable @18% → ₹2,039.63 each half
+  it("splits intra-state into CGST + SGST that sum to the whole line tax", () => {
+    // ₹22,662.50 taxable @18% → ₹4,079.25 tax → 2039.62 + 2039.63
     const r = splitLineTax(2266250, 18, "intra");
-    expect(r.cgst).toBe(203963);
+    expect(r.cgst).toBe(203962);
     expect(r.sgst).toBe(203963);
+    expect(r.cgst + r.sgst).toBe(407925);
     expect(r.igst).toBe(0);
   });
   it("puts all inter-state tax into IGST", () => {
@@ -64,6 +65,11 @@ describe("splitLineTax", () => {
     expect(r.igst).toBe(407925);
     expect(r.cgst).toBe(0);
     expect(r.sgst).toBe(0);
+  });
+  it("intra and inter total the same tax for the same taxable value", () => {
+    const intra = splitLineTax(2266250, 18, "intra");
+    const inter = splitLineTax(2266250, 18, "inter");
+    expect(intra.cgst + intra.sgst).toBe(inter.igst);
   });
   it("handles 0% (exempt) lines", () => {
     expect(splitLineTax(100000, 0, "intra")).toEqual({ cgst: 0, sgst: 0, igst: 0 });

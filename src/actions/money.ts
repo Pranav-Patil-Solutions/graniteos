@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireSession } from "@/lib/auth";
+import { can } from "@/lib/permissions";
 import { paymentSchema, invoiceEditSchema } from "@/lib/validation";
 import { rupeesToPaise } from "@/lib/money";
 import {
@@ -16,8 +17,10 @@ import {
 
 type QuoteLine = {
   slab_id: string | null;
+  product_id: string | null;
   description: string;
   hsn_code: string | null;
+  uom: string | null;
   sqft: number;
   rate_paise: number;
   gst_rate: number;
@@ -26,6 +29,7 @@ type QuoteLine = {
 
 export async function createInvoiceFromOrder(orderId: string) {
   const me = await requireSession();
+  if (!can(me.role, "confirmOrder")) return { error: "You don't have permission to create invoices." };
   const supabase = await createClient();
 
   // already invoiced?
@@ -72,7 +76,7 @@ export async function createInvoiceFromOrder(orderId: string) {
   if (order.quote_id) {
     const { data: qItems } = await supabase
       .from("quote_items")
-      .select("slab_id, description, hsn_code, sqft, rate_paise, gst_rate, line_subtotal_paise")
+      .select("slab_id, product_id, description, hsn_code, uom, sqft, rate_paise, gst_rate, line_subtotal_paise")
       .eq("quote_id", order.quote_id);
     lines = (qItems ?? []) as QuoteLine[];
   }
@@ -82,8 +86,10 @@ export async function createInvoiceFromOrder(orderId: string) {
     lines = [
       {
         slab_id: null,
+        product_id: null,
         description: "Stone supply",
         hsn_code: DEFAULT_HSN,
+        uom: "SQF",
         sqft: 0,
         rate_paise: sub,
         gst_rate: 18,
@@ -106,8 +112,10 @@ export async function createInvoiceFromOrder(orderId: string) {
     return {
       company_id: me.company_id,
       slab_id: ln.slab_id,
+      product_id: ln.product_id ?? null,
       description: ln.description,
       hsn_code: ln.hsn_code || DEFAULT_HSN,
+      uom: ln.uom || "SQF",
       sqft: ln.sqft,
       rate_paise: Number(ln.rate_paise),
       gst_rate: Number(ln.gst_rate),
@@ -161,6 +169,7 @@ export async function createInvoiceFromOrder(orderId: string) {
 
 export async function updateInvoice(invoiceId: string, input: unknown) {
   const me = await requireSession();
+  if (!can(me.role, "confirmOrder")) return { error: "You don't have permission to edit invoices." };
   const parsed = invoiceEditSchema.safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const v = parsed.data;

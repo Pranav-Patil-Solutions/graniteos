@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireSession } from "@/lib/auth";
+import { can } from "@/lib/permissions";
 import { quoteSchema } from "@/lib/validation";
 import { rupeesToPaise } from "@/lib/money";
 import {
@@ -28,6 +29,7 @@ async function displayNumber(
 
 export async function createQuote(input: unknown) {
   const me = await requireSession();
+  if (!can(me.role, "createQuote")) return { error: "You don't have permission to create quotes." };
   const parsed = quoteSchema.safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const v = parsed.data;
@@ -119,6 +121,7 @@ export async function createQuote(input: unknown) {
 
 export async function updateQuote(quoteId: string, input: unknown) {
   const me = await requireSession();
+  if (!can(me.role, "createQuote")) return { error: "You don't have permission to edit quotes." };
   const parsed = quoteSchema.safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const v = parsed.data;

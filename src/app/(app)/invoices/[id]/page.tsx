@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ChevronLeft, FileText, Pencil } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { formatINR } from "@/lib/money";
+import { formatINR, formatINRPrecise } from "@/lib/money";
 import RecordPaymentForm from "@/components/money/RecordPaymentForm";
 import ShareWhatsApp from "@/components/money/ShareWhatsApp";
 
@@ -100,14 +100,14 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
         <Row label="Taxable value" value={formatINR(invoice.subtotal_paise)} />
         {(invoice.supply_type ?? "intra") === "intra" ? (
           <>
-            <Row label="CGST" value={formatINR(invoice.cgst_paise ?? 0)} />
-            <Row label="SGST" value={formatINR(invoice.sgst_paise ?? 0)} />
+            <Row label="CGST" value={formatINRPrecise(invoice.cgst_paise ?? 0)} />
+            <Row label="SGST" value={formatINRPrecise(invoice.sgst_paise ?? 0)} />
           </>
         ) : (
-          <Row label="IGST" value={formatINR(invoice.igst_paise ?? 0)} />
+          <Row label="IGST" value={formatINRPrecise(invoice.igst_paise ?? 0)} />
         )}
         {Number(invoice.round_off_paise ?? 0) !== 0 && (
-          <Row label="Round off" value={formatINR(invoice.round_off_paise)} />
+          <Row label="Round off" value={formatINRPrecise(invoice.round_off_paise)} />
         )}
         <div className="flex justify-between pt-1.5 border-t border-graphite-600">
           <span className="font-bold text-white">Total</span>
