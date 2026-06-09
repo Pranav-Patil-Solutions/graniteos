@@ -52,6 +52,33 @@ export const STONE_FINISHES = [
 export const STONE_GRADES = ["Premium", "Standard", "Commercial"] as const;
 export const SLAB_THICKNESSES_MM = [16, 18, 20, 30] as const;
 
+// Units of measure for the stone trade. `uqc` is the GST Unit Quantity Code
+// that must appear on a tax invoice (e.g. running-feet bills under MTR).
+export const UOM = [
+  { code: "SQF", label: "Sq. Feet", uqc: "SQF" },
+  { code: "SQM", label: "Sq. Metre", uqc: "SQM" },
+  { code: "RFT", label: "Running Feet", uqc: "MTR" },
+  { code: "RMT", label: "Running Metre", uqc: "MTR" },
+  { code: "NOS", label: "Pieces (Nos)", uqc: "NOS" },
+  { code: "SLB", label: "Slab", uqc: "NOS" },
+  { code: "SET", label: "Set", uqc: "SET" },
+  { code: "BDL", label: "Bundle", uqc: "BDL" },
+  { code: "CBM", label: "Cubic Metre", uqc: "CBM" },
+  { code: "TON", label: "Tonne", uqc: "TON" },
+] as const;
+export const UOM_CODES = UOM.map((u) => u.code);
+export const DEFAULT_UOM = "SQF";
+export type UomCode = (typeof UOM)[number]["code"];
+
+/** Human label for a UOM code, falling back to the raw code. */
+export function uomLabel(code: string | null | undefined): string {
+  return UOM.find((u) => u.code === code)?.label ?? code ?? "SQF";
+}
+/** GST Unit Quantity Code for a UOM code (what goes on the tax invoice). */
+export function uomUqc(code: string | null | undefined): string {
+  return UOM.find((u) => u.code === code)?.uqc ?? "OTH";
+}
+
 const optText = (max: number) => z.string().trim().max(max).optional().or(z.literal(""));
 
 export const blockSchema = z.object({
@@ -124,8 +151,10 @@ export const GST_RATES = [0, 5, 12, 18, 28] as const;
 export const quoteItemSchema = z.object({
   description: z.string().trim().min(1, "Description required").max(140),
   slabId: z.string().uuid().optional().or(z.literal("")),
+  productId: z.string().uuid().optional().or(z.literal("")),
   hsn: z.string().trim().max(8).optional().or(z.literal("")),
-  sqft: numericFromInput.positive("Sq-ft must be greater than 0"),
+  uom: z.enum(UOM_CODES as [string, ...string[]]).default(DEFAULT_UOM),
+  sqft: numericFromInput.positive("Quantity must be greater than 0"),
   rateRupees: numericFromInput.min(0),
   gstRate: numericFromInput.min(0).max(28),
 });
@@ -138,6 +167,26 @@ export const quoteSchema = z.object({
 });
 export type QuoteItemInput = z.infer<typeof quoteItemSchema>;
 export type QuoteInput = z.infer<typeof quoteSchema>;
+
+// Product master — a reusable named line (stone slab type or service) with
+// sensible defaults the user can override on each quote.
+export const productSchema = z.object({
+  name: z.string().trim().min(1, "Product name is required").max(120),
+  hsn: z.string().trim().max(8).optional().or(z.literal("")),
+  uom: z.enum(UOM_CODES as [string, ...string[]]).default(DEFAULT_UOM),
+  rateRupees: numericFromInput.min(0).optional(),
+  gstRate: numericFromInput.min(0).max(28).default(18),
+  material: optText(60),
+  finish: optText(30),
+  notes: optText(200),
+});
+export type ProductInput = z.infer<typeof productSchema>;
+
+// Editing an invoice replaces its line items wholesale (same shape as a quote line).
+export const invoiceEditSchema = z.object({
+  items: z.array(quoteItemSchema).min(1, "Add at least one line item"),
+});
+export type InvoiceEditInput = z.infer<typeof invoiceEditSchema>;
 
 export const PAYMENT_MODES = ["cash", "upi", "bank", "cheque", "other"] as const;
 

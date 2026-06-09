@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ChevronLeft, Upload, ChevronRight } from "lucide-react";
+import { ChevronLeft, Upload, ChevronRight, Package } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/permissions";
 import { createClient } from "@/lib/supabase/server";
@@ -37,6 +37,20 @@ export default async function SettingsPage() {
           <span className="block text-white font-semibold">Import from Excel</span>
           <span className="block text-xs text-slate-400 mt-0.5">
             Bring in customers, suppliers, blocks, slabs &amp; jobs from a spreadsheet.
+          </span>
+        </span>
+        <ChevronRight className="w-4 h-4 text-slate-500" />
+      </Link>
+
+      <Link
+        href="/products"
+        className="mb-5 flex items-center gap-3 rounded-2xl border border-graphite-600 bg-white/[0.04] backdrop-blur p-4 hover:border-gold/60 transition-colors"
+      >
+        <span className="text-gold"><Package className="w-5 h-5" /></span>
+        <span className="flex-1">
+          <span className="block text-white font-semibold">Products</span>
+          <span className="block text-xs text-slate-400 mt-0.5">
+            Create your own reusable products with default rate, unit, HSN &amp; GST.
           </span>
         </span>
         <ChevronRight className="w-4 h-4 text-slate-500" />
