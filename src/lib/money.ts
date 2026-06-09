@@ -24,6 +24,14 @@ export function formatINRPrecise(paise: number): string {
   );
 }
 
+/** Muted suffix label for big figures: "2.4 lakh" / "1.3 crore". "" if < ₹1 lakh. */
+export function formatINRShort(paise: number): string {
+  const r = Math.abs(paiseToRupees(paise));
+  if (r >= 1_00_00_000) return `${+(r / 1_00_00_000).toFixed(2)} crore`;
+  if (r >= 1_00_000) return `${+(r / 1_00_000).toFixed(2)} lakh`;
+  return "";
+}
+
 /** Square feet from inches (length × width / 144), rounded to 2 dp. */
 export function sqFtFromInches(lengthIn: number, widthIn: number): number {
   return Math.round((lengthIn * widthIn) / 144 / 0.01) * 0.01;

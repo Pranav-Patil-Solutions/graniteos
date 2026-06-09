@@ -4,13 +4,65 @@
 
 :root {
   color-scheme: dark;
+
+  /* ── Premium Stone design tokens (redesign spec §2) ── */
+  /* Background (dark shell) */
+  --bg-base: #0b0e11;
+  --bg-elevated: #15191e;
+  --bg-elevated2: #1c2127;
+  /* Foreground (light slabs) */
+  --slab: #f7f6f3;
+  --slab-muted: #eceae5;
+  /* Text */
+  --text-on-dark: #f2f0eb;
+  --text-on-dark-muted: #9aa1a9;
+  --text-on-light: #14181c;
+  --text-on-light-muted: #5c636b;
+  /* Accents */
+  --gold: #c8a24b;
+  --gold-soft: #e4c97e;
+  --green: #7c8c5d;
+  /* Semantic */
+  --positive: #1f8a70;
+  --negative: #d96a5b;
+  --info: #2c7a8c;
+  /* Lines */
+  --border-dark: rgba(242, 240, 235, 0.08);
+  --border-light: rgba(20, 24, 28, 0.1);
 }
 
 html,
 body {
   height: 100%;
-  background: #0b0e11;
-  color: #e8e6e1;
+  background: var(--bg-base);
+  color: var(--text-on-dark);
+}
+
+/* Tabular numerals for all money / quantity figures */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Soft gold glow behind a hero element (one per screen) */
+.stone-glow::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10% auto auto;
+  width: 70%;
+  height: 140%;
+  background: radial-gradient(closest-side, rgba(200, 162, 75, 0.18), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
 
 /* Inputs on dark surfaces */
