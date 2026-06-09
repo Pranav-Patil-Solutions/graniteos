@@ -183,28 +183,33 @@ export default function CatalogView({
             <Link
               key={s.id}
               href={`/s/${s.id}`}
-              className="group rounded-2xl border border-graphite-600 bg-white/[0.04] overflow-hidden hover:border-gold/50 hover:-translate-y-0.5 transition-all"
+              className="group rounded-2xl border border-graphite-600 bg-white/[0.04] overflow-hidden hover:border-gold/50 hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgba(201,139,75,.5)] transition-all"
             >
-              <div className="relative">
+              <div className="relative h-40">
                 {s.photo_path ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={s.photo_path} alt={s.material} className="w-full h-32 object-cover" />
+                  <img src={s.photo_path} alt={s.material} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 ) : (
-                  <StoneSwatch material={s.material} color={s.color} className="w-full h-32" />
+                  <StoneSwatch material={s.material} color={s.color} className="w-full h-full" />
                 )}
+                {/* gradient + name overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
                 {s.finish && (
-                  <span className="absolute top-2 left-2 rounded-full bg-black/55 backdrop-blur px-2 py-0.5 text-[10px] font-semibold text-white">
+                  <span className="absolute top-2 right-2 rounded-full bg-black/50 backdrop-blur px-2 py-0.5 text-[10px] font-semibold text-white">
                     {s.finish}
                   </span>
                 )}
-              </div>
-              <div className="p-3">
-                <p className="font-bold text-white text-sm truncate">{s.material}</p>
-                <div className="mt-1 flex flex-wrap gap-1">
-                  <Badge>{Number(s.sqft).toFixed(0)} sq-ft</Badge>
-                  {s.thickness_mm ? <Badge>{s.thickness_mm}mm</Badge> : null}
+                <div className="absolute left-3 right-3 bottom-2">
+                  <p className="font-bold text-white text-sm leading-tight drop-shadow truncate">{s.material}</p>
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    <Badge>{Number(s.sqft).toFixed(0)} sq-ft</Badge>
+                    {s.thickness_mm ? <Badge>{s.thickness_mm}mm</Badge> : null}
+                  </div>
                 </div>
-                <p className="mt-2 text-[11px] text-gold/80 group-hover:text-gold">Price on request →</p>
+              </div>
+              <div className="flex items-center justify-between px-3 py-2.5">
+                <span className="text-[11px] text-gold/80 group-hover:text-gold font-medium">Price on request</span>
+                <span className="text-gold/70 group-hover:text-gold group-hover:translate-x-0.5 transition-transform">→</span>
               </div>
             </Link>
           ))}
