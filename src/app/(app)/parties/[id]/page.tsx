@@ -67,7 +67,9 @@ export default async function PartyPage({ params }: { params: Promise<{ id: stri
     : await supabase
         .from("blocks")
         .select("id, label, material, cost_paise, created_at")
-        .ilike("supplier", party.name)
+        // exact (case-insensitive) match — ilike with the raw name would treat
+        // any % or _ in the supplier name as a wildcard and match wrong blocks.
+        .ilike("supplier", (party.name as string).trim().replace(/([%_\\])/g, "\\$1"))
         .order("created_at", { ascending: false });
 
   const opening = Number(party.opening_balance_paise);

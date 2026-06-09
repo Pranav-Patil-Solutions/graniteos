@@ -26,12 +26,14 @@ export default async function AnalyticsPage() {
     { data: quotes },
     { data: orders },
     { data: slabs },
+    { data: customers },
   ] = await Promise.all([
     supabase.from("invoices").select("id, customer_id, total_paise, invoice_date, invoice_no, status, parties(name)"),
     supabase.from("payments").select("amount_paise, paid_on, invoice_id"),
     supabase.from("quotes").select("status, total_paise"),
     supabase.from("orders").select("status"),
     supabase.from("slabs").select("status, net_sqft, rate_paise"),
+    supabase.from("parties").select("opening_balance_paise").eq("kind", "customer"),
   ]);
 
   const inv = invoices ?? [];
@@ -39,6 +41,7 @@ export default async function AnalyticsPage() {
   const qts = quotes ?? [];
   const ords = orders ?? [];
   const slb = slabs ?? [];
+  const openingReceivable = (customers ?? []).reduce((n, c) => n + Number(c.opening_balance_paise), 0);
 
   // ── headline money ─────────────────────────────────────────────────────────
   const now = new Date();
@@ -63,7 +66,9 @@ export default async function AnalyticsPage() {
     }))
     .filter((i) => i.pending > 0)
     .sort((a, b) => b.pending - a.pending);
-  const receivables = pendingInvoices.reduce((n, i) => n + i.pending, 0);
+  // Total receivable = unpaid invoice amounts + carried-forward opening balances
+  // (matches the per-customer "outstanding" shown on the party page).
+  const receivables = pendingInvoices.reduce((n, i) => n + i.pending, 0) + openingReceivable;
 
   // ── quote funnel ───────────────────────────────────────────────────────────
   const quoteCount = qts.length;
@@ -190,7 +195,7 @@ export default async function AnalyticsPage() {
         ) : (
           <div className="space-y-2">
             {topCustomers.map(([name, amt]) => {
-              const pct = Math.round((amt / topCustomers[0][1]) * 100);
+              const pct = Math.round((amt / (topCustomers[0][1] || 1)) * 100);
               return (
                 <div key={name}>
                   <div className="flex justify-between text-xs mb-0.5">

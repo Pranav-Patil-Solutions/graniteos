@@ -32,6 +32,16 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
   ]);
   const lines = (items ?? []) as { id: string; description: string; line_total_paise: number }[];
 
+  // A paid / part-paid invoice can't be edited — don't show a dead Edit link.
+  let invoicePaid = 0;
+  if (invoice) {
+    const { data: pays } = await supabase
+      .from("payments")
+      .select("amount_paise")
+      .eq("invoice_id", invoice.id);
+    invoicePaid = (pays ?? []).reduce((n, p) => n + Number(p.amount_paise), 0);
+  }
+
   return (
     <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
       <Link
@@ -76,12 +86,14 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
           >
             View invoice {invoice.invoice_no}
           </Link>
-          <Link
-            href={`/invoices/${invoice.id}/edit`}
-            className="flex items-center justify-center gap-1.5 rounded-xl border border-graphite-500 px-4 py-2.5 text-sm font-semibold text-slate-200 hover:border-gold hover:text-gold"
-          >
-            <Pencil className="w-4 h-4" /> Edit
-          </Link>
+          {invoicePaid === 0 && (
+            <Link
+              href={`/invoices/${invoice.id}/edit`}
+              className="flex items-center justify-center gap-1.5 rounded-xl border border-graphite-500 px-4 py-2.5 text-sm font-semibold text-slate-200 hover:border-gold hover:text-gold"
+            >
+              <Pencil className="w-4 h-4" /> Edit
+            </Link>
+          )}
         </div>
       ) : (
         <div className="mt-4 flex items-center justify-between rounded-xl border border-graphite-600 bg-white/[0.04] px-4 py-3">
