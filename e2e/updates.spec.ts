@@ -72,4 +72,22 @@ test.describe("New features (owner)", () => {
     await expect(page.getByRole("link", { name: /Products/i })).toBeVisible({ timeout: 15_000 });
     await expect(page.getByRole("link", { name: /Import from Excel/i })).toBeVisible();
   });
+
+  test("owner analytics dashboard loads with KPIs", async ({ page }) => {
+    await page.goto("/analytics");
+    await expect(page.getByRole("heading", { name: /Business insights/i })).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/Receivables/i)).toBeVisible();
+    await expect(page.getByText(/Pending invoices/i)).toBeVisible();
+    await expect(page.getByText(/Top customers by revenue/i)).toBeVisible();
+  });
+
+  test("party history opens from the list and shows a ledger", async ({ page }) => {
+    await page.goto("/parties");
+    const firstParty = page.locator('a[href^="/parties/"]').first();
+    await expect(firstParty).toBeVisible({ timeout: 15_000 });
+    await firstParty.click();
+    await expect(page).toHaveURL(/\/parties\/[0-9a-f-]+$/);
+    // a customer shows the History section; a supplier shows Blocks supplied
+    await expect(page.getByText(/History|Blocks supplied/i).first()).toBeVisible({ timeout: 15_000 });
+  });
 });
