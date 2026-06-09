@@ -103,6 +103,16 @@ export default async function AnalyticsPage() {
   const monthRevenue = months.map((mk) => inv.filter((i) => monthKey(i.invoice_date as string) === mk).reduce((n, i) => n + Number(i.total_paise), 0));
   const maxMonth = Math.max(1, ...monthRevenue);
 
+  // SVG area-chart geometry for the revenue trend (no chart library).
+  const CW = 320, CH = 120, PAD = 14, BASE = CH - 16;
+  const pts = monthRevenue.map((rev, i) => {
+    const x = PAD + (i * (CW - PAD * 2)) / Math.max(1, months.length - 1);
+    const y = 12 + (1 - rev / maxMonth) * (BASE - 12);
+    return [x, y] as const;
+  });
+  const linePath = pts.map((p, i) => `${i ? "L" : "M"}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(" ");
+  const areaPath = `${linePath} L${pts[pts.length - 1][0].toFixed(1)} ${BASE} L${pts[0][0].toFixed(1)} ${BASE} Z`;
+
   return (
     <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
       <Link href="/dashboard" className="inline-flex items-center gap-1 text-sm text-slate-400 hover:text-slate-200">
@@ -119,22 +129,37 @@ export default async function AnalyticsPage() {
         <Kpi icon={Package} label="Stock value" value={formatINR(stockValue)} sub={`${inStock.length} slabs in stock`} tone="gold" />
       </div>
 
-      {/* revenue trend */}
+      {/* revenue trend — gradient area chart */}
       <Section title="Revenue · last 6 months" icon={TrendingUp}>
-        <div className="flex items-end justify-between gap-2 h-28 px-1">
+        <svg viewBox={`0 0 ${CW} ${CH}`} className="w-full" style={{ height: 130 }} preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="rev-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#e0b07a" stopOpacity="0.45" />
+              <stop offset="100%" stopColor="#c98b4b" stopOpacity="0.02" />
+            </linearGradient>
+            <linearGradient id="rev-line" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#e0b07a" />
+              <stop offset="100%" stopColor="#c98b4b" />
+            </linearGradient>
+          </defs>
+          {[0.25, 0.5, 0.75].map((g) => (
+            <line key={g} x1={PAD} x2={CW - PAD} y1={12 + g * (BASE - 12)} y2={12 + g * (BASE - 12)} stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+          ))}
+          <path d={areaPath} fill="url(#rev-fill)" />
+          <path d={linePath} fill="none" stroke="url(#rev-line)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          {pts.map((p, i) => (
+            <circle key={i} cx={p[0]} cy={p[1]} r={i === pts.length - 1 ? 4 : 2.5} fill={i === pts.length - 1 ? "#e0b07a" : "#0c0a08"} stroke="#e0b07a" strokeWidth="1.5" />
+          ))}
+        </svg>
+        <div className="mt-1 flex justify-between px-1">
           {months.map((mk, i) => (
-            <div key={mk} className="flex-1 flex flex-col items-center justify-end gap-1">
-              <div
-                className="w-full rounded-t bg-gradient-to-t from-gold/40 to-gold"
-                style={{ height: `${Math.max(3, (monthRevenue[i] / maxMonth) * 100)}%` }}
-                title={formatINR(monthRevenue[i])}
-              />
-              <span className="text-[10px] text-slate-500">{monthLabel(mk)}</span>
-            </div>
+            <span key={mk} className={`text-[10px] ${i === months.length - 1 ? "text-gold font-semibold" : "text-slate-500"}`}>
+              {monthLabel(mk)}
+            </span>
           ))}
         </div>
         <p className="mt-2 text-center text-[11px] text-slate-500">
-          Peak month: {formatINR(maxMonth)}
+          This month: <span className="text-gold font-semibold">{formatINR(monthRevenue[months.length - 1])}</span> · Peak {formatINR(maxMonth)}
         </p>
       </Section>
 
@@ -228,13 +253,23 @@ function Kpi({
   sub: string;
   tone: "white" | "green" | "red" | "gold";
 }) {
-  const color =
-    tone === "green" ? "text-granite-green2" : tone === "red" ? "text-red-300" : tone === "gold" ? "text-gold" : "text-white";
+  const map = {
+    white: { text: "text-white", chip: "bg-white/[0.08] text-slate-200", glow: "rgba(255,255,255,.05)" },
+    green: { text: "text-granite-green2", chip: "bg-granite-green2/15 text-granite-green2", glow: "rgba(52,211,153,.10)" },
+    red: { text: "text-red-300", chip: "bg-red-500/15 text-red-300", glow: "rgba(248,113,113,.10)" },
+    gold: { text: "text-gold", chip: "bg-gold/15 text-gold", glow: "rgba(201,139,75,.12)" },
+  }[tone];
   return (
-    <div className="rounded-2xl border border-graphite-600 bg-white/[0.04] p-4">
-      <div className="flex items-center gap-1.5 text-slate-400"><Icon className="w-3.5 h-3.5" /><span className="text-[11px]">{label}</span></div>
-      <p className={`mt-1 text-xl font-extrabold ${color}`}>{value}</p>
-      <p className="text-[11px] text-slate-500 mt-0.5">{sub}</p>
+    <div className="relative rounded-2xl border border-graphite-600 bg-white/[0.04] p-4 overflow-hidden">
+      <div className="absolute inset-0" style={{ background: `radial-gradient(140px 90px at 100% 0%, ${map.glow}, transparent 70%)` }} />
+      <div className="relative">
+        <span className={`inline-flex w-7 h-7 rounded-lg items-center justify-center ${map.chip}`}>
+          <Icon className="w-4 h-4" />
+        </span>
+        <p className={`mt-2 text-2xl font-extrabold leading-none tracking-tight ${map.text}`}>{value}</p>
+        <p className="text-[11px] text-slate-400 mt-1.5">{label}</p>
+        <p className="text-[10px] text-slate-500 mt-0.5">{sub}</p>
+      </div>
     </div>
   );
 }
