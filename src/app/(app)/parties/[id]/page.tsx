@@ -171,20 +171,24 @@ export default async function PartyPage({ params }: { params: Promise<{ id: stri
       {/* summary */}
       {isCustomer ? (
         <>
-          <div className="mt-5 rounded-2xl border border-graphite-600 bg-white/[0.04] p-4">
-            <div className="flex items-end justify-between">
-              <span className="text-sm text-slate-400">Outstanding (they owe you)</span>
-              <span className={`text-2xl font-extrabold ${outstanding > 0 ? "text-red-300" : "text-granite-green2"}`}>
+          <div className="relative mt-5 rounded-2xl border border-graphite-600 bg-white/[0.04] p-5 overflow-hidden">
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: `radial-gradient(240px 150px at 100% 0%, ${outstanding > 0 ? "rgba(248,113,113,.12)" : "rgba(52,211,153,.12)"}, transparent 70%)` }}
+            />
+            <div className="relative">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Outstanding · they owe you</p>
+              <p className={`mt-1 text-[34px] leading-none font-extrabold tracking-tight ${outstanding > 0 ? "text-red-300" : "text-granite-green2"}`}>
                 {formatINR(outstanding)}
-              </span>
+              </p>
             </div>
-            <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+            <div className="relative mt-4 grid grid-cols-3 gap-2 text-center">
               <Mini label="Invoiced" value={formatINR(invoicedTotal)} />
               <Mini label="Paid" value={formatINR(paidTotal)} green />
               <Mini label="Quoted" value={formatINR(quotedTotal)} />
             </div>
             {totalPending > 0 && (
-              <div className="mt-3 flex items-center justify-between rounded-lg bg-red-500/10 border border-red-500/20 px-3 py-2">
+              <div className="relative mt-3 flex items-center justify-between rounded-lg bg-red-500/10 border border-red-500/20 px-3 py-2">
                 <span className="text-xs text-red-200">
                   {(invoices ?? []).filter((iv) => Number(iv.total_paise) - (paidByInvoice.get(iv.id as string) ?? 0) > 0).length} invoice(s) pending
                 </span>
@@ -192,7 +196,7 @@ export default async function PartyPage({ params }: { params: Promise<{ id: stri
               </div>
             )}
             {opening !== 0 && (
-              <p className="mt-2 text-[11px] text-slate-500">Includes opening balance of {formatINR(opening)}.</p>
+              <p className="relative mt-2 text-[11px] text-slate-500">Includes opening balance of {formatINR(opening)}.</p>
             )}
           </div>
 
@@ -250,14 +254,18 @@ export default async function PartyPage({ params }: { params: Promise<{ id: stri
         </>
       ) : (
         <>
-          <div className="mt-5 rounded-2xl border border-graphite-600 bg-white/[0.04] p-4">
-            <div className="flex items-end justify-between">
-              <span className="text-sm text-slate-400">Payable (you owe them)</span>
-              <span className={`text-2xl font-extrabold ${opening > 0 ? "text-amber-300" : "text-granite-green2"}`}>
+          <div className="relative mt-5 rounded-2xl border border-graphite-600 bg-white/[0.04] p-5 overflow-hidden">
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: `radial-gradient(240px 150px at 100% 0%, ${opening > 0 ? "rgba(245,165,36,.12)" : "rgba(52,211,153,.12)"}, transparent 70%)` }}
+            />
+            <div className="relative">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Payable · you owe them</p>
+              <p className={`mt-1 text-[34px] leading-none font-extrabold tracking-tight ${opening > 0 ? "text-amber-300" : "text-granite-green2"}`}>
                 {formatINR(opening)}
-              </span>
+              </p>
             </div>
-            <div className="mt-3 grid grid-cols-2 gap-2 text-center">
+            <div className="relative mt-4 grid grid-cols-2 gap-2 text-center">
               <Mini label="Blocks supplied" value={String((blocks ?? []).length)} />
               <Mini label="Stock value" value={formatINR(blockCost)} />
             </div>
@@ -317,9 +325,9 @@ function Chip({ icon: Icon, href, children }: { icon: typeof Phone; href?: strin
 
 function Mini({ label, value, green }: { label: string; value: string; green?: boolean }) {
   return (
-    <div className="rounded-lg bg-white/[0.03] py-2">
+    <div className="rounded-xl border border-graphite-600 bg-white/[0.04] py-2.5">
       <div className={`text-sm font-bold ${green ? "text-granite-green2" : "text-white"}`}>{value}</div>
-      <div className="text-[10px] text-slate-500">{label}</div>
+      <div className="text-[10px] text-slate-500 mt-0.5">{label}</div>
     </div>
   );
 }

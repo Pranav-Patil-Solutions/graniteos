@@ -96,6 +96,36 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
         )}
       </div>
 
+      {/* outstanding hero + payment progress */}
+      <div className="relative mt-4 rounded-2xl border border-graphite-600 bg-white/[0.04] p-5 overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: `radial-gradient(240px 150px at 100% 0%, ${outstanding > 0 ? "rgba(248,113,113,.12)" : "rgba(52,211,153,.12)"}, transparent 70%)` }}
+        />
+        <div className="relative flex items-end justify-between">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">
+              {outstanding > 0 ? "Outstanding" : "Fully settled"}
+            </p>
+            <p className={`mt-1 text-[34px] leading-none font-extrabold tracking-tight ${outstanding > 0 ? "text-red-300" : "text-granite-green2"}`}>
+              {formatINR(outstanding > 0 ? outstanding : Number(invoice.total_paise))}
+            </p>
+            <p className="mt-1.5 text-[11px] text-slate-400">
+              Paid {formatINR(paid)} of {formatINR(invoice.total_paise)}
+            </p>
+          </div>
+          <span className="text-[10px] font-bold uppercase tracking-wide rounded-full px-2.5 py-1 bg-white/[0.06] text-slate-300">
+            {invoice.status}
+          </span>
+        </div>
+        <div className="relative mt-3 h-2 rounded-full bg-white/[0.06] overflow-hidden">
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-granite-green to-granite-green2"
+            style={{ width: `${Math.min(100, Math.round((paid / Math.max(1, Number(invoice.total_paise))) * 100))}%` }}
+          />
+        </div>
+      </div>
+
       <div className="mt-4 rounded-2xl border border-graphite-600 bg-white/[0.04] p-4 space-y-1.5">
         <Row label="Taxable value" value={formatINR(invoice.subtotal_paise)} />
         {(invoice.supply_type ?? "intra") === "intra" ? (
@@ -112,13 +142,6 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
         <div className="flex justify-between pt-1.5 border-t border-graphite-600">
           <span className="font-bold text-white">Total</span>
           <span className="font-extrabold text-white">{formatINR(invoice.total_paise)}</span>
-        </div>
-        <Row label="Paid" value={formatINR(paid)} green />
-        <div className="flex justify-between pt-1.5 border-t border-graphite-600">
-          <span className="font-bold text-white">Outstanding</span>
-          <span className={`font-extrabold ${outstanding > 0 ? "text-red-300" : "text-granite-green2"}`}>
-            {formatINR(outstanding)}
-          </span>
         </div>
       </div>
 
