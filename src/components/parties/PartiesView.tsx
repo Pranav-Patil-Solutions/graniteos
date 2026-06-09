@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Phone, MapPin, BadgeCheck } from "lucide-react";
+import { Plus, Phone, MapPin, BadgeCheck, ChevronRight } from "lucide-react";
 import { addParty } from "@/actions/parties";
 import { verifyGstin } from "@/actions/gst";
 import { Button } from "@/components/ui/Button";
@@ -254,9 +255,10 @@ export default function PartiesView({
           </p>
         )}
         {list.map((p) => (
-          <div
+          <Link
             key={p.id}
-            className="flex items-center gap-3 rounded-2xl border border-graphite-600 bg-white/[0.04] p-3"
+            href={`/parties/${p.id}`}
+            className="flex items-center gap-3 rounded-2xl border border-graphite-600 bg-white/[0.04] p-3 hover:border-gold/40 transition-colors"
           >
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-granite-green to-granite-green2 text-white grid place-items-center font-bold shrink-0">
               {p.name.charAt(0).toUpperCase()}
@@ -289,7 +291,8 @@ export default function PartiesView({
                 <div className="text-[10px] text-slate-500">{balanceLabel}</div>
               </div>
             )}
-          </div>
+            <ChevronRight className="w-4 h-4 text-slate-500 shrink-0" />
+          </Link>
         ))}
       </div>
     </div>
