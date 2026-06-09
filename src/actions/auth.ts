@@ -3,6 +3,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { phoneSchema, emailSchema, otpSchema, passwordSchema } from "@/lib/validation";
 import { getCurrentUser } from "@/lib/auth";
+import { isAllowedLogin, mayCreateUser } from "@/lib/beta-allowlist";
+
+const NOT_INVITED =
+  "This is a private beta. Ask the GraniteOS team to add your email or number.";
 
 export type Channel = "phone" | "email" | "password";
 
@@ -12,9 +16,10 @@ export async function sendOtp(channel: Channel, value: string) {
   if (channel === "email") {
     const e = emailSchema.safeParse(value);
     if (!e.success) return { error: e.error.issues[0].message };
+    if (!isAllowedLogin(e.data)) return { error: NOT_INVITED };
     const { error } = await supabase.auth.signInWithOtp({
       email: e.data,
-      options: { shouldCreateUser: true },
+      options: { shouldCreateUser: mayCreateUser() },
     });
     if (error) return { error: error.message };
     return { ok: true as const };
@@ -22,7 +27,11 @@ export async function sendOtp(channel: Channel, value: string) {
 
   const p = phoneSchema.safeParse(value);
   if (!p.success) return { error: p.error.issues[0].message };
-  const { error } = await supabase.auth.signInWithOtp({ phone: p.data });
+  if (!isAllowedLogin(p.data)) return { error: NOT_INVITED };
+  const { error } = await supabase.auth.signInWithOtp({
+    phone: p.data,
+    options: { shouldCreateUser: mayCreateUser() },
+  });
   if (error) return { error: error.message };
   return { ok: true as const };
 }
@@ -79,6 +88,7 @@ export async function signUpPassword(email: string, password: string) {
   const p = passwordSchema.safeParse(password);
   if (!e.success) return { error: e.error.issues[0].message };
   if (!p.success) return { error: p.error.issues[0].message };
+  if (!isAllowedLogin(e.data)) return { error: NOT_INVITED };
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@ai-sdk/groq": "^3.0.39",
+    "@google/genai": "^2.8.0",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.107.0",
     "ai": "^6.0.197",
@@ -24,6 +25,7 @@
     "react-dom": "^19.0.0",
     "server-only": "^0.0.1",
     "three": "^0.184.0",
+    "xlsx": "^0.18.5",
     "zod": "^4.4.3"
   },
   "devDependencies": {

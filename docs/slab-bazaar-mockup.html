@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GraniteOS · Slab Bazaar (mockup)</title>
+<style>
+  :root{
+    --bg:#0b0e11; --g800:#11161b; --g700:#161c22; --g600:#1c2228; --g500:#232a31;
+    --ink:#e8e6e1; --muted:#8b93a0; --faint:#5c6470;
+    --gold:#c9a24b; --gold-soft:#e6c878; --green:#1f8a5b; --green-d:#0F4C35;
+    --amber:#e0a93a; --slate:#94a3b8;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+  .phone{max-width:430px;margin:0 auto;min-height:100vh;background:
+    radial-gradient(1200px 400px at 50% -200px, rgba(201,162,75,.10), transparent 60%), var(--bg);
+    border-left:1px solid var(--g600);border-right:1px solid var(--g600)}
+  .pad{padding:16px}
+
+  /* header */
+  .top{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 10px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(145deg,var(--gold),var(--green));
+    display:grid;place-items:center;font-weight:800;color:#0b0e11;font-size:15px}
+  .brand b{font-size:16px;letter-spacing:.2px}
+  .brand span{color:var(--gold);font-weight:800}
+  .bell{width:38px;height:38px;border-radius:11px;background:var(--g700);border:1px solid var(--g600);display:grid;place-items:center;color:var(--muted)}
+
+  h1{font-size:22px;font-weight:800;letter-spacing:.2px}
+  .sub{color:var(--muted);font-size:13px;margin-top:3px}
+
+  /* radar nudge */
+  .radar{margin:14px 16px;border:1px solid rgba(224,169,58,.35);border-radius:16px;padding:14px 14px;
+    background:linear-gradient(135deg, rgba(224,169,58,.12), rgba(224,169,58,.03))}
+  .radar .r1{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;color:var(--gold-soft)}
+  .radar p{color:var(--muted);font-size:12.5px;margin:6px 0 11px;line-height:1.5}
+  .radar b{color:var(--ink)}
+  .btn-gold{background:linear-gradient(135deg,var(--gold),#b78c33);color:#0b0e11;border:none;border-radius:11px;
+    font-weight:800;font-size:13px;padding:11px 14px;cursor:pointer;width:100%}
+
+  /* tabs */
+  .tabs{display:flex;gap:8px;padding:4px 16px 12px}
+  .tab{flex:1;text-align:center;padding:10px;border-radius:12px;border:1px solid var(--g600);background:var(--g700);
+    color:var(--muted);font-weight:700;font-size:13px;cursor:pointer}
+  .tab.on{background:var(--ink);color:#0b0e11;border-color:var(--ink)}
+  .tab .n{font-size:11px;opacity:.7;display:block;font-weight:600}
+
+  /* filters */
+  .filters{display:flex;gap:8px;overflow-x:auto;padding:0 16px 12px;scrollbar-width:none}
+  .filters::-webkit-scrollbar{display:none}
+  .chip{white-space:nowrap;padding:8px 13px;border-radius:999px;border:1px solid var(--g600);background:var(--g700);
+    color:var(--muted);font-size:12.5px;font-weight:600;cursor:pointer}
+  .chip.on{border-color:var(--gold);color:var(--gold-soft);background:rgba(201,162,75,.10)}
+
+  /* cards */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px 90px}
+  .card{background:var(--g700);border:1px solid var(--g600);border-radius:16px;overflow:hidden;cursor:pointer;
+    transition:transform .12s,border-color .12s}
+  .card:active{transform:scale(.98)}
+  .card:hover{border-color:var(--g500)}
+  .ph{height:104px;position:relative}
+  .ph .idle{position:absolute;top:8px;left:8px;background:rgba(11,14,17,.72);backdrop-filter:blur(4px);
+    color:var(--amber);font-size:10.5px;font-weight:700;padding:4px 8px;border-radius:999px;border:1px solid rgba(224,169,58,.4)}
+  .ph .sqft{position:absolute;bottom:8px;right:8px;background:rgba(11,14,17,.72);color:#fff;font-size:11px;font-weight:700;padding:4px 8px;border-radius:8px}
+  .cbody{padding:10px 11px 12px}
+  .mat{font-weight:700;font-size:13.5px;line-height:1.2}
+  .dim{color:var(--muted);font-size:11px;margin-top:2px}
+  .rate{margin-top:8px;font-weight:800;font-size:15px;color:var(--gold-soft)}
+  .rate small{color:var(--faint);font-weight:600;font-size:11px}
+  .seller{display:flex;align-items:center;gap:5px;margin-top:9px;font-size:11px;color:var(--muted)}
+  .verif{display:inline-flex;align-items:center;gap:3px;color:var(--green);font-weight:700}
+  .city{color:var(--slate)}
+  .enq{margin-top:10px;width:100%;border:1px solid rgba(31,138,91,.5);background:rgba(31,138,91,.12);color:#5fd6a0;
+    font-weight:700;font-size:12px;border-radius:10px;padding:9px;cursor:pointer}
+
+  /* stone textures */
+  .blackgalaxy{background:#0c0c0e radial-gradient(1px 1px at 20% 30%,#d9c789 50%,transparent),
+    radial-gradient(1px 1px at 60% 70%,#c9a24b 50%,transparent),
+    radial-gradient(1px 1px at 80% 20%,#fff 50%,transparent),
+    radial-gradient(1px 1px at 35% 80%,#e6c878 50%,transparent);background-size:auto, 22px 22px,30px 30px,18px 18px}
+  .imperialred{background:linear-gradient(135deg,#6e1a1f,#9a2a2a 40%,#c0603e 75%,#7a2230);
+    background-blend-mode:overlay}
+  .carrara{background:linear-gradient(120deg,#dfe3e6,#c4ccd1 45%,#eef1f2 60%,#b9c2c8);position:relative}
+  .carrara::after{content:"";position:absolute;inset:0;background:
+    linear-gradient(115deg,transparent 38%,rgba(90,100,110,.5) 39%,transparent 41%),
+    linear-gradient(100deg,transparent 60%,rgba(110,120,130,.4) 61%,transparent 63%)}
+  .steelgrey{background:linear-gradient(135deg,#3a4047,#565d65 50%,#2c3137);position:relative}
+  .steelgrey::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 6px,transparent 6px 16px)}
+  .tanbrown{background:linear-gradient(135deg,#2b211c,#5a3b2c 45%,#1c1512 90%);position:relative}
+  .tanbrown::after{content:"";position:absolute;inset:0;background:radial-gradient(2px 2px at 40% 50%,#b07a3f 50%,transparent),radial-gradient(1px 1px at 70% 30%,#d9a05a 50%,transparent);background-size:26px 26px}
+  .greengalaxy{background:#0d1410 radial-gradient(1px 1px at 30% 40%,#5fd6a0 50%,transparent),radial-gradient(1px 1px at 70% 60%,#1f8a5b 50%,transparent);background-size:auto,24px 24px}
+
+  /* My Listings rows */
+  .rows{padding:0 16px 90px;display:none;flex-direction:column;gap:10px}
+  .row{display:flex;gap:11px;background:var(--g700);border:1px solid var(--g600);border-radius:14px;padding:10px}
+  .row .ph{width:78px;height:78px;border-radius:10px;flex:none;overflow:hidden}
+  .row .info{flex:1;min-width:0}
+  .stat{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;margin-top:6px}
+  .s-active{background:rgba(31,138,91,.16);color:#5fd6a0;border:1px solid rgba(31,138,91,.4)}
+  .s-sold{background:rgba(148,163,184,.14);color:#b6c0cd;border:1px solid rgba(148,163,184,.35)}
+  .enqcount{color:var(--gold-soft);font-size:11.5px;margin-top:6px;font-weight:600}
+  .rowbtns{display:flex;gap:6px;margin-top:9px}
+  .mini{flex:1;font-size:11.5px;font-weight:700;border-radius:9px;padding:8px;cursor:pointer;border:1px solid var(--g500);background:var(--g600);color:var(--muted)}
+  .mini.sold{border-color:rgba(201,162,75,.4);color:var(--gold-soft);background:rgba(201,162,75,.08)}
+
+  /* bottom nav */
+  .nav{position:sticky;bottom:0;display:flex;justify-content:space-around;padding:9px 6px 14px;background:rgba(11,14,17,.92);
+    backdrop-filter:blur(10px);border-top:1px solid var(--g600)}
+  .nav a{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--faint);font-size:10px;font-weight:600;text-decoration:none}
+  .nav a.on{color:var(--gold-soft)}
+  .nav .ic{font-size:18px}
+
+  /* modal */
+  .scrim{position:fixed;inset:0;background:rgba(5,7,9,.7);backdrop-filter:blur(3px);display:none;align-items:flex-end;justify-content:center;z-index:50}
+  .scrim.show{display:flex}
+  .sheet{width:100%;max-width:430px;background:var(--g800);border:1px solid var(--g600);border-radius:22px 22px 0 0;padding:20px 18px 26px;animation:up .22s ease}
+  @keyframes up{from{transform:translateY(40px);opacity:.5}to{transform:translateY(0);opacity:1}}
+  .sheet h3{font-size:17px;margin-bottom:3px}
+  .sheet .sline{color:var(--muted);font-size:12.5px;margin-bottom:16px}
+  .field{margin-bottom:13px}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600}
+  .field input{width:100%;height:48px;background:rgba(255,255,255,.04);border:1px solid var(--g500);color:var(--ink);border-radius:12px;padding:0 14px;font-size:14px}
+  .note{font-size:11px;color:var(--faint);line-height:1.5;margin:4px 0 16px;display:flex;gap:7px}
+  .wa{background:#25D366;color:#062b16}
+  .x{float:right;color:var(--faint);font-size:20px;cursor:pointer;line-height:1}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="top">
+    <div class="brand"><div class="logo">G</div><b>Granite<span>OS</span></b></div>
+    <div class="bell">🔔</div>
+  </div>
+
+  <div class="pad" style="padding-bottom:6px">
+    <h1>Slab Bazaar</h1>
+    <div class="sub">Turn idle slabs into cash. Buy surplus from yards near you.</div>
+  </div>
+
+  <!-- Idle-Burn Radar nudge -->
+  <div class="radar" id="radar">
+    <div class="r1">⚡ Idle-Burn Radar</div>
+    <p><b>3 slabs</b> have been sitting over 45 days — roughly <b>₹2.4L</b> locked up. List them on the Bazaar to recover cash.</p>
+    <button class="btn-gold" onclick="openList()">List my idle slabs →</button>
+  </div>
+
+  <!-- tabs -->
+  <div class="tabs">
+    <div class="tab on" id="tab-browse" onclick="show('browse')">Browse <span class="n">142 live</span></div>
+    <div class="tab" id="tab-mine" onclick="show('mine')">My Listings <span class="n">3 active</span></div>
+  </div>
+
+  <!-- filters -->
+  <div class="filters" id="filters">
+    <div class="chip on">All materials</div>
+    <div class="chip">Granite</div>
+    <div class="chip">Marble</div>
+    <div class="chip">📍 Hyderabad</div>
+    <div class="chip">≤ ₹120/sqft</div>
+    <div class="chip">≥ 15 sqft</div>
+  </div>
+
+  <!-- BROWSE grid -->
+  <div class="grid" id="grid">
+    <!-- card template repeated -->
+    <div class="card">
+      <div class="ph blackgalaxy"><span class="idle">idle 61d</span><span class="sqft">18.2 sqft</span></div>
+      <div class="cbody">
+        <div class="mat">Black Galaxy</div>
+        <div class="dim">62" × 42" · 18mm</div>
+        <div class="rate">₹95 <small>/sqft</small></div>
+        <div class="seller"><span class="verif">✓GST</span> · <span class="city">Hyderabad</span></div>
+        <button class="enq" onclick="enquire('Black Galaxy')">Enquire on WhatsApp</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ph imperialred"><span class="idle">idle 47d</span><span class="sqft">21.0 sqft</span></div>
+      <div class="cbody">
+        <div class="mat">Imperial Red</div>
+        <div class="dim">72" × 42" · 20mm</div>
+        <div class="rate">₹88 <small>/sqft</small></div>
+        <div class="seller"><span class="verif">✓GST</span> · <span class="city">Jaipur</span></div>
+        <button class="enq" onclick="enquire('Imperial Red')">Enquire on WhatsApp</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ph carrara"><span class="idle">idle 33d</span><span class="sqft">24.5 sqft</span></div>
+      <div class="cbody">
+        <div class="mat">Carrara Marble</div>
+        <div class="dim">78" × 45" · 18mm</div>
+        <div class="rate">₹260 <small>/sqft</small></div>
+        <div class="seller"><span class="verif">✓GST</span> · <span class="city">Mumbai</span></div>
+        <button class="enq" onclick="enquire('Carrara Marble')">Enquire on WhatsApp</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ph steelgrey"><span class="idle">idle 52d</span><span class="sqft">19.4 sqft</span></div>
+      <div class="cbody">
+        <div class="mat">Steel Grey</div>
+        <div class="dim">66" × 42" · 20mm</div>
+        <div class="rate">₹78 <small>/sqft</small></div>
+        <div class="seller"><span class="verif">✓GST</span> · <span class="city">Hyderabad</span></div>
+        <button class="enq" onclick="enquire('Steel Grey')">Enquire on WhatsApp</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ph tanbrown"><span class="idle">idle 71d</span><span class="sqft">16.8 sqft</span></div>
+      <div class="cbody">
+        <div class="mat">Tan Brown</div>
+        <div class="dim">58" × 42" · 18mm</div>
+        <div class="rate">₹82 <small>/sqft</small></div>
+        <div class="seller"><span class="city">Bengaluru</span></div>
+        <button class="enq" onclick="enquire('Tan Brown')">Enquire on WhatsApp</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ph greengalaxy"><span class="idle">idle 38d</span><span class="sqft">20.1 sqft</span></div>
+      <div class="cbody">
+        <div class="mat">Green Galaxy</div>
+        <div class="dim">68" × 43" · 20mm</div>
+        <div class="rate">₹110 <small>/sqft</small></div>
+        <div class="seller"><span class="verif">✓GST</span> · <span class="city">Chennai</span></div>
+        <button class="enq" onclick="enquire('Green Galaxy')">Enquire on WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MY LISTINGS -->
+  <div class="rows" id="rows">
+    <div class="row">
+      <div class="ph blackgalaxy"></div>
+      <div class="info">
+        <div class="mat">Black Galaxy · 18.2 sqft</div>
+        <div class="dim">₹95/sqft · listed 6 days ago</div>
+        <span class="stat s-active">● Active</span>
+        <div class="enqcount">2 yards enquired →</div>
+        <div class="rowbtns">
+          <button class="mini">Withdraw</button>
+          <button class="mini sold">Mark sold</button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="ph steelgrey"></div>
+      <div class="info">
+        <div class="mat">Steel Grey · 19.4 sqft</div>
+        <div class="dim">₹78/sqft · listed 11 days ago</div>
+        <span class="stat s-active">● Active</span>
+        <div class="enqcount">0 enquiries yet</div>
+        <div class="rowbtns">
+          <button class="mini">Withdraw</button>
+          <button class="mini sold">Mark sold</button>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="opacity:.62">
+      <div class="ph imperialred"></div>
+      <div class="info">
+        <div class="mat">Imperial Red · 21.0 sqft</div>
+        <div class="dim">₹88/sqft · sold to Sri Balaji Granites</div>
+        <span class="stat s-sold">✓ Sold</span>
+        <div class="enqcount" style="color:var(--faint)">Recovered ₹1,84,800</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- bottom nav -->
+  <div class="nav">
+    <a><span class="ic">🏠</span>Home</a>
+    <a><span class="ic">📦</span>Inventory</a>
+    <a class="on"><span class="ic">🔁</span>Bazaar</a>
+    <a><span class="ic">🧾</span>Invoices</a>
+    <a><span class="ic">⚙️</span>More</a>
+  </div>
+</div>
+
+<!-- Enquiry / List modal -->
+<div class="scrim" id="scrim" onclick="if(event.target===this)close_()">
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<script>
+  function show(which){
+    var b=which==='browse';
+    document.getElementById('tab-browse').classList.toggle('on',b);
+    document.getElementById('tab-mine').classList.toggle('on',!b);
+    document.getElementById('grid').style.display=b?'grid':'none';
+    document.getElementById('rows').style.display=b?'none':'flex';
+    document.getElementById('filters').style.display=b?'flex':'none';
+    document.getElementById('radar').style.display=b?'block':'none';
+  }
+  var scrim=document.getElementById('scrim'), sheet=document.getElementById('sheet');
+  function close_(){scrim.classList.remove('show')}
+  function enquire(mat){
+    sheet.innerHTML=`
+      <span class="x" onclick="close_()">✕</span>
+      <h3>Enquire — ${mat}</h3>
+      <div class="sline">Your message goes to the seller. You deal directly over WhatsApp.</div>
+      <div class="field"><label>Message (optional)</label><input value="Is this slab still available? Can you share more photos?"></div>
+      <div class="note">🔒 GraniteOS only connects you with the seller. We never handle the payment — you settle the deal directly.</div>
+      <button class="btn-gold wa" onclick="close_()">Open WhatsApp to seller →</button>`;
+    scrim.classList.add('show');
+  }
+  function openList(){
+    sheet.innerHTML=`
+      <span class="x" onclick="close_()">✕</span>
+      <h3>List on Bazaar</h3>
+      <div class="sline">Black Galaxy · 62"×42" · 18.2 sqft — idle 61 days</div>
+      <div class="field"><label>Asking rate (₹ / sqft)</label><input value="95"></div>
+      <div class="field"><label>Show buyers your city</label><input value="Hyderabad"></div>
+      <div class="note">🔒 Buyers see only: photo, material, size, your rate & city. Your cost, exact godown and customers stay private.</div>
+      <button class="btn-gold" onclick="close_()">Publish to Bazaar →</button>`;
+    scrim.classList.add('show');
+  }
+</script>
+</body>
+</html>

@@ -6,6 +6,10 @@ const securityHeaders = [
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "Permissions-Policy", value: "camera=(self), microphone=(), geolocation=()" },
   { key: "X-DNS-Prefetch-Control", value: "on" },
+  // Keep the private beta out of search engines. Set BETA_NOINDEX=1 on the deploy.
+  ...(process.env.BETA_NOINDEX === "1"
+    ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }]
+    : []),
 ];
 
 const nextConfig: NextConfig = {
