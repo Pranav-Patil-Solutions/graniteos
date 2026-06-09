@@ -23,6 +23,8 @@ export async function addParty(input: unknown) {
     city: v.city || null,
     address: v.address || null,
     gstin: v.gstin || null,
+    gst_state_code: v.gstStateCode || (v.gstin ? v.gstin.slice(0, 2) : null),
+    legal_name: v.legalName || null,
     credit_limit_paise: v.creditLimitRupees ? rupeesToPaise(v.creditLimitRupees) : 0,
     opening_balance_paise: v.openingBalanceRupees ? rupeesToPaise(v.openingBalanceRupees) : 0,
     notes: v.notes || null,

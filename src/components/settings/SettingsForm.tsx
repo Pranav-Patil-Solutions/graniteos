@@ -4,11 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateCompany } from "@/actions/company";
 import { Button } from "@/components/ui/Button";
+import { validateGstin, parseStateFromGstin, stateName, GST_STATES } from "@/lib/gst";
 
 type Company = {
   name: string;
+  legal_name: string | null;
   city: string | null;
   gst_number: string | null;
+  gst_state_code: string | null;
+  pan: string | null;
   upi_id: string | null;
   quote_terms_text: string | null;
 };
@@ -19,6 +23,19 @@ export default function SettingsForm({ company }: { company: Company }) {
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
 
+  const [gstin, setGstin] = useState(company.gst_number ?? "");
+  const [stateCode, setStateCode] = useState(
+    company.gst_state_code ?? parseStateFromGstin(company.gst_number) ?? "",
+  );
+  const gstCheck = gstin ? validateGstin(gstin) : null;
+
+  function onGstin(v: string) {
+    const up = v.toUpperCase();
+    setGstin(up);
+    const sc = parseStateFromGstin(up);
+    if (sc) setStateCode(sc);
+  }
+
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
@@ -27,8 +44,11 @@ export default function SettingsForm({ company }: { company: Company }) {
     const fd = new FormData(e.currentTarget);
     const res = await updateCompany({
       name: fd.get("name"),
+      legalName: fd.get("legalName") ?? "",
       city: fd.get("city") ?? "",
-      gstNumber: fd.get("gstNumber") ?? "",
+      gstNumber: gstin,
+      gstStateCode: stateCode,
+      pan: fd.get("pan") ?? "",
       upiId: fd.get("upiId") ?? "",
       quoteTerms: fd.get("quoteTerms") ?? "",
     });
@@ -40,9 +60,52 @@ export default function SettingsForm({ company }: { company: Company }) {
 
   return (
     <form onSubmit={onSubmit} className="space-y-3">
-      <Field name="name" label="Company name" defaultValue={company.name} required />
+      <Field name="name" label="Trade name (display)" defaultValue={company.name} required />
+      <Field
+        name="legalName"
+        label="Legal / registered name (on tax invoice)"
+        defaultValue={company.legal_name ?? ""}
+        placeholder="Shree Stone Industries Pvt Ltd"
+      />
       <Field name="city" label="City" defaultValue={company.city ?? ""} />
-      <Field name="gstNumber" label="GST number" defaultValue={company.gst_number ?? ""} placeholder="36ABCDE1234F1Z5" />
+
+      <label className="block">
+        <span className="text-xs font-medium text-slate-300">GSTIN</span>
+        <input
+          suppressHydrationWarning
+          value={gstin}
+          onChange={(e) => onGstin(e.target.value)}
+          placeholder="27ABCDE1234F1Z0"
+          maxLength={15}
+          className="mt-1 w-full text-base focus:border-gold outline-none font-mono tracking-wide"
+        />
+        {gstCheck && (
+          <span className={`text-xs ${gstCheck.valid ? "text-granite-green2" : "text-red-300"}`}>
+            {gstCheck.valid
+              ? `✓ Valid · ${stateName(stateCode)} (${stateCode})`
+              : `✗ ${gstCheck.reason}`}
+          </span>
+        )}
+      </label>
+
+      <label className="block">
+        <span className="text-xs font-medium text-slate-300">GST state (place of business)</span>
+        <select
+          suppressHydrationWarning
+          value={stateCode}
+          onChange={(e) => setStateCode(e.target.value)}
+          className="mt-1 w-full text-base focus:border-gold outline-none"
+        >
+          <option value="">Select state…</option>
+          {GST_STATES.map((s) => (
+            <option key={s.code} value={s.code}>
+              {s.name} ({s.code})
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <Field name="pan" label="PAN" defaultValue={company.pan ?? ""} placeholder="ABCDE1234F" />
       <Field
         name="upiId"
         label="UPI ID (for pay-links)"

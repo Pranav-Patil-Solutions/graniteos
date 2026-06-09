@@ -44,8 +44,11 @@ export async function updateCompany(input: unknown) {
     .from("companies")
     .update({
       name: v.name,
+      legal_name: v.legalName || null,
       city: v.city || null,
       gst_number: v.gstNumber || null,
+      gst_state_code: v.gstStateCode || (v.gstNumber ? v.gstNumber.slice(0, 2) : null),
+      pan: v.pan || (v.gstNumber ? v.gstNumber.slice(2, 12) : null),
       upi_id: v.upiId || null,
       quote_terms_text: v.quoteTerms || null,
     })

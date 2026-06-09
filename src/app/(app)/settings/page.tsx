@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Upload, ChevronRight } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/permissions";
 import { createClient } from "@/lib/supabase/server";
@@ -13,7 +13,7 @@ export default async function SettingsPage() {
   const supabase = await createClient();
   const { data: company } = await supabase
     .from("companies")
-    .select("name, city, gst_number, upi_id, quote_terms_text")
+    .select("name, legal_name, city, gst_number, gst_state_code, pan, upi_id, quote_terms_text")
     .eq("id", me.company_id)
     .single();
 
@@ -27,13 +27,31 @@ export default async function SettingsPage() {
       </Link>
       <h1 className="mt-2 text-2xl font-bold text-white">Company settings</h1>
       <p className="text-sm text-slate-400 mb-5">Your UPI ID powers the WhatsApp pay-links.</p>
+
+      <Link
+        href="/import"
+        className="mb-5 flex items-center gap-3 rounded-2xl border border-graphite-600 bg-white/[0.04] backdrop-blur p-4 hover:border-gold/60 transition-colors"
+      >
+        <span className="text-gold"><Upload className="w-5 h-5" /></span>
+        <span className="flex-1">
+          <span className="block text-white font-semibold">Import from Excel</span>
+          <span className="block text-xs text-slate-400 mt-0.5">
+            Bring in customers, suppliers, blocks, slabs &amp; jobs from a spreadsheet.
+          </span>
+        </span>
+        <ChevronRight className="w-4 h-4 text-slate-500" />
+      </Link>
+
       {company && (
         <SettingsForm
           company={
             company as {
               name: string;
+              legal_name: string | null;
               city: string | null;
               gst_number: string | null;
+              gst_state_code: string | null;
+              pan: string | null;
               upi_id: string | null;
               quote_terms_text: string | null;
             }

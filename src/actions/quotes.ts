@@ -5,6 +5,14 @@ import { createClient } from "@/lib/supabase/server";
 import { requireSession } from "@/lib/auth";
 import { quoteSchema } from "@/lib/validation";
 import { rupeesToPaise } from "@/lib/money";
+import {
+  supplyType as resolveSupplyType,
+  splitLineTax,
+  computeRoundOff,
+  parseStateFromGstin,
+  DEFAULT_HSN,
+  type SupplyType,
+} from "@/lib/gst";
 
 async function displayNumber(
   supabase: Awaited<ReturnType<typeof createClient>>,
@@ -24,26 +32,55 @@ export async function createQuote(input: unknown) {
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const v = parsed.data;
 
-  // GST math (paise)
+  const supabase = await createClient();
+
+  // ── Place of supply: seller state vs customer state → intra/inter ──
+  const { data: company } = await supabase
+    .from("companies")
+    .select("gst_state_code, gst_number")
+    .eq("id", me.company_id)
+    .single();
+  const sellerState =
+    company?.gst_state_code || parseStateFromGstin(company?.gst_number) || null;
+
+  const { data: cust } = await supabase
+    .from("parties")
+    .select("gst_state_code, gstin")
+    .eq("id", v.customerId)
+    .single();
+  const customerState = cust?.gst_state_code || parseStateFromGstin(cust?.gstin) || null;
+  const placeOfSupply = customerState || sellerState;
+  const type: SupplyType =
+    sellerState && placeOfSupply ? resolveSupplyType(sellerState, placeOfSupply) : "intra";
+
+  // GST math (paise) — per-line CGST/SGST/IGST split
   const items = v.items.map((it) => {
     const ratePaise = rupeesToPaise(it.rateRupees);
     const subtotal = Math.round(it.sqft * ratePaise);
-    const gst = Math.round((subtotal * it.gstRate) / 100);
+    const tax = splitLineTax(subtotal, it.gstRate, type);
+    const lineTax = tax.cgst + tax.sgst + tax.igst;
     return {
       slab_id: it.slabId || null,
       description: it.description,
+      hsn_code: it.hsn || DEFAULT_HSN,
       sqft: it.sqft,
       rate_paise: ratePaise,
       gst_rate: it.gstRate,
       line_subtotal_paise: subtotal,
-      line_gst_paise: gst,
-      line_total_paise: subtotal + gst,
+      line_cgst_paise: tax.cgst,
+      line_sgst_paise: tax.sgst,
+      line_igst_paise: tax.igst,
+      line_gst_paise: lineTax,
+      line_total_paise: subtotal + lineTax,
     };
   });
   const subtotal = items.reduce((n, i) => n + i.line_subtotal_paise, 0);
-  const gst = items.reduce((n, i) => n + i.line_gst_paise, 0);
+  const cgst = items.reduce((n, i) => n + i.line_cgst_paise, 0);
+  const sgst = items.reduce((n, i) => n + i.line_sgst_paise, 0);
+  const igst = items.reduce((n, i) => n + i.line_igst_paise, 0);
+  const gst = cgst + sgst + igst;
+  const { roundedTotalPaise, roundOffPaise } = computeRoundOff(subtotal + gst);
 
-  const supabase = await createClient();
   const quoteNo = await displayNumber(supabase, me.company_id, "quote");
 
   const { data: quote, error: qErr } = await supabase
@@ -57,7 +94,13 @@ export async function createQuote(input: unknown) {
       notes: v.notes || null,
       subtotal_paise: subtotal,
       gst_paise: gst,
-      total_paise: subtotal + gst,
+      total_paise: roundedTotalPaise,
+      place_of_supply: placeOfSupply,
+      supply_type: type,
+      cgst_paise: cgst,
+      sgst_paise: sgst,
+      igst_paise: igst,
+      round_off_paise: roundOffPaise,
     })
     .select("id")
     .single();

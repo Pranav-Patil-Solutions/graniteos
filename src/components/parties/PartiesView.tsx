@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Phone, MapPin } from "lucide-react";
+import { Plus, Phone, MapPin, BadgeCheck } from "lucide-react";
 import { addParty } from "@/actions/parties";
+import { verifyGstin } from "@/actions/gst";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { formatINR } from "@/lib/money";
 import { CUSTOMER_TYPES, SUPPLIER_TYPES } from "@/lib/validation";
+import { validateGstin, parseStateFromGstin, stateName } from "@/lib/gst";
 
 type Kind = "customer" | "supplier";
 type Party = {
@@ -35,6 +37,51 @@ export default function PartiesView({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // GSTIN: live format/checksum + best-effort verify (autofills when a GSP is wired)
+  const [gstin, setGstin] = useState("");
+  const [gstMsg, setGstMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [verifying, setVerifying] = useState(false);
+  const [legalName, setLegalName] = useState("");
+  const [autoCity, setAutoCity] = useState("");
+  const gstStateCode = parseStateFromGstin(gstin) ?? "";
+
+  function onGstin(v: string) {
+    const up = v.toUpperCase();
+    setGstin(up);
+    if (!up) return setGstMsg(null);
+    const r = validateGstin(up);
+    setGstMsg(
+      r.valid
+        ? { ok: true, text: `✓ Valid · ${stateName(up.slice(0, 2))} (${up.slice(0, 2)})` }
+        : { ok: false, text: `✗ ${r.reason}` },
+    );
+  }
+
+  async function onVerify() {
+    if (!gstin) return;
+    setVerifying(true);
+    const res = await verifyGstin(gstin);
+    setVerifying(false);
+    if ("error" in res) return setGstMsg({ ok: false, text: res.error });
+    if (!res.valid) return setGstMsg({ ok: false, text: res.reason ?? "Invalid GSTIN" });
+    const rec = res.record;
+    if (rec.legalName) setLegalName(rec.legalName);
+    if (rec.city) setAutoCity(rec.city);
+    setGstMsg({
+      ok: true,
+      text: rec.liveLookup
+        ? `✓ ${rec.status.toUpperCase()} · ${rec.legalName ?? ""}`
+        : `✓ Format valid — live GST-portal lookup activates once a verification provider is connected`,
+    });
+  }
+
+  function resetGst() {
+    setGstin("");
+    setGstMsg(null);
+    setLegalName("");
+    setAutoCity("");
+  }
+
   const list = parties.filter((p) => p.kind === kind);
   const totalOutstanding = list.reduce((n, p) => n + Number(p.opening_balance_paise), 0);
   const types = kind === "customer" ? CUSTOMER_TYPES : SUPPLIER_TYPES;
@@ -50,8 +97,10 @@ export default function PartiesView({
       name: fd.get("name"),
       partyType: fd.get("partyType") ?? "",
       phone: fd.get("phone") ?? "",
-      city: fd.get("city") ?? "",
-      gstin: fd.get("gstin") ?? "",
+      city: (fd.get("city") as string) || autoCity || "",
+      gstin,
+      gstStateCode,
+      legalName,
       email: fd.get("email") ?? "",
       creditLimitRupees: fd.get("creditLimitRupees") || undefined,
       openingBalanceRupees: fd.get("openingBalanceRupees") || undefined,
@@ -60,6 +109,7 @@ export default function PartiesView({
     setLoading(false);
     if (res.error) return setError(res.error);
     (e.target as HTMLFormElement).reset();
+    resetGst();
     setOpen(false);
     router.refresh();
   }
@@ -131,10 +181,39 @@ export default function PartiesView({
               </Select>
               <Field name="city" label="City" placeholder="Hyderabad" />
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <Field name="phone" label="Phone" placeholder="+91 98xxxxxxx" />
-              <Field name="gstin" label="GSTIN (opt.)" placeholder="36ABCDE1234F1Z5" />
-            </div>
+            <Field name="phone" label="Phone" placeholder="+91 98xxxxxxx" />
+
+            <label className="block">
+              <span className="text-xs font-medium text-slate-300">GSTIN (optional)</span>
+              <div className="mt-1 flex gap-2">
+                <input
+                  suppressHydrationWarning
+                  value={gstin}
+                  onChange={(e) => onGstin(e.target.value)}
+                  maxLength={15}
+                  placeholder="36ABCDE1234F1Z5"
+                  className="flex-1 text-base font-mono tracking-wide focus:border-gold outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={onVerify}
+                  disabled={verifying || !gstin}
+                  className="inline-flex items-center gap-1 rounded-lg border border-graphite-500 px-3 text-sm text-slate-300 hover:border-gold hover:text-gold disabled:opacity-40"
+                >
+                  <BadgeCheck className="w-4 h-4" /> {verifying ? "…" : "Verify"}
+                </button>
+              </div>
+              {gstMsg && (
+                <span className={`text-xs ${gstMsg.ok ? "text-granite-green2" : "text-red-300"}`}>
+                  {gstMsg.text}
+                </span>
+              )}
+              {legalName && (
+                <span className="block text-xs text-slate-400 mt-0.5">
+                  Legal name: <span className="text-slate-200">{legalName}</span>
+                </span>
+              )}
+            </label>
             <div className="grid grid-cols-2 gap-3">
               <Field
                 name="openingBalanceRupees"

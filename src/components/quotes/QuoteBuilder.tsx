@@ -7,18 +7,27 @@ import { createQuote } from "@/actions/quotes";
 import { Button } from "@/components/ui/Button";
 import { formatINR } from "@/lib/money";
 import { GST_RATES } from "@/lib/validation";
+import { DEFAULT_HSN } from "@/lib/gst";
 
 type Customer = { id: string; name: string };
 type Slab = { id: string; label: string; sqft: number; rateRupees: number };
 type Item = {
   description: string;
   slabId: string;
+  hsn: string;
   sqft: string;
   rateRupees: string;
   gstRate: string;
 };
 
-const blank = (): Item => ({ description: "", slabId: "", sqft: "", rateRupees: "", gstRate: "18" });
+const blank = (): Item => ({
+  description: "",
+  slabId: "",
+  hsn: DEFAULT_HSN,
+  sqft: "",
+  rateRupees: "",
+  gstRate: "18",
+});
 
 export default function QuoteBuilder({
   customers,
@@ -46,6 +55,7 @@ export default function QuoteBuilder({
       {
         description: s.label,
         slabId: s.id,
+        hsn: DEFAULT_HSN,
         sqft: String(s.sqft),
         rateRupees: String(s.rateRupees),
         gstRate: "18",
@@ -72,6 +82,7 @@ export default function QuoteBuilder({
       items: items.map((it) => ({
         description: it.description,
         slabId: it.slabId,
+        hsn: it.hsn,
         sqft: it.sqft,
         rateRupees: it.rateRupees || "0",
         gstRate: it.gstRate || "0",
@@ -117,6 +128,14 @@ export default function QuoteBuilder({
                 onChange={(e) => setItem(i, { description: e.target.value })}
                 placeholder="Polished Black Galaxy slab"
                 className="flex-1 text-sm focus:border-gold outline-none"
+              />
+              <input
+                suppressHydrationWarning
+                value={it.hsn}
+                onChange={(e) => setItem(i, { hsn: e.target.value })}
+                placeholder="HSN"
+                title="HSN/SAC code (6802 = granite/marble slabs, 9988 = job-work)"
+                className="w-16 text-sm text-center focus:border-gold outline-none"
               />
               {items.length > 1 && (
                 <button

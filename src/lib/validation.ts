@@ -111,6 +111,8 @@ export const partySchema = z.object({
   city: optText(60),
   address: optText(200),
   gstin: optText(20),
+  gstStateCode: optText(2),
+  legalName: optText(120),
   creditLimitRupees: numericFromInput.min(0).optional(),
   openingBalanceRupees: numericFromInput.min(0).optional(),
   notes: optText(300),
@@ -122,6 +124,7 @@ export const GST_RATES = [0, 5, 12, 18, 28] as const;
 export const quoteItemSchema = z.object({
   description: z.string().trim().min(1, "Description required").max(140),
   slabId: z.string().uuid().optional().or(z.literal("")),
+  hsn: z.string().trim().max(8).optional().or(z.literal("")),
   sqft: numericFromInput.positive("Sq-ft must be greater than 0"),
   rateRupees: numericFromInput.min(0),
   gstRate: numericFromInput.min(0).max(28),
@@ -176,10 +179,19 @@ export type JobInput = z.infer<typeof jobSchema>;
 
 export const companySettingsSchema = z.object({
   name: z.string().trim().min(2, "Company name required").max(100),
+  legalName: optText(120),
   city: optText(60),
   gstNumber: optText(20),
+  gstStateCode: optText(2),
+  pan: optText(10),
   upiId: optText(60),
   quoteTerms: optText(300),
+});
+
+// Extra fields captured on a party for GST (derived from GSTIN, editable).
+export const partyGstSchema = z.object({
+  gstStateCode: optText(2),
+  legalName: optText(120),
 });
 
 export const inviteSchema = z.object({

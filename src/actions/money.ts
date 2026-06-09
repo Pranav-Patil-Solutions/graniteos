@@ -5,6 +5,24 @@ import { createClient } from "@/lib/supabase/server";
 import { requireSession } from "@/lib/auth";
 import { paymentSchema } from "@/lib/validation";
 import { rupeesToPaise } from "@/lib/money";
+import {
+  supplyType as resolveSupplyType,
+  splitLineTax,
+  computeRoundOff,
+  parseStateFromGstin,
+  DEFAULT_HSN,
+  type SupplyType,
+} from "@/lib/gst";
+
+type QuoteLine = {
+  slab_id: string | null;
+  description: string;
+  hsn_code: string | null;
+  sqft: number;
+  rate_paise: number;
+  gst_rate: number;
+  line_subtotal_paise: number;
+};
 
 export async function createInvoiceFromOrder(orderId: string) {
   const me = await requireSession();
@@ -25,20 +43,84 @@ export async function createInvoiceFromOrder(orderId: string) {
     .single();
   if (!order) return { error: "Order not found." };
 
-  let subtotal = 0;
-  let gst = 0;
-  if (order.quote_id) {
-    const { data: q } = await supabase
-      .from("quotes")
-      .select("subtotal_paise, gst_paise")
-      .eq("id", order.quote_id)
+  // ── Place of supply: seller state vs customer state → intra/inter ──
+  const { data: company } = await supabase
+    .from("companies")
+    .select("gst_state_code, gst_number")
+    .eq("id", me.company_id)
+    .single();
+  const sellerState =
+    company?.gst_state_code || parseStateFromGstin(company?.gst_number) || null;
+
+  let customerState: string | null = null;
+  if (order.customer_id) {
+    const { data: cust } = await supabase
+      .from("parties")
+      .select("gst_state_code, gstin")
+      .eq("id", order.customer_id)
       .single();
-    if (q) {
-      subtotal = Number(q.subtotal_paise);
-      gst = Number(q.gst_paise);
-    }
+    customerState = cust?.gst_state_code || parseStateFromGstin(cust?.gstin) || null;
   }
-  if (!subtotal) subtotal = Number(order.total_paise);
+  const placeOfSupply = customerState || sellerState;
+  // When either side's state is unknown we cannot split inter-state safely;
+  // default to intra (CGST+SGST), the common case for a local stone shop.
+  const type: SupplyType =
+    sellerState && placeOfSupply ? resolveSupplyType(sellerState, placeOfSupply) : "intra";
+
+  // ── Line items: snapshot from the quote (Rule 46 needs per-line HSN+tax) ──
+  let lines: QuoteLine[] = [];
+  if (order.quote_id) {
+    const { data: qItems } = await supabase
+      .from("quote_items")
+      .select("slab_id, description, hsn_code, sqft, rate_paise, gst_rate, line_subtotal_paise")
+      .eq("quote_id", order.quote_id);
+    lines = (qItems ?? []) as QuoteLine[];
+  }
+  // Fallback: order with no quote lines → one summary line at default rate.
+  if (lines.length === 0) {
+    const sub = Math.round(Number(order.total_paise) / 1.18);
+    lines = [
+      {
+        slab_id: null,
+        description: "Stone supply",
+        hsn_code: DEFAULT_HSN,
+        sqft: 0,
+        rate_paise: sub,
+        gst_rate: 18,
+        line_subtotal_paise: sub,
+      },
+    ];
+  }
+
+  let subtotal = 0;
+  let cgst = 0;
+  let sgst = 0;
+  let igst = 0;
+  const itemRows = lines.map((ln) => {
+    const sub = Number(ln.line_subtotal_paise);
+    const tax = splitLineTax(sub, Number(ln.gst_rate), type);
+    subtotal += sub;
+    cgst += tax.cgst;
+    sgst += tax.sgst;
+    igst += tax.igst;
+    return {
+      company_id: me.company_id,
+      slab_id: ln.slab_id,
+      description: ln.description,
+      hsn_code: ln.hsn_code || DEFAULT_HSN,
+      sqft: ln.sqft,
+      rate_paise: Number(ln.rate_paise),
+      gst_rate: Number(ln.gst_rate),
+      line_subtotal_paise: sub,
+      line_cgst_paise: tax.cgst,
+      line_sgst_paise: tax.sgst,
+      line_igst_paise: tax.igst,
+      line_total_paise: sub + tax.cgst + tax.sgst + tax.igst,
+    };
+  });
+
+  const taxTotal = cgst + sgst + igst;
+  const { roundedTotalPaise, roundOffPaise } = computeRoundOff(subtotal + taxTotal);
 
   const { data: no } = await supabase.rpc("generate_display_number", {
     p_company_id: me.company_id,
@@ -53,13 +135,24 @@ export async function createInvoiceFromOrder(orderId: string) {
       order_id: order.id,
       invoice_no: (no as string) ?? null,
       subtotal_paise: subtotal,
-      gst_paise: gst,
-      total_paise: Number(order.total_paise),
+      gst_paise: taxTotal,
+      total_paise: roundedTotalPaise,
+      place_of_supply: placeOfSupply,
+      supply_type: type,
+      cgst_paise: cgst,
+      sgst_paise: sgst,
+      igst_paise: igst,
+      round_off_paise: roundOffPaise,
       status: "unpaid",
     })
     .select("id")
     .single();
   if (error) return { error: error.message };
+
+  const { error: itemErr } = await supabase
+    .from("invoice_items")
+    .insert(itemRows.map((r) => ({ ...r, invoice_id: inv.id })));
+  if (itemErr) return { error: itemErr.message };
 
   revalidatePath("/invoices");
   revalidatePath("/orders");
