@@ -10,6 +10,7 @@ import {
   Factory,
   Sparkles,
   Settings,
+  BarChart3,
 } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -118,6 +119,15 @@ export default async function DashboardPage() {
             <p className="text-xs text-gold/70 mt-1">Posts &amp; copy</p>
           </TiltCard>
         </Link>
+        {isOwner && (
+          <Link href="/analytics" className="block">
+            <TiltCard wow>
+              <BarChart3 className="text-gold" />
+              <p className="font-bold text-gold mt-2">Insights</p>
+              <p className="text-xs text-gold/70 mt-1">Business analytics</p>
+            </TiltCard>
+          </Link>
+        )}
         {isOwner && (
           <Link href="/team" className="block">
             <TiltCard wow>
