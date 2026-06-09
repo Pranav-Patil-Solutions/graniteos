@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraniteOS — Just Shipped (June 9, 2026)</title>
+<style>
+  :root{
+    --bg:#0c0a08; --card:rgba(255,255,255,.04); --stroke:rgba(255,255,255,.10);
+    --txt:#f4f1ec; --dim:#a39b8e; --stone:#c98b4b; --stone2:#e0b07a;
+    --good:#34d399; --info:#6c8cff; --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:
+      radial-gradient(1100px 650px at 82% -12%,rgba(52,211,153,.16),transparent 58%),
+      radial-gradient(900px 600px at -5% 110%,rgba(201,139,75,.18),transparent 55%),
+      var(--bg);
+    color:var(--txt); min-height:100vh; padding:46px 24px 80px; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1100px;margin:0 auto}
+  .eyebrow{letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:var(--good);font-weight:600}
+  h1{font-size:clamp(34px,5vw,54px);line-height:1.04;margin:8px 0 6px;font-weight:700;letter-spacing:-.02em}
+  .sub{color:var(--dim);font-size:16px;max-width:660px}
+  .stamp{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--dim);
+    border:1px solid var(--stroke);padding:6px 12px;border-radius:999px;background:var(--card)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 12px var(--good)}
+
+  .checks{display:flex;gap:10px;flex-wrap:wrap;margin:26px 0 4px}
+  .check{display:inline-flex;align-items:center;gap:8px;font-size:13px;border:1px solid rgba(52,211,153,.3);
+    background:rgba(52,211,153,.08);color:#a7f3d0;padding:8px 13px;border-radius:999px;font-weight:500}
+
+  .feat{display:flex;flex-direction:column;gap:16px;margin-top:30px}
+  .row{border:1px solid var(--stroke);background:var(--card);border-radius:18px;padding:20px 22px;
+    display:grid;grid-template-columns:54px 1fr auto;gap:18px;align-items:start;
+    transition:transform .15s ease,border-color .15s ease}
+  .row:hover{transform:translateY(-2px);border-color:rgba(201,139,75,.45)}
+  .row .ic{font-size:34px;line-height:1;grid-row:span 2}
+  .row .head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .row h2{font-size:19px;font-weight:700}
+  .row .sha{font-family:var(--mono);font-size:11.5px;color:var(--stone2);background:rgba(201,139,75,.12);
+    padding:2px 8px;border-radius:6px}
+  .row p{font-size:13.5px;color:var(--dim);line-height:1.5;margin-top:6px;grid-column:2}
+  .bul{grid-column:2;display:flex;flex-wrap:wrap;gap:6px 8px;margin-top:10px}
+  .bul span{font-size:11.5px;border:1px solid var(--stroke);background:rgba(255,255,255,.03);
+    padding:4px 10px;border-radius:999px;color:var(--dim)}
+  .new{justify-self:end;align-self:start;font-size:11px;font-weight:700;color:var(--good);
+    background:rgba(52,211,153,.14);padding:4px 10px;border-radius:999px;white-space:nowrap}
+
+  .footer{margin-top:34px;border-top:1px solid var(--stroke);padding-top:18px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--dim)}
+  .footer b{color:var(--txt)}
+  .note{font-size:12.5px;color:var(--dim);margin-top:14px;border-left:3px solid var(--info);
+    padding:8px 0 8px 14px;background:linear-gradient(90deg,rgba(108,140,255,.06),transparent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="stamp"><span class="dot"></span>master · clean working tree · June 9, 2026</div>
+  <p class="eyebrow" style="margin-top:18px">GraniteOS · this session</p>
+  <h1>Just Shipped</h1>
+  <p class="sub">Four features that were sitting half-finished and uncommitted are now verified and committed as clean, separate commits.</p>
+
+  <div class="checks">
+    <span class="check">✓ TypeScript compiles (0 errors)</span>
+    <span class="check">✓ 40 / 40 unit tests pass</span>
+    <span class="check">✓ GST DB migration live</span>
+    <span class="check">✓ No 500s on any route</span>
+    <span class="check">✓ Secrets safe (.env.local ignored)</span>
+  </div>
+
+  <div class="feat">
+
+    <div class="row">
+      <div class="ic">🧾</div>
+      <div class="head"><h2>GST Compliance — Phase A</h2><span class="sha">6f22d47</span></div>
+      <p>A proper Rule-46 tax invoice. Place-of-supply drives the CGST/SGST vs IGST split, per-line HSN codes, round-off, and amount-in-words. GSTIN is validated by format + check digit. Invoices now number by financial year (INV/2026-27/0001).</p>
+      <div class="bul"><span>invoice_items table</span><span>CGST·SGST·IGST split</span><span>HSN per line</span><span>GSTIN check-digit</span><span>amount in words</span><span>FY numbering</span><span>printable tax invoice</span></div>
+      <span class="new">NEW</span>
+    </div>
+
+    <div class="row">
+      <div class="ic">📥</div>
+      <div class="head"><h2>Bulk Excel / CSV Import</h2><span class="sha">9d25ec4</span></div>
+      <p>An owner-only wizard to onboard data fast: customers, suppliers, blocks, slabs and jobs. Download a template, drop in your sheet — the server re-validates every row (never trusting the browser preview), resolves block labels to IDs, and reports exactly which rows failed and why.</p>
+      <div class="bul"><span>5 import types</span><span>downloadable templates</span><span>server re-validation</span><span>per-row error report</span><span>owner-gated</span></div>
+      <span class="new">NEW</span>
+    </div>
+
+    <div class="row">
+      <div class="ic">🛋️</div>
+      <div class="head"><h2>Stone Visualizer</h2><span class="sha">81b4eb1</span></div>
+      <p>Two ways for a customer to see a slab in a real space. Quick mode composites the stone onto preset kitchen / bath / floor photos; photoreal mode edits the customer's own room photo with AI so only the chosen surface becomes that stone. Lives inside the public catalogue and the slab passport.</p>
+      <div class="bul"><span>room try-on (3 presets)</span><span>AI "see it in your space"</span><span>Gemini 2.5 Flash Image</span><span>in catalogue + /s/[id]</span></div>
+      <span class="new">NEW</span>
+    </div>
+
+    <div class="row">
+      <div class="ic">🔑</div>
+      <div class="head"><h2>Private-Beta Gate &amp; Tooling</h2><span class="sha">40b599a</span></div>
+      <p>Only invited emails can sign in while the allowlist is set, and the beta deploy stays out of Google (noindex). Plus the two new dependencies the features need, and a Playwright audit script with screenshots.</p>
+      <div class="bul"><span>login allowlist</span><span>noindex on beta</span><span>@google/genai</span><span>xlsx</span><span>audit screenshots</span></div>
+      <span class="new">NEW</span>
+    </div>
+
+  </div>
+
+  <div class="note">
+    <b style="color:#cbd5ff">Local only.</b> &nbsp;These are committed to <code>master</code> but <b style="color:#fff">not pushed</b> yet — nothing is live on the web until you say "push / deploy".
+  </div>
+
+  <div class="footer">
+    <div><b>4</b> commits · <b>58</b> files · <b>+5,277</b> lines</div>
+    <div>Next.js 15.5.19 · Supabase · Groq + Gemini · running at localhost:3000</div>
+  </div>
+
+</div>
+</body>
+</html>
