@@ -198,7 +198,8 @@ export default function InvoiceEditor({
         <Row label="GST" value={formatINR(Math.round(gstTotal * 100))} />
         <div className="flex justify-between pt-1.5 border-t border-graphite-600">
           <span className="font-bold text-white">Total</span>
-          <span className="font-extrabold text-gold text-lg">{formatINR(Math.round(grand * 100))}</span>
+          {/* round to the nearest rupee to match the server's GST round-off */}
+          <span className="font-extrabold text-gold text-lg">{formatINR(Math.round(grand) * 100)}</span>
         </div>
       </div>
 

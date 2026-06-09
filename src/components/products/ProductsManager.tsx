@@ -183,23 +183,39 @@ export default function ProductsManager({ products }: { products: ProductRow[] }
 
           <div className="grid grid-cols-2 gap-2">
             <Field label="HSN / SAC">
-              <select
-                value={HSN_PRESETS.some((h) => h.code === form.hsn) ? form.hsn : "custom"}
-                onChange={(e) => {
-                  const code = e.target.value;
-                  if (code === "custom") return;
-                  const preset = HSN_PRESETS.find((h) => h.code === code);
-                  set({ hsn: code, gstRate: preset ? String(preset.rate) : form.gstRate });
-                }}
-                className="w-full !min-h-0 !py-1.5 text-sm bg-white/[0.04]"
-              >
-                {HSN_PRESETS.map((h) => (
-                  <option key={h.code} value={h.code}>
-                    {h.code} · {h.label}
-                  </option>
-                ))}
-                <option value="custom">Custom…</option>
-              </select>
+              {(() => {
+                const isPreset = HSN_PRESETS.some((h) => h.code === form.hsn);
+                return (
+                  <>
+                    <select
+                      value={isPreset ? form.hsn : "custom"}
+                      onChange={(e) => {
+                        const code = e.target.value;
+                        if (code === "custom") return set({ hsn: "" });
+                        const preset = HSN_PRESETS.find((h) => h.code === code);
+                        set({ hsn: code, gstRate: preset ? String(preset.rate) : form.gstRate });
+                      }}
+                      className="w-full !min-h-0 !py-1.5 text-sm bg-white/[0.04]"
+                    >
+                      {HSN_PRESETS.map((h) => (
+                        <option key={h.code} value={h.code}>
+                          {h.code} · {h.label}
+                        </option>
+                      ))}
+                      <option value="custom">Custom…</option>
+                    </select>
+                    {!isPreset && (
+                      <input
+                        value={form.hsn}
+                        onChange={(e) => set({ hsn: e.target.value })}
+                        placeholder="Enter HSN / SAC"
+                        maxLength={8}
+                        className="mt-1.5 w-full text-sm focus:border-gold outline-none"
+                      />
+                    )}
+                  </>
+                );
+              })()}
             </Field>
             <Field label="GST %">
               <select
