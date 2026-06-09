@@ -39,7 +39,7 @@ export default function LegalDoc({
           <Link href="/privacy" className="hover:text-gold">
             Privacy
           </Link>
-          <span>© 2026 GraniteOS</span>
+          <span>© 2026 GraniteOS · made by HandelOS</span>
         </div>
       </div>
     </div>

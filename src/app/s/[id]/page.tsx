@@ -108,7 +108,10 @@ export default async function SlabPage({ params }: { params: Promise<{ id: strin
             💬 Enquire about this slab
           </a>
         )}
-        <p className="mt-6 text-center text-[11px] text-graphite-500">Powered by GraniteOS</p>
+        <p className="mt-6 text-center text-[11px] text-graphite-500">
+          Powered by <span className="text-slate-400">GraniteOS</span> · made by{" "}
+          <span className="text-gold/70 font-semibold">HandelOS</span>
+        </p>
       </div>
     </div>
   );

@@ -88,7 +88,8 @@ function LoginInner() {
           G
         </div>
         <h1 className="mt-4 text-2xl font-bold text-white">GraniteOS</h1>
-        <p className="mt-1 text-sm text-slate-400">
+        <p className="text-[10px] uppercase tracking-[0.2em] text-gold/60 mt-0.5">made by HandelOS</p>
+        <p className="mt-1.5 text-sm text-slate-400">
           {step === "otp"
             ? `Enter the code sent to ${value}`
             : "Sign in to your granite business"}

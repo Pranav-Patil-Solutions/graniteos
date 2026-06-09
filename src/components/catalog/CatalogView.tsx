@@ -238,7 +238,10 @@ export default function CatalogView({
             💬 Enquire
           </a>
         )}
-        <p className="mt-8 text-center text-[11px] text-graphite-500">Powered by GraniteOS</p>
+        <p className="mt-8 text-center text-[11px] text-graphite-500">
+          Powered by <span className="text-slate-400">GraniteOS</span> · made by{" "}
+          <span className="text-gold/70 font-semibold">HandelOS</span>
+        </p>
       </div>
     </div>
   );
