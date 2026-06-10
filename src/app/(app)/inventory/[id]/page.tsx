@@ -4,7 +4,7 @@ import { ChevronLeft } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR, formatINRPrecise } from "@/lib/money";
-import SlabViewer from "@/components/three/SlabViewer";
+import Slab3D from "@/components/catalog/Slab3D";
 import { StoneSwatch } from "@/components/inventory/StoneSwatch";
 import AddSlabForm from "@/components/inventory/AddSlabForm";
 import SlabStatus from "@/components/inventory/SlabStatus";
@@ -86,7 +86,7 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
           color={block.color}
           className="absolute inset-0 opacity-30"
         />
-        <SlabViewer material={block.material} color={block.color} className="absolute inset-0 w-full h-full" />
+        <Slab3D material={block.material} color={block.color} className="absolute inset-0 w-full h-full" />
         <div className="absolute left-4 bottom-3 text-xs text-slate-400">
           👆 drag — or 📱 tilt your phone — to spin your{" "}
           <span className="text-gold font-semibold">{block.material}</span>
