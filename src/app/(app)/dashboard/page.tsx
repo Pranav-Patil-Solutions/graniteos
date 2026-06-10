@@ -60,7 +60,7 @@ export default async function DashboardPage() {
         <RoleBadge role={user.role} />
       </div>
 
-      <MorningCard companyId={user.company_id} />
+      <MorningCard role={user.role} />
 
       <div className="mt-6 grid grid-cols-2 gap-3">
         <Link href="/inventory" className="block">
