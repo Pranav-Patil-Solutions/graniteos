@@ -8,7 +8,6 @@ import SlabViewer from "@/components/three/SlabViewer";
 import { StoneSwatch } from "@/components/inventory/StoneSwatch";
 import AddSlabForm from "@/components/inventory/AddSlabForm";
 import SlabStatus from "@/components/inventory/SlabStatus";
-import SlabPhoto from "@/components/inventory/SlabPhoto";
 import SlabQR from "@/components/inventory/SlabQR";
 
 type Slab = {
@@ -153,12 +152,10 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
         )}
         {slabs.map((s) => (
           <div key={s.id} className="rounded-2xl border border-graphite-600 bg-white/[0.04] p-3">
-            <SlabPhoto
-              slabId={s.id}
-              blockId={id}
-              photo={s.photo_path}
+            <StoneSwatch
               material={block.material}
               color={block.color}
+              className="w-full h-32 rounded-xl border border-white/10"
             />
             <div className="mt-2.5 flex items-start justify-between gap-2">
               <div>
