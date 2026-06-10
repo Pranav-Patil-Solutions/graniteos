@@ -4,6 +4,7 @@ import { ChevronLeft } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { can } from "@/lib/permissions";
+import { isWhatsAppConnected } from "@/lib/whatsapp";
 import StockAlertBroadcast, { type AlertCustomer, type RecentSlab } from "@/components/stock/StockAlertBroadcast";
 
 export default async function StockAlertPage() {
@@ -56,6 +57,7 @@ export default async function StockAlertPage() {
         companyName={company?.name ?? "our showroom"}
         recent={recent}
         customers={custs}
+        whatsappConnected={isWhatsAppConnected()}
       />
     </>
   );

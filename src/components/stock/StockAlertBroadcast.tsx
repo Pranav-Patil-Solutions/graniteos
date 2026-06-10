@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { MessageCircle, Copy, Check, Megaphone, RotateCcw } from "lucide-react";
+import { MessageCircle, Copy, Check, Megaphone, RotateCcw, Zap, Loader2, Settings2 } from "lucide-react";
 import { setStockNotify } from "@/actions/parties";
+import { broadcastNewStock, type BroadcastResult } from "@/actions/stock-alert";
 
 export type RecentSlab = { material: string; createdAt: string };
 export type AlertCustomer = { id: string; name: string; phone: string; optIn: boolean };
@@ -21,11 +22,13 @@ export default function StockAlertBroadcast({
   companyName,
   recent,
   customers,
+  whatsappConnected,
 }: {
   companyId: string;
   companyName: string;
   recent: RecentSlab[];
   customers: AlertCustomer[];
+  whatsappConnected: boolean;
 }) {
   const [origin, setOrigin] = useState("");
   const [windowDays, setWindowDays] = useState(7);
@@ -36,6 +39,8 @@ export default function StockAlertBroadcast({
   const [opt, setOpt] = useState<Record<string, boolean>>(
     () => Object.fromEntries(customers.map((c) => [c.id, c.optIn])),
   );
+  const [sending, setSending] = useState(false);
+  const [result, setResult] = useState<BroadcastResult | null>(null);
 
   useEffect(() => setOrigin(window.location.origin), []);
 
@@ -84,6 +89,24 @@ export default function StockAlertBroadcast({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+  }
+
+  // Single-line params for the approved WhatsApp template ({{1}},{{2}},{{3}}).
+  const oneLineSummary = useMemo(() => {
+    const names = materials.map((m) => m.material);
+    if (names.length === 0) return "fresh lots on the floor";
+    const head = names.slice(0, 3).join(", ");
+    const more = names.length - 3;
+    return more > 0 ? `${head} & ${more} more` : head;
+  }, [materials]);
+
+  async function autoSend() {
+    if (sending) return;
+    setSending(true);
+    setResult(null);
+    const res = await broadcastNewStock([companyName, oneLineSummary, catalogueUrl]);
+    setResult(res);
+    setSending(false);
   }
 
   return (
@@ -152,6 +175,49 @@ export default function StockAlertBroadcast({
       <p className="mt-1 text-[11px] text-slate-500 text-center">
         Tip: WhatsApp → New broadcast → pick customers → paste. One message reaches everyone.
       </p>
+
+      {/* Path B — automated send via WhatsApp Business API */}
+      <div className="mt-5 rounded-2xl border border-gold/30 bg-gradient-to-br from-[#14110a] to-graphite-800 p-4">
+        <div className="flex items-center gap-2">
+          <Zap className="w-4 h-4 text-gold" />
+          <span className="text-sm font-bold text-white">Auto-send to everyone</span>
+          <span className="ml-auto text-[10px] font-bold uppercase tracking-wide rounded-full px-2 py-0.5 bg-white/[0.06] text-slate-300">
+            {whatsappConnected ? "connected" : "not connected"}
+          </span>
+        </div>
+
+        {whatsappConnected ? (
+          <>
+            <p className="mt-1.5 text-[12px] text-slate-300">
+              Sends the approved template to all <b className="text-gold">{optedIn.length}</b> opted-in customers — no taps.
+            </p>
+            <button
+              onClick={autoSend}
+              disabled={sending || optedIn.length === 0}
+              className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gold px-4 py-2.5 text-sm font-bold text-graphite-900 hover:brightness-110 disabled:opacity-50"
+            >
+              {sending ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending…</> : <><Zap className="w-4 h-4" /> Auto-send to {optedIn.length} customers</>}
+            </button>
+          </>
+        ) : (
+          <div className="mt-2 flex items-start gap-2 text-[12px] text-slate-400">
+            <Settings2 className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
+            <p>
+              Hands-off sending is wired and ready. Connect your <b className="text-slate-200">WhatsApp Business API</b> (Meta Cloud API or a provider) to enable it — set <code className="text-gold">WHATSAPP_TOKEN</code> + <code className="text-gold">WHATSAPP_PHONE_NUMBER_ID</code> and an approved template. Until then, use the one-tap sends below.
+            </p>
+          </div>
+        )}
+
+        {result && (
+          <div className={`mt-3 rounded-lg px-3 py-2 text-[12px] border ${
+            result.ok ? "bg-granite-green2/10 border-granite-green2/30 text-granite-green2" : "bg-red-500/10 border-red-500/20 text-red-300"
+          }`}>
+            {result.notConnected
+              ? "WhatsApp Business API is not connected."
+              : <>✅ Sent to <b>{result.sent}</b> of {result.total}{result.failed > 0 ? ` · ${result.failed} failed` : ""}.{result.errors[0] ? ` (${result.errors[0]})` : ""}</>}
+          </div>
+        )}
+      </div>
 
       {/* one-by-one send list */}
       <div className="mt-6 flex items-center justify-between">
