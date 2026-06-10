@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireSession } from "@/lib/auth";
+import { can } from "@/lib/permissions";
 import { partySchema } from "@/lib/validation";
 import { rupeesToPaise } from "@/lib/money";
 
@@ -32,6 +33,21 @@ export async function addParty(input: unknown) {
   if (error) return { error: error.message };
 
   revalidatePath("/parties");
+  return { ok: true as const };
+}
+
+/** Toggle a customer's opt-in for WhatsApp new-stock alerts (DPDP control). */
+export async function setStockNotify(partyId: string, on: boolean) {
+  const me = await requireSession();
+  if (!can(me.role, "createQuote"))
+    return { error: "You don't have permission to manage customer alerts." };
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("parties")
+    .update({ notify_new_stock: on })
+    .eq("id", partyId);
+  if (error) return { error: error.message };
+  revalidatePath("/stock-alert");
   return { ok: true as const };
 }
 

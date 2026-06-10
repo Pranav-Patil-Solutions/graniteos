@@ -11,6 +11,7 @@ import {
   Sparkles,
   Settings,
   BarChart3,
+  Megaphone,
 } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -37,6 +38,7 @@ export default async function DashboardPage() {
     .single();
 
   const isOwner = can(user.role, "inviteTeamMember");
+  const canBroadcast = can(user.role, "createQuote");
 
   return (
     <div className="max-w-lg mx-auto px-4 pt-12" style={{ perspective: 1000 }}>
@@ -112,6 +114,15 @@ export default async function DashboardPage() {
             <p className="text-xs text-slate-400 mt-1">Production &amp; QC</p>
           </TiltCard>
         </Link>
+        {canBroadcast && (
+          <Link href="/stock-alert" className="block">
+            <TiltCard>
+              <Megaphone className="text-gold" />
+              <p className="font-bold text-white mt-2">Stock Alert</p>
+              <p className="text-xs text-slate-400 mt-1">WhatsApp new stock</p>
+            </TiltCard>
+          </Link>
+        )}
         <Link href="/growth" className="block">
           <TiltCard wow>
             <Sparkles className="text-gold" />
