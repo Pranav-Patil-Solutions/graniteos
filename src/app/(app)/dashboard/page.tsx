@@ -12,6 +12,7 @@ import {
   Settings,
   BarChart3,
   Megaphone,
+  Target,
 } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -120,6 +121,15 @@ export default async function DashboardPage() {
               <Megaphone className="text-gold" />
               <p className="font-bold text-white mt-2">Stock Alert</p>
               <p className="text-xs text-slate-400 mt-1">WhatsApp new stock</p>
+            </TiltCard>
+          </Link>
+        )}
+        {canBroadcast && (
+          <Link href="/marketing" className="block">
+            <TiltCard>
+              <Target className="text-gold" />
+              <p className="font-bold text-white mt-2">Marketing Helper</p>
+              <p className="text-xs text-slate-400 mt-1">Who to reach &amp; what to say</p>
             </TiltCard>
           </Link>
         )}
