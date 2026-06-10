@@ -35,7 +35,7 @@ const GROUPS: { group: string; items: Item[] }[] = [
     items: [
       { href: "/stock-alert", label: "Stock Alert", icon: Megaphone, need: "broadcast" },
       { href: "/marketing", label: "Marketing Helper", icon: Target, need: "broadcast" },
-      { href: "/ai-studio", label: "AI Studio", icon: Sparkles },
+      { href: "/growth", label: "Marketing AI", icon: Sparkles },
       { href: "/analytics", label: "Insights", icon: BarChart3, need: "owner" },
     ],
   },
