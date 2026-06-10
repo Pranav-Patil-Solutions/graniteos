@@ -24,14 +24,19 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  // License gate — the app does not run without a valid, signed licence.
-  const host = (await headers()).get("host") ?? undefined;
-  const license = verifyLicense(host);
+  // Licensing is fully wired but ENFORCED ONLY when LICENSE_ENFORCE=1.
+  // Flip that env on (with a valid GRANITEOS_LICENSE) to lock the app later.
+  let gate: React.ReactNode = null;
+  if (process.env.LICENSE_ENFORCE === "1") {
+    const host = (await headers()).get("host") ?? undefined;
+    const license = verifyLicense(host);
+    if (!license.valid) gate = <LicenseGate status={license} />;
+  }
 
   return (
     <html lang="en" suppressHydrationWarning className={`${manrope.variable} ${fraunces.variable}`}>
       <body suppressHydrationWarning className="font-sans antialiased">
-        {license.valid ? children : <LicenseGate status={license} />}
+        {gate ?? children}
       </body>
     </html>
   );
