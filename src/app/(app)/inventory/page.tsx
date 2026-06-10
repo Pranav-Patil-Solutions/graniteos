@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { ChevronRight, Layers } from "lucide-react";
+import { ChevronRight, Layers, Boxes, Ruler, Wallet } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { Card } from "@/components/ui/Card";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { StoneSwatch } from "@/components/inventory/StoneSwatch";
 import { formatINR } from "@/lib/money";
@@ -78,33 +77,25 @@ export default async function InventoryPage() {
     <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
       <div className="flex items-center justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-bold text-white">Stock</h1>
+          <h1 className="font-display text-3xl font-semibold text-white tracking-tight">Stock</h1>
           <p className="text-sm text-slate-400">Blocks → slabs → godown</p>
         </div>
         <ShareCatalog companyId={me.company_id} />
       </div>
 
       <div className="mt-5 grid grid-cols-3 gap-3">
-        <Card className="p-3 text-center">
-          <AnimatedNumber value={totalSlabs} className="block text-2xl font-extrabold text-white" />
-          <div className="text-[11px] text-slate-400 mt-0.5">slabs</div>
-        </Card>
-        <Card className="p-3 text-center">
-          <AnimatedNumber value={Math.round(totalSqft)} className="block text-2xl font-extrabold text-white" />
-          <div className="text-[11px] text-slate-400 mt-0.5">sq-ft</div>
-        </Card>
-        <Card className="p-3 text-center">
-          <span className="block text-2xl font-extrabold text-gold">{formatINR(totalValue)}</span>
-          <div className="text-[11px] text-slate-400 mt-0.5">in stock</div>
-        </Card>
+        <Tile icon={Boxes} value={totalSlabs} label="slabs" />
+        <Tile icon={Ruler} value={Math.round(totalSqft)} label="sq-ft" />
+        <Tile icon={Wallet} display={formatINR(totalValue)} label="in stock" gold />
       </div>
 
       {best && worst && best.id !== worst.id && (
-        <div className="mt-4 rounded-2xl border border-[#3a3320] bg-gold/[0.06] p-4">
-          <div className="flex items-center gap-2 text-gold font-bold">
+        <div className="relative mt-4 rounded-2xl border border-gold/25 bg-gradient-to-br from-[#14110a] to-graphite-800 p-4 overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(220px 140px at 100% 0%, rgba(201,139,75,.18), transparent 70%)" }} />
+          <div className="relative flex items-center gap-2 text-gold font-bold">
             <Layers className="w-4 h-4" /> Recovery Radar ⭐
           </div>
-          <p className="mt-2 text-sm text-slate-300">
+          <p className="relative mt-2 text-sm text-slate-300">
             <span className="text-granite-green2 font-semibold">{best.label}</span> yields best at{" "}
             <b>{best.perCBM.toFixed(0)} sq-ft/CBM</b> — <b>{(best.perCBM - worst.perCBM).toFixed(0)} more</b>{" "}
             than <span className="text-red-300 font-semibold">{worst.label}</span> (
@@ -153,6 +144,40 @@ export default async function InventoryPage() {
             </div>
           </Link>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function Tile({
+  icon: Icon,
+  value,
+  display,
+  label,
+  gold,
+}: {
+  icon: typeof Boxes;
+  value?: number;
+  display?: string;
+  label: string;
+  gold?: boolean;
+}) {
+  const glow = gold ? "rgba(201,139,75,.12)" : "rgba(255,255,255,.05)";
+  const chip = gold ? "bg-gold/15 text-gold" : "bg-white/[0.08] text-slate-200";
+  const text = gold ? "text-gold" : "text-white";
+  return (
+    <div className="relative rounded-2xl border border-graphite-600 bg-white/[0.04] p-3 overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(110px 70px at 100% 0%, ${glow}, transparent 70%)` }} />
+      <div className="relative">
+        <span className={`inline-flex w-6 h-6 rounded-md items-center justify-center ${chip}`}>
+          <Icon className="w-3.5 h-3.5" />
+        </span>
+        {display !== undefined ? (
+          <span className={`block text-xl font-extrabold mt-1.5 leading-none tracking-tight ${text}`}>{display}</span>
+        ) : (
+          <AnimatedNumber value={value ?? 0} className={`block text-xl font-extrabold mt-1.5 leading-none tracking-tight ${text}`} />
+        )}
+        <div className="text-[10px] text-slate-400 mt-1">{label}</div>
       </div>
     </div>
   );
