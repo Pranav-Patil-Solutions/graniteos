@@ -4,7 +4,7 @@ export const metadata = { title: "Terms of Service · GraniteOS" };
 
 export default function TermsPage() {
   return (
-    <LegalDoc title="Terms of Service" updated="7 June 2026">
+    <LegalDoc title="Terms of Service" updated="10 June 2026">
       <p>
         These Terms of Service (&quot;Terms&quot;) govern your access to and use of GraniteOS (the
         &quot;Service&quot;), a software platform for managing granite and marble businesses, operated
@@ -35,11 +35,14 @@ export default function TermsPage() {
         <li>use the Service to send spam or violate any applicable law (including GST/tax law).</li>
       </ul>
 
-      <h2>4. Your data</h2>
+      <h2>4. Your data &amp; data protection</h2>
       <p>
-        You own the business data you enter (stock, customers, invoices, etc.). You grant us a limited
-        licence to host and process it solely to provide the Service. We handle your data as described in
-        our <a href="/privacy">Privacy Policy</a>.
+        You own the business data you enter (stock, customers, invoices, etc.). You grant us a limited licence
+        to host and process it solely to provide the Service. For personal data about <b>your own customers and
+        suppliers</b>, you are the Data Fiduciary and we act as your <b>Data Processor</b> on your instructions —
+        you are responsible for having a lawful basis and the necessary consent (including before sending them
+        messages). We handle data as described in our <a href="/privacy">Privacy Policy</a>, and will provide a
+        Data Processing Agreement on request.
       </p>
 
       <h2>5. Intellectual property</h2>
@@ -49,10 +52,14 @@ export default function TermsPage() {
         limited right to use the Service under these Terms.
       </p>
 
-      <h2>6. Subscriptions &amp; payment</h2>
+      <h2>6. Licensing, subscriptions &amp; payment</h2>
       <p>
-        Paid plans (where offered) are billed in advance for the chosen period. Fees are non-refundable
-        except where required by law. We may change pricing on reasonable notice.
+        Access to the Service may be provided under a <b>licence</b> (which may be time-limited and tied to your
+        deployment) and/or a subscription. We grant you a non-exclusive, non-transferable, revocable right to use
+        the Service for your business for the licensed/subscribed term only; the licence does not transfer
+        ownership and may not be shared, resold or sub-licensed. Paid plans are billed in advance for the chosen
+        period; fees are non-refundable except where required by law; we may change pricing on reasonable notice.
+        On expiry, suspension or termination of the licence, access may stop.
       </p>
 
       <h2>7. Third-party services</h2>
@@ -83,8 +90,10 @@ export default function TermsPage() {
 
       <h2>11. Governing law</h2>
       <p>
-        These Terms are governed by the laws of India, and disputes are subject to the exclusive
-        jurisdiction of the courts at [your city]. (Please confirm the jurisdiction with your lawyer.)
+        These Terms are governed by the laws of India, and disputes are subject to the exclusive jurisdiction of
+        the courts at <b>[your registered place of business]</b>. The operating entity for &quot;Vyaparwerk&quot;
+        and its registered address are available on request. (Confirm the entity and jurisdiction with your lawyer
+        before relying on these Terms.)
       </p>
 
       <h2>12. Contact</h2>
