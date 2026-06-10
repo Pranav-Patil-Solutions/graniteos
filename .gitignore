@@ -14,3 +14,9 @@ coverage
 /playwright-report
 /.playwright
 .vercel
+
+# License signing keys — NEVER commit
+license-keys/
+
+# Generated customer licences
+license.json
