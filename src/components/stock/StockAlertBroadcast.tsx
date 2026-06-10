@@ -158,6 +158,7 @@ export default function StockAlertBroadcast({
           )}
         </div>
         <textarea
+          suppressHydrationWarning
           value={message}
           onChange={(e) => { setMessage(e.target.value); setEdited(true); }}
           rows={8}

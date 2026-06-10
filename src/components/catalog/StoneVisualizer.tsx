@@ -27,6 +27,7 @@ export default function StoneVisualizer({
   return (
     <>
       <button
+        suppressHydrationWarning
         onClick={() => setOpen(true)}
         className={
           triggerClassName ??

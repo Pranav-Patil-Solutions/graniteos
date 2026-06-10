@@ -138,6 +138,7 @@ export default function MarketingHelper({
         <p className="mt-1 text-[12px] text-slate-400">{meta.desc}</p>
 
         <textarea
+          suppressHydrationWarning
           value={message}
           onChange={(e) => setOverride((o) => ({ ...o, [active]: e.target.value }))}
           rows={4}

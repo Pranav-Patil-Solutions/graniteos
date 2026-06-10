@@ -130,6 +130,7 @@ export default function CatalogView({
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <input
+                suppressHydrationWarning
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search stone, colour, finish…"
@@ -145,6 +146,7 @@ export default function CatalogView({
               )}
             </div>
             <select
+              suppressHydrationWarning
               value={sort}
               onChange={(e) => setSort(e.target.value as Sort)}
               className="rounded-xl border border-graphite-600 bg-white/[0.04] px-2 py-2 text-sm text-slate-300 focus:border-gold outline-none"
@@ -290,6 +292,7 @@ function Chip({
 }) {
   return (
     <button
+      suppressHydrationWarning
       onClick={onClick}
       className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold border transition-colors ${
         on
