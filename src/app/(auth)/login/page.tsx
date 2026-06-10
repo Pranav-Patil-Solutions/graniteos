@@ -84,15 +84,23 @@ function LoginInner() {
       transition={{ duration: 0.5 }}
     >
       <div className="flex flex-col items-center text-center mb-7">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-granite-green to-granite-green2 text-white grid place-items-center text-2xl font-extrabold shadow-lg shadow-granite-green2/40">
-          G
+        {/* classical gold seal-ring monogram */}
+        <div className="relative w-16 h-16 rounded-full grid place-items-center border border-gold/40 bg-gradient-to-b from-white/[0.07] to-transparent shadow-[0_0_34px_rgba(200,162,75,0.28)]">
+          <span className="absolute inset-1.5 rounded-full border border-gold/15" aria-hidden />
+          <span className="font-display text-[30px] font-semibold text-gold leading-none">G</span>
         </div>
-        <h1 className="mt-4 text-2xl font-bold text-white">GraniteOS</h1>
-        <p className="text-[10px] uppercase tracking-[0.2em] text-gold/60 mt-0.5">made by HandelOS</p>
-        <p className="mt-1.5 text-sm text-slate-400">
+        <h1 className="mt-4 font-display text-3xl font-semibold text-white tracking-tight">GraniteOS</h1>
+        <p className="text-[10px] uppercase tracking-[0.32em] text-gold/70 mt-1.5">made by HandelOS</p>
+        {/* classical flourish divider */}
+        <div className="mt-4 flex items-center gap-2 w-32" aria-hidden>
+          <span className="h-px flex-1 bg-gradient-to-r from-transparent to-gold/40" />
+          <span className="w-1.5 h-1.5 rotate-45 bg-gold/70" />
+          <span className="h-px flex-1 bg-gradient-to-l from-transparent to-gold/40" />
+        </div>
+        <p className="mt-3.5 text-sm text-slate-300">
           {step === "otp"
             ? `Enter the code sent to ${value}`
-            : "Sign in to your granite business"}
+            : "The operating system for the stone trade"}
         </p>
       </div>
 

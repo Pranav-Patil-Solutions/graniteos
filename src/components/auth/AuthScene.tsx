@@ -52,9 +52,13 @@ export default function AuthScene({ children }: { children: ReactNode }) {
       >
         <motion.div
           style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
-          className="w-full max-w-sm rounded-3xl border border-gold/30 bg-white/[0.06] backdrop-blur-xl p-7 shadow-2xl shadow-black/60"
+          className="relative w-full max-w-sm rounded-[28px] border border-gold/25 bg-white/[0.06] backdrop-blur-xl p-8 shadow-2xl shadow-black/60"
         >
-          {children}
+          {/* classical inner gold hairline frame */}
+          <div aria-hidden className="pointer-events-none absolute inset-3 rounded-[20px] border border-gold/15" />
+          {/* gold rule at the very top of the card */}
+          <div aria-hidden className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+          <div className="relative">{children}</div>
         </motion.div>
       </div>
     </div>
