@@ -10,6 +10,7 @@ const PUBLIC_PREFIXES = [
   "/s",
   "/terms",
   "/privacy",
+  "/dev",
 ];
 
 function isPublic(path: string) {
