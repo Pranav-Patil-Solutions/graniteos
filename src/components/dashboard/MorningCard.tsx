@@ -19,6 +19,7 @@ type TileSpec = {
   icon: typeof Receipt;
   label: string;
   value: number;
+  href: string;
   rupees?: boolean;
   tone?: "green" | "red" | "gold" | "plain";
 };
@@ -26,19 +27,19 @@ type TileSpec = {
 function tilesFor(b: Briefing): TileSpec[] {
   const r = (p: number) => Math.round(p / 100);
   const money = {
-    cash: { icon: ArrowDownLeft, label: "Cash in (7d)", value: r(b.cashIn7Paise), rupees: true, tone: "green" as const },
-    udhaar: { icon: AlertTriangle, label: "Udhaar pending", value: r(b.receivablePaise), rupees: true, tone: "red" as const },
-    gst: { icon: Receipt, label: b.netGstPaise >= 0 ? "GST payable" : "GST credit", value: Math.abs(r(b.netGstPaise)), rupees: true, tone: "gold" as const },
+    cash: { icon: ArrowDownLeft, label: "Cash in (7d)", value: r(b.cashIn7Paise), rupees: true, tone: "green" as const, href: "/money" },
+    udhaar: { icon: AlertTriangle, label: "Udhaar pending", value: r(b.receivablePaise), rupees: true, tone: "red" as const, href: "/money" },
+    gst: { icon: Receipt, label: b.netGstPaise >= 0 ? "GST payable" : "GST credit", value: Math.abs(r(b.netGstPaise)), rupees: true, tone: "gold" as const, href: "/money" },
   };
   const sales = {
-    qexp: { icon: AlertTriangle, label: "Quotes expiring", value: b.quotesExpiringSoon, tone: "gold" as const },
-    qopen: { icon: FileText, label: "Open quotes", value: b.quotesOpen, tone: "plain" as const },
+    qexp: { icon: AlertTriangle, label: "Quotes expiring", value: b.quotesExpiringSoon, tone: "gold" as const, href: "/quotes" },
+    qopen: { icon: FileText, label: "Open quotes", value: b.quotesOpen, tone: "plain" as const, href: "/quotes" },
   };
   const floor = {
-    ready: { icon: Factory, label: "Ready to dispatch", value: b.jobsReady, tone: "green" as const },
-    active: { icon: Factory, label: "Jobs in progress", value: b.jobsActive, tone: "plain" as const },
+    ready: { icon: Factory, label: "Ready to dispatch", value: b.jobsReady, tone: "green" as const, href: "/fabrication" },
+    active: { icon: Factory, label: "Jobs in progress", value: b.jobsActive, tone: "plain" as const, href: "/fabrication" },
   };
-  const stock = { icon: Boxes, label: "Slabs in stock", value: b.inStock, tone: "plain" as const };
+  const stock = { icon: Boxes, label: "Slabs in stock", value: b.inStock, tone: "plain" as const, href: "/inventory" };
 
   switch (b.role) {
     case "owner":
@@ -107,7 +108,7 @@ export default async function MorningCard({ role }: { role: Role }) {
   );
 }
 
-function Tile({ icon: Icon, label, value, rupees, tone = "plain" }: TileSpec) {
+function Tile({ icon: Icon, label, value, href, rupees, tone = "plain" }: TileSpec) {
   const t =
     tone === "green"
       ? { text: "text-granite-green2", chip: "bg-granite-green2/15 text-granite-green2", glow: "rgba(52,211,153,.10)" }
@@ -117,7 +118,10 @@ function Tile({ icon: Icon, label, value, rupees, tone = "plain" }: TileSpec) {
           ? { text: "text-gold", chip: "bg-gold/15 text-gold", glow: "rgba(201,139,75,.12)" }
           : { text: "text-white", chip: "bg-white/[0.08] text-slate-200", glow: "rgba(255,255,255,.05)" };
   return (
-    <div className="relative rounded-xl bg-white/[0.04] border border-graphite-600 p-3 overflow-hidden">
+    <Link
+      href={href}
+      className="relative block rounded-xl bg-white/[0.04] border border-graphite-600 p-3 overflow-hidden hover:border-gold/40 active:opacity-80 transition-colors"
+    >
       <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(120px 80px at 100% 0%, ${t.glow}, transparent 70%)` }} />
       <div className="relative">
         <span className={`inline-flex w-6 h-6 rounded-md items-center justify-center ${t.chip}`}>
@@ -130,6 +134,6 @@ function Tile({ icon: Icon, label, value, rupees, tone = "plain" }: TileSpec) {
         />
         <div className="text-[11px] text-slate-400 mt-1">{label}</div>
       </div>
-    </div>
+    </Link>
   );
 }
