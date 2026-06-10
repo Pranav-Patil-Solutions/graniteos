@@ -226,7 +226,8 @@ export async function setQuoteStatus(
   id: string,
   status: "draft" | "sent" | "accepted" | "rejected" | "expired",
 ) {
-  await requireSession();
+  const me = await requireSession();
+  if (!can(me.role, "createQuote")) return { error: "You don't have permission to change quotes." };
   const supabase = await createClient();
   const { error } = await supabase.from("quotes").update({ status }).eq("id", id);
   if (error) return { error: error.message };
@@ -239,7 +240,8 @@ export async function setOrderStatus(
   orderId: string,
   status: "confirmed" | "in_production" | "dispatched" | "delivered" | "cancelled",
 ) {
-  await requireSession();
+  const me = await requireSession();
+  if (!can(me.role, "confirmOrder")) return { error: "You don't have permission to change orders." };
   const supabase = await createClient();
   const { error } = await supabase.from("orders").update({ status }).eq("id", orderId);
   if (error) return { error: error.message };
@@ -250,6 +252,7 @@ export async function setOrderStatus(
 
 export async function confirmOrder(quoteId: string) {
   const me = await requireSession();
+  if (!can(me.role, "confirmOrder")) return { error: "You don't have permission to confirm orders." };
   const supabase = await createClient();
 
   const { data: quote } = await supabase

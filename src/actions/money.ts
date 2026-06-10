@@ -254,6 +254,7 @@ export async function updateInvoice(invoiceId: string, input: unknown) {
 
 export async function recordPayment(input: unknown) {
   const me = await requireSession();
+  if (!can(me.role, "confirmOrder")) return { error: "You don't have permission to record payments." };
   const parsed = paymentSchema.safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const v = parsed.data;

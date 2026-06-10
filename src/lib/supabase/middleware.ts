@@ -15,9 +15,9 @@ const PUBLIC_PREFIXES = [
 
 function isPublic(path: string) {
   if (path === "/") return true;
-  return PUBLIC_PREFIXES.some(
-    (p) => path === p || path.startsWith(p + "/") || path.startsWith(p),
-  );
+  // Exact match or a real sub-path only — NOT a bare prefix (so "/s" no longer
+  // makes "/settings", "/setup", "/stock-alert" public).
+  return PUBLIC_PREFIXES.some((p) => path === p || path.startsWith(p + "/"));
 }
 
 export async function updateSession(request: NextRequest) {

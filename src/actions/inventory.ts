@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireSession } from "@/lib/auth";
+import { can } from "@/lib/permissions";
 import { blockSchema, slabSchema } from "@/lib/validation";
 import { rupeesToPaise } from "@/lib/money";
 
@@ -69,7 +70,8 @@ export async function setSlabStatus(
   status: "in_stock" | "reserved" | "sold",
   blockId: string,
 ) {
-  await requireSession();
+  const me = await requireSession();
+  if (!can(me.role, "logInwardReceipt")) return { error: "You don't have permission to change stock." };
   const supabase = await createClient();
   const { error } = await supabase.from("slabs").update({ status }).eq("id", slabId);
   if (error) return { error: error.message };

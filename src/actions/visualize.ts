@@ -1,8 +1,30 @@
 "use server";
 
+import { headers } from "next/headers";
 import { GoogleGenAI } from "@google/genai";
 
 const MODEL = "gemini-2.5-flash-image";
+
+// Best-effort per-IP rate limit for this UNAUTHENTICATED, paid endpoint (it runs
+// on the public catalogue). In-memory: not perfect on serverless, but blocks the
+// obvious abuse / denial-of-wallet. A KV/Upstash limiter is the production-grade
+// upgrade.
+const MAX_IMG_BYTES = 6 * 1024 * 1024; // ~6 MB
+const RL_MAX = 8;
+const RL_WINDOW_MS = 5 * 60 * 1000;
+const hits = new Map<string, number[]>();
+
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < RL_WINDOW_MS);
+  if (recent.length >= RL_MAX) {
+    hits.set(ip, recent);
+    return true;
+  }
+  recent.push(now);
+  hits.set(ip, recent);
+  return false;
+}
 
 export type VisualizeResult =
   | { ok: true; image: string } // data URL
@@ -24,6 +46,13 @@ export async function visualizeStone(input: {
     return { error: "Photoreal preview isn't switched on yet (missing GEMINI_API_KEY)." };
   }
   if (!input.imageBase64) return { error: "No photo provided." };
+
+  // Abuse guards (public, unauthenticated, paid call).
+  if (Math.floor(input.imageBase64.length * 0.75) > MAX_IMG_BYTES)
+    return { error: "That photo is too large — please use one under ~6 MB." };
+  const ip = ((await headers()).get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
+  if (rateLimited(ip))
+    return { error: "Too many previews from this device — please wait a few minutes." };
 
   const prompt =
     `Edit this real photo of a room. Replace ONLY the ${input.surface} surface so it is made of ` +

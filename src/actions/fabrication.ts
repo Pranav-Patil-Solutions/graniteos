@@ -3,10 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireSession } from "@/lib/auth";
+import { can } from "@/lib/permissions";
 import { jobSchema, FAB_STAGES } from "@/lib/validation";
 
 export async function createJob(input: unknown) {
   const me = await requireSession();
+  if (!can(me.role, "manageProduction")) return { error: "You don't have permission to manage production." };
   const parsed = jobSchema.safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const v = parsed.data;
@@ -33,7 +35,8 @@ export async function createJob(input: unknown) {
 }
 
 export async function advanceStage(jobId: string, current: string) {
-  await requireSession();
+  const me = await requireSession();
+  if (!can(me.role, "manageProduction")) return { error: "You don't have permission to manage production." };
   const idx = FAB_STAGES.indexOf(current as (typeof FAB_STAGES)[number]);
   const next = FAB_STAGES[Math.min(idx + 1, FAB_STAGES.length - 1)];
   const supabase = await createClient();
@@ -47,7 +50,8 @@ export async function advanceStage(jobId: string, current: string) {
 }
 
 export async function setQC(jobId: string, status: "passed" | "failed") {
-  await requireSession();
+  const me = await requireSession();
+  if (!can(me.role, "manageProduction")) return { error: "You don't have permission to manage production." };
   const supabase = await createClient();
   // pass → move on to ready; fail → send back to polishing for rework
   const stage = status === "passed" ? "ready" : "polishing";

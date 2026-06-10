@@ -52,7 +52,8 @@ export async function setStockNotify(partyId: string, on: boolean) {
 }
 
 export async function deleteParty(id: string) {
-  await requireSession();
+  const me = await requireSession();
+  if (!can(me.role, "viewCompanySettings")) return { error: "Only the owner can delete a customer or supplier." };
   const supabase = await createClient();
   const { error } = await supabase.from("parties").delete().eq("id", id);
   if (error) return { error: error.message };

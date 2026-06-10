@@ -6,7 +6,8 @@ export type Permission =
   | "viewCompanySettings"
   | "createQuote"
   | "confirmOrder"
-  | "logInwardReceipt";
+  | "logInwardReceipt"
+  | "manageProduction";
 
 // owner-weighted map; later slices reference these permissions as they land.
 const PERMISSIONS: Record<Permission, Role[]> = {
@@ -16,6 +17,7 @@ const PERMISSIONS: Record<Permission, Role[]> = {
   createQuote: ["owner", "sales_manager"],
   confirmOrder: ["owner", "sales_manager"],
   logInwardReceipt: ["owner", "store_manager"],
+  manageProduction: ["owner", "store_manager", "fabrication_supervisor"],
 };
 
 export function can(role: Role, permission: Permission): boolean {
