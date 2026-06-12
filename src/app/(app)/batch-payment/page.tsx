@@ -32,10 +32,10 @@ export default async function BatchPaymentPage() {
     .sort((a, b) => b.outstanding_paise - a.outstanding_paise);
 
   return (
-    <div className="px-4 py-5 max-w-md mx-auto">
-      <div className="mb-4">
-        <h1 className="text-xl font-semibold text-white">Batch Payment</h1>
-        <p className="text-xs text-slate-400 mt-0.5">
+    <div className="px-4 pt-12 pb-8 max-w-md mx-auto">
+      <div className="mb-5">
+        <h1 className="text-2xl font-bold text-white">Batch Payment</h1>
+        <p className="text-sm text-slate-400">
           One payment, auto-allocated across a customer&apos;s open invoices — oldest first.
         </p>
       </div>

@@ -5,12 +5,21 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Monitor } from "lucide-react";
 import type { Role } from "@/lib/roles";
 import { NAV_GROUPS, allowedFor, isActive } from "@/components/layout/navConfig";
+import ThemeToggle from "@/components/layout/ThemeToggle";
 import SignOutButton from "@/components/auth/SignOutButton";
 
-export default function NavDrawer({ role }: { role: Role }) {
+export default function NavDrawer({
+  role,
+  forceMobile = false,
+  onSwitchToDesktop,
+}: {
+  role: Role;
+  forceMobile?: boolean;
+  onSwitchToDesktop?: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -20,7 +29,7 @@ export default function NavDrawer({ role }: { role: Role }) {
       <button
         onClick={() => setOpen(true)}
         aria-label="Menu"
-        className="fixed top-3 left-3 z-40 w-10 h-10 grid place-items-center rounded-xl bg-[#0b0e11]/70 backdrop-blur border border-line-dark text-ondark hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold lg:hidden"
+        className={`fixed top-3 left-3 z-40 w-10 h-10 grid place-items-center rounded-xl bg-graphite-900/70 backdrop-blur border border-line-dark text-ondark hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold ${forceMobile ? "" : "lg:hidden"}`}
       >
         <Menu className="w-5 h-5" />
       </button>
@@ -33,7 +42,7 @@ export default function NavDrawer({ role }: { role: Role }) {
 
       {/* drawer */}
       <aside
-        className={`fixed inset-y-0 left-0 z-[70] w-72 max-w-[82vw] bg-[#0c1014] border-r border-line-dark shadow-2xl transition-transform duration-200 ${open ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 z-[70] w-72 max-w-[82vw] bg-graphite-900 border-r border-line-dark shadow-2xl transition-transform duration-200 ${open ? "translate-x-0" : "-translate-x-full"}`}
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="flex items-center justify-between px-4 h-14 border-b border-line-dark">
@@ -46,7 +55,7 @@ export default function NavDrawer({ role }: { role: Role }) {
           </button>
         </div>
 
-        <nav className="overflow-y-auto h-[calc(100%-56px-72px)] px-3 py-3">
+        <nav className="overflow-y-auto h-[calc(100%-56px-116px)] px-3 py-3">
           {NAV_GROUPS.map((g) => {
             const items = g.items.filter((it) => allowedFor(role, it.need));
             if (items.length === 0) return null;
@@ -75,7 +84,19 @@ export default function NavDrawer({ role }: { role: Role }) {
           })}
         </nav>
 
-        <div className="absolute bottom-0 inset-x-0 px-4 py-4 border-t border-line-dark">
+        <div className="absolute bottom-0 inset-x-0 px-4 py-3 border-t border-line-dark space-y-2">
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            {/* way back to the desktop layout — only meaningful on a wide screen */}
+            {forceMobile && onSwitchToDesktop && (
+              <button
+                onClick={onSwitchToDesktop}
+                className="hidden lg:inline-flex items-center gap-2 rounded-xl border border-graphite-600 bg-white/[0.04] px-3 py-2 text-xs font-semibold text-slate-300 hover:text-gold hover:border-gold/40 transition-colors"
+              >
+                <Monitor className="w-4 h-4" /> Desktop view
+              </button>
+            )}
+          </div>
           <SignOutButton />
         </div>
       </aside>

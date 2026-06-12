@@ -28,8 +28,8 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
     const supabase = await createClient();
     const [{ data: parties }, { data: blocks }, { data: invoices }, { data: quotes }, { data: orders }] =
       await Promise.all([
-        supabase.from("parties").select("id, name, kind"),
-        supabase.from("blocks").select("id, label, material, color, supplier"),
+        supabase.from("parties").select("id, name, kind, phone, city, gstin"),
+        supabase.from("blocks").select("id, label, material, color, supplier, origin"),
         supabase.from("invoices").select("id, invoice_no, customer_id, total_paise"),
         supabase.from("quotes").select("id, quote_no, customer_id, total_paise"),
         supabase.from("orders").select("id, order_no, status"),
@@ -38,12 +38,12 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
     const nameById = new Map(((parties ?? []) as { id: string; name: string }[]).map((p) => [p.id, p.name] as const));
     const nm = (id: string | null) => (id ? nameById.get(id) ?? "—" : "—");
 
-    for (const p of (parties ?? []) as { id: string; name: string; kind: string }[]) {
-      if (matches(query, p.name, p.kind))
-        hits.push({ kind: "Customer", icon: Users, title: p.name, sub: p.kind === "supplier" ? "Supplier" : "Customer", href: `/parties/${p.id}` });
+    for (const p of (parties ?? []) as { id: string; name: string; kind: string; phone: string | null; city: string | null; gstin: string | null }[]) {
+      if (matches(query, p.name, p.kind, p.phone, p.city, p.gstin))
+        hits.push({ kind: "Customer", icon: Users, title: p.name, sub: [p.kind === "supplier" ? "Supplier" : "Customer", p.city, p.phone].filter(Boolean).join(" · "), href: `/parties/${p.id}` });
     }
-    for (const b of (blocks ?? []) as { id: string; label: string; material: string; color: string | null; supplier: string | null }[]) {
-      if (matches(query, b.material, b.label, b.color, b.supplier))
+    for (const b of (blocks ?? []) as { id: string; label: string; material: string; color: string | null; supplier: string | null; origin: string | null }[]) {
+      if (matches(query, b.material, b.label, b.color, b.supplier, b.origin))
         hits.push({ kind: "Stock", icon: Boxes, title: b.material, sub: [b.label, b.supplier].filter(Boolean).join(" · ") || "Block", href: `/inventory/${b.id}` });
     }
     for (const i of (invoices ?? []) as { id: string; invoice_no: string | null; customer_id: string | null; total_paise: number }[]) {
@@ -61,8 +61,9 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   }
 
   return (
-    <div className="px-4 py-5 max-w-2xl mx-auto">
-      <h1 className="text-xl font-semibold text-white mb-3">Search</h1>
+    <div className="px-4 pt-12 pb-8 max-w-2xl mx-auto">
+      <h1 className="text-2xl font-bold text-white">Search</h1>
+      <p className="text-sm text-slate-400 mb-4">One box for everything — names work in Hindi or English.</p>
 
       <form action="/search" method="get" className="relative mb-5">
         <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -76,7 +77,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
       </form>
 
       {!query ? (
-        <Card><p className="text-sm text-slate-400">Type anything — names work in Hindi or English.</p></Card>
+        <Card><p className="text-sm text-slate-400">Try a name, a stone, an invoice number, a phone or a city.</p></Card>
       ) : hits.length === 0 ? (
         <Card><p className="text-sm text-slate-400">No matches for &ldquo;{query}&rdquo;.</p></Card>
       ) : (

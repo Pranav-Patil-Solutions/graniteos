@@ -4,15 +4,23 @@
 // hamburger NavDrawer + bottom tabs take over. Same nav source as the drawer.
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Smartphone } from "lucide-react";
 import type { Role } from "@/lib/roles";
 import { NAV_GROUPS, allowedFor, isActive } from "@/components/layout/navConfig";
+import ThemeToggle from "@/components/layout/ThemeToggle";
 import SignOutButton from "@/components/auth/SignOutButton";
 
-export default function DesktopSidebar({ role }: { role: Role }) {
+export default function DesktopSidebar({
+  role,
+  onSwitchToMobile,
+}: {
+  role: Role;
+  onSwitchToMobile?: () => void;
+}) {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex fixed inset-y-0 left-0 z-40 w-60 flex-col border-r border-line-dark bg-[#0c1014]/95 backdrop-blur">
+    <aside className="hidden lg:flex fixed inset-y-0 left-0 z-40 w-60 flex-col border-r border-line-dark bg-graphite-900/95 backdrop-blur">
       <div className="flex items-center gap-2 h-16 px-5 border-b border-line-dark shrink-0">
         <span className="font-display text-2xl font-semibold text-gold leading-none">G</span>
         <span className="font-display text-lg font-semibold text-white">GraniteOS</span>
@@ -46,7 +54,19 @@ export default function DesktopSidebar({ role }: { role: Role }) {
         })}
       </nav>
 
-      <div className="px-4 py-4 border-t border-line-dark shrink-0">
+      <div className="px-4 py-3 border-t border-line-dark shrink-0 space-y-2">
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          {onSwitchToMobile && (
+            <button
+              onClick={onSwitchToMobile}
+              title="Preview the phone layout"
+              className="inline-flex items-center gap-2 rounded-xl border border-graphite-600 bg-white/[0.04] px-3 py-2 text-xs font-semibold text-slate-300 hover:text-gold hover:border-gold/40 transition-colors"
+            >
+              <Smartphone className="w-4 h-4" /> Mobile
+            </button>
+          )}
+        </div>
         <SignOutButton />
       </div>
     </aside>

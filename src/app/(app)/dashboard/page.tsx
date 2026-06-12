@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Settings } from "lucide-react";
+import { Settings, Search } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { can } from "@/lib/permissions";
@@ -46,6 +46,17 @@ export default async function DashboardPage() {
       <div className="mt-3">
         <RoleBadge role={user.role} />
       </div>
+
+      {/* search everywhere — customers, stock, invoices, quotes, orders */}
+      <form action="/search" method="get" className="relative mt-5">
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+        <input
+          name="q"
+          placeholder="Search customers, stock, invoices…"
+          aria-label="Search everything"
+          className="w-full !pl-10 text-base focus:border-gold outline-none"
+        />
+      </form>
 
       <MorningCard role={user.role} />
 

@@ -43,11 +43,11 @@ export default async function MeasurePage() {
   };
 
   return (
-    <div className="px-4 py-5 max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-4">
+    <div className="px-4 pt-12 pb-8 max-w-4xl mx-auto">
+      <div className="flex items-end justify-between mb-5">
         <div>
-          <h1 className="text-xl font-semibold text-white">Measurement Sheet</h1>
-          <p className="text-xs text-slate-400 mt-0.5">Every slab — size, area and value, from your stock.</p>
+          <h1 className="text-2xl font-bold text-white">Measurement Sheet</h1>
+          <p className="text-sm text-slate-400">Every slab — size, area and value, from your stock.</p>
         </div>
         <span className="text-xs px-2.5 py-1 rounded-full bg-white/[0.06] text-slate-300 shrink-0">
           {totals.area.toLocaleString("en-IN")} sq.ft · {totals.count} pcs

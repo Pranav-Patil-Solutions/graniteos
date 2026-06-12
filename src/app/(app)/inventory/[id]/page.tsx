@@ -4,7 +4,6 @@ import { ChevronLeft } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR, formatINRPrecise } from "@/lib/money";
-import Slab3D from "@/components/catalog/Slab3D";
 import { StoneSwatch } from "@/components/inventory/StoneSwatch";
 import AddSlabForm from "@/components/inventory/AddSlabForm";
 import SlabStatus from "@/components/inventory/SlabStatus";
@@ -79,17 +78,14 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
         <ChevronLeft className="w-4 h-4" /> Stock
       </Link>
 
-      <div className="mt-3 relative h-52 rounded-3xl overflow-hidden border border-graphite-600 bg-gradient-to-b from-graphite-800 to-graphite-900 shadow-inner">
-        {/* fallback stone texture (shows if WebGL is blocked) */}
-        <StoneSwatch
-          material={block.material}
-          color={block.color}
-          className="absolute inset-0 opacity-30"
-        />
-        <Slab3D material={block.material} color={block.color} className="absolute inset-0 w-full h-full" />
-        <div className="absolute left-4 bottom-3 text-xs text-slate-400">
-          👆 drag — or 📱 tilt your phone — to spin your{" "}
-          <span className="text-gold font-semibold">{block.material}</span>
+      {/* stone surface hero — instant, no WebGL (3D stays on the public
+          Slab Passport share link, where it sells) */}
+      <div className="mt-3 relative h-44 rounded-3xl overflow-hidden border border-graphite-600 shadow-inner">
+        <StoneSwatch material={block.material} color={block.color} className="absolute inset-0" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+        <div className="absolute left-4 bottom-3">
+          <p className="text-sm font-bold text-slab">{block.material}</p>
+          {block.color && <p className="text-xs text-slab-muted">{block.color}</p>}
         </div>
       </div>
 

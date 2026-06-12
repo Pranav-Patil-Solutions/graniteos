@@ -14,5 +14,9 @@ export default async function AiStudioPage() {
 
   const vizMaterials: VizMaterial[] = materials.map((m) => ({ label: m, material: m }));
 
-  return <AiStudio vizMaterials={vizMaterials} materials={materials} />;
+  // Gemini tools are metered (paid). The flag flips on after Google billing
+  // is set up; until then the UI warns and the server actions refuse to spend.
+  const billingReady = process.env.AI_BILLING_READY === "true";
+
+  return <AiStudio vizMaterials={vizMaterials} materials={materials} billingReady={billingReady} />;
 }

@@ -53,7 +53,7 @@ export default function CelebrationLayer({ recentPayments }: { recentPayments: P
           className="fixed top-4 inset-x-0 z-[60] flex justify-center px-4 pointer-events-none"
         >
           <div
-            className="pointer-events-auto relative overflow-hidden rounded-2xl border border-granite-green2/40 bg-gradient-to-br from-[#0c2418] to-graphite-800 px-5 py-3.5 shadow-2xl cursor-pointer"
+            className="force-dark pointer-events-auto relative overflow-hidden rounded-2xl border border-granite-green2/40 bg-gradient-to-br from-[#0c2418] to-[#11161b] px-5 py-3.5 shadow-2xl cursor-pointer"
             onClick={() => setShow(false)}
           >
             <Confetti />

@@ -35,6 +35,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" suppressHydrationWarning className={`${manrope.variable} ${fraunces.variable}`}>
+      <head>
+        {/* Apply the saved theme before paint (no flash). Dark is the default. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('gos-theme')==='light')document.documentElement.classList.add('light')}catch(e){}",
+          }}
+        />
+      </head>
       <body suppressHydrationWarning className="font-sans antialiased">
         {gate ?? children}
       </body>

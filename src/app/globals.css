@@ -2,40 +2,155 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Theme variables ─────────────────────────────────────────────────────
+   RGB triplets consumed by tailwind.config.ts via rgb(var(--x) / <alpha>).
+   :root = dark (brand default). html.light overrides the same names.
+   Note: --c-white is the "foreground tint" — dark theme: true white;
+   light theme: near-black ink, so text-white and bg-white/[0.04] flip
+   meaning correctly everywhere. */
 :root {
   color-scheme: dark;
 
-  /* ── Premium Stone design tokens (redesign spec §2) ── */
-  /* Background (dark shell) */
+  --c-white: 255 255 255;
+  /* slate = muted text scale (Tailwind defaults on dark) */
+  --c-slate-100: 241 245 249;
+  --c-slate-200: 226 232 240;
+  --c-slate-300: 203 213 225;
+  --c-slate-400: 148 163 184;
+  --c-slate-500: 100 116 139;
+  --c-slate-600: 71 85 105;
+  /* graphite = surfaces */
+  --c-graphite-900: 11 14 17;
+  --c-graphite-800: 17 22 27;
+  --c-graphite-700: 22 28 34;
+  --c-graphite-600: 28 34 40;
+  --c-graphite-500: 35 42 49;
+  --c-gold: 200 162 75;
+  --c-gold-soft: 228 201 126;
+  --c-granite-green2: 31 138 91;
+  --c-line: 242 240 235;
+  --c-ondark: 242 240 235;
+  --c-ondark-muted: 154 161 169;
+  /* accent text shades (Tailwind defaults on dark) */
+  --c-red-200: 254 202 202; --c-red-300: 252 165 165; --c-red-400: 248 113 113;
+  --c-rose-200: 254 205 211; --c-rose-300: 253 164 175; --c-rose-400: 251 113 133;
+  --c-amber-200: 253 230 138; --c-amber-300: 252 211 77; --c-amber-400: 251 191 36;
+  --c-emerald-200: 167 243 208; --c-emerald-300: 110 231 183; --c-emerald-400: 52 211 153;
+  --c-sky-300: 125 211 252; --c-sky-400: 56 189 248;
+  --c-violet-300: 196 181 253; --c-violet-400: 167 139 250;
+  --c-blue-300: 147 197 253; --c-blue-400: 96 165 250;
+  --c-stone-300: 214 211 209; --c-stone-400: 168 162 158;
+  --c-orange-300: 253 186 116; --c-orange-400: 251 146 60;
+
+  /* page + form surfaces */
   --bg-base: #0b0e11;
+  --bg-glow: #1c2630;
+  --input-border: #232a31;
+  --input-ink: #e8e6e1;
+  --input-placeholder: #5c6470;
+  --scrollbar: #232a31;
+
+  /* ── Premium Stone design tokens (redesign spec §2, unchanged) ── */
   --bg-elevated: #15191e;
   --bg-elevated2: #1c2127;
-  /* Foreground (light slabs) */
   --slab: #f7f6f3;
   --slab-muted: #eceae5;
-  /* Text */
   --text-on-dark: #f2f0eb;
   --text-on-dark-muted: #9aa1a9;
   --text-on-light: #14181c;
   --text-on-light-muted: #5c636b;
-  /* Accents */
   --gold: #c8a24b;
   --gold-soft: #e4c97e;
   --green: #7c8c5d;
-  /* Semantic */
   --positive: #1f8a70;
   --negative: #d96a5b;
   --info: #2c7a8c;
-  /* Lines */
   --border-dark: rgba(242, 240, 235, 0.08);
   --border-light: rgba(20, 24, 28, 0.1);
+}
+
+html.light {
+  color-scheme: light;
+
+  --c-white: 20 24 28; /* "white" becomes ink: text flips, tints flip */
+  --c-slate-100: 23 28 34;
+  --c-slate-200: 35 42 52;
+  --c-slate-300: 58 68 82;
+  --c-slate-400: 86 96 112;
+  --c-slate-500: 107 116 128;
+  --c-slate-600: 154 161 169;
+  --c-graphite-900: 255 255 255;
+  --c-graphite-800: 250 249 246;
+  --c-graphite-700: 244 242 238;
+  --c-graphite-600: 222 218 209;
+  --c-graphite-500: 206 201 190;
+  --c-gold: 154 117 40;
+  --c-gold-soft: 128 96 30;
+  --c-granite-green2: 22 109 71;
+  --c-line: 20 24 28;
+  --c-ondark: 20 24 28;
+  --c-ondark-muted: 92 99 107;
+  /* accents darken (≈ the -700/-800 of each scale) for light backgrounds */
+  --c-red-200: 153 27 27; --c-red-300: 185 28 28; --c-red-400: 220 38 38;
+  --c-rose-200: 159 18 57; --c-rose-300: 190 18 60; --c-rose-400: 225 29 72;
+  --c-amber-200: 146 64 14; --c-amber-300: 180 83 9; --c-amber-400: 217 119 6;
+  --c-emerald-200: 6 95 70; --c-emerald-300: 4 120 87; --c-emerald-400: 5 150 105;
+  --c-sky-300: 3 105 161; --c-sky-400: 2 132 199;
+  --c-violet-300: 109 40 217; --c-violet-400: 124 58 237;
+  --c-blue-300: 29 78 216; --c-blue-400: 37 99 235;
+  --c-stone-300: 68 64 60; --c-stone-400: 87 83 78;
+  --c-orange-300: 194 65 12; --c-orange-400: 234 88 12;
+
+  --bg-base: #f4f3ef;
+  --bg-glow: #ffffff;
+  --input-border: #d8d4ca;
+  --input-ink: #14181c;
+  --input-placeholder: #8a8f98;
+  --scrollbar: #c9c4b8;
 }
 
 html,
 body {
   height: 100%;
   background: var(--bg-base);
-  color: var(--text-on-dark);
+  color: rgb(var(--c-ondark));
+}
+
+/* Dark-by-design surfaces (hero cards, toasts on photos): re-pin the dark
+   palette inside this scope so light mode never flips their text. */
+.force-dark {
+  --c-white: 255 255 255;
+  --c-slate-100: 241 245 249;
+  --c-slate-200: 226 232 240;
+  --c-slate-300: 203 213 225;
+  --c-slate-400: 148 163 184;
+  --c-slate-500: 100 116 139;
+  --c-slate-600: 71 85 105;
+  --c-graphite-900: 11 14 17;
+  --c-graphite-800: 17 22 27;
+  --c-graphite-700: 22 28 34;
+  --c-graphite-600: 28 34 40;
+  --c-graphite-500: 35 42 49;
+  --c-gold: 200 162 75;
+  --c-gold-soft: 228 201 126;
+  --c-granite-green2: 31 138 91;
+  --c-line: 242 240 235;
+  --c-ondark: 242 240 235;
+  --c-ondark-muted: 154 161 169;
+  --c-red-200: 254 202 202; --c-red-300: 252 165 165; --c-red-400: 248 113 113;
+  --c-rose-200: 254 205 211; --c-rose-300: 253 164 175; --c-rose-400: 251 113 133;
+  --c-amber-200: 253 230 138; --c-amber-300: 252 211 77; --c-amber-400: 251 191 36;
+  --c-emerald-200: 167 243 208; --c-emerald-300: 110 231 183; --c-emerald-400: 52 211 153;
+  --c-sky-300: 125 211 252; --c-sky-400: 56 189 248;
+  --c-violet-300: 196 181 253; --c-violet-400: 167 139 250;
+  --c-blue-300: 147 197 253; --c-blue-400: 96 165 250;
+  --c-stone-300: 214 211 209; --c-stone-400: 168 162 158;
+  --c-orange-300: 253 186 116; --c-orange-400: 251 146 60;
+}
+
+/* App shell page background (was an inline arbitrary-hex gradient) */
+.app-bg {
+  background: radial-gradient(1200px 600px at 70% -10%, var(--bg-glow), var(--bg-base) 60%);
 }
 
 /* Tabular numerals for all money / quantity figures */
@@ -65,19 +180,19 @@ body {
   }
 }
 
-/* Inputs on dark surfaces */
+/* Inputs on themed surfaces */
 input,
 select,
 textarea {
   min-height: 52px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid #232a31;
-  color: #e8e6e1;
+  background: rgb(var(--c-white) / 0.04);
+  border: 1px solid var(--input-border);
+  color: var(--input-ink);
   border-radius: 14px;
   padding: 0 16px;
 }
 input::placeholder {
-  color: #5c6470;
+  color: var(--input-placeholder);
 }
 button {
   min-height: 44px;
@@ -88,6 +203,6 @@ button {
   width: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #232a31;
+  background: var(--scrollbar);
   border-radius: 8px;
 }

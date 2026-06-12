@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
@@ -46,14 +47,29 @@ export default function AppShell({
   const pathname = usePathname();
   const tabs = NAV_TABS_BY_ROLE[role] ?? [];
 
+  // Desktop ↔ mobile is switchable: "mobile" forces the phone chrome (tabs +
+  // hamburger) even on a wide screen — handy for demos. Persisted per device.
+  const [forceMobile, setForceMobile] = useState(false);
+  useEffect(() => {
+    try {
+      setForceMobile(localStorage.getItem("gos-layout") === "mobile");
+    } catch {}
+  }, []);
+  const setLayout = (mobile: boolean) => {
+    setForceMobile(mobile);
+    try {
+      localStorage.setItem("gos-layout", mobile ? "mobile" : "auto");
+    } catch {}
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-[radial-gradient(1200px_600px_at_70%_-10%,#1c2630,#0b0e11_60%)] lg:pl-60">
-      <NavDrawer role={role} />
-      <DesktopSidebar role={role} />
+    <div className={`min-h-screen flex flex-col app-bg ${forceMobile ? "" : "lg:pl-60"}`}>
+      <NavDrawer role={role} forceMobile={forceMobile} onSwitchToDesktop={() => setLayout(false)} />
+      {!forceMobile && <DesktopSidebar role={role} onSwitchToMobile={() => setLayout(true)} />}
       <VoiceCommandBar />
-      <main className="flex-1 pb-24 lg:pb-10 overflow-y-auto">{children}</main>
+      <main className={`flex-1 pb-24 overflow-y-auto ${forceMobile ? "" : "lg:pb-10"}`}>{children}</main>
       <nav
-        className="fixed bottom-0 inset-x-0 bg-graphite-900/90 backdrop-blur border-t border-graphite-600 z-50 lg:hidden"
+        className={`fixed bottom-0 inset-x-0 bg-graphite-900/90 backdrop-blur border-t border-graphite-600 z-50 ${forceMobile ? "" : "lg:hidden"}`}
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="flex justify-around h-16 max-w-lg mx-auto">
@@ -66,8 +82,9 @@ export default function AppShell({
               <Link
                 key={key}
                 href={tab.href}
-                className="relative flex-1 flex flex-col items-center justify-center gap-1"
-                style={{ color: active ? "#c9a24b" : "#5c6470" }}
+                className={`relative flex-1 flex flex-col items-center justify-center gap-1 ${
+                  active ? "text-gold" : "text-slate-500"
+                }`}
               >
                 {active && (
                   <motion.span

@@ -56,11 +56,11 @@ export default async function LogsPage() {
   );
 
   return (
-    <div className="px-4 py-5 max-w-3xl mx-auto">
-      <div className="flex items-center justify-between mb-4">
+    <div className="px-4 pt-12 pb-8 max-w-3xl mx-auto">
+      <div className="flex items-end justify-between mb-5">
         <div>
-          <h1 className="text-xl font-semibold text-white">Logs</h1>
-          <p className="text-xs text-slate-400 mt-0.5">Every action, newest first — fully timestamped.</p>
+          <h1 className="text-2xl font-bold text-white">Logs</h1>
+          <p className="text-sm text-slate-400">Every action, newest first — fully timestamped.</p>
         </div>
         <span className="text-xs px-2.5 py-1 rounded-full bg-white/[0.06] text-slate-300 shrink-0">
           {rows.length} event{rows.length === 1 ? "" : "s"}

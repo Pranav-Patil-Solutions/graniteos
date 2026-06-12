@@ -1,9 +1,9 @@
 // Single source of truth for the section nav — shared by the mobile NavDrawer
 // (hamburger) and the desktop sidebar so they never drift apart.
 import {
-  Home, Boxes, Users, Truck, Receipt, FileText, Wallet, Factory,
+  Home, Boxes, Users, Receipt, FileText, Wallet, Factory,
   Megaphone, Target, Sparkles, BarChart3, Package, Settings, History, Ruler, BookOpen, Banknote,
-  Search, HardHat, StickyNote,
+  HardHat, StickyNote,
 } from "lucide-react";
 import { can } from "@/lib/permissions";
 import type { Role } from "@/lib/roles";
@@ -16,10 +16,8 @@ export const NAV_GROUPS: { group: string; items: NavItem[] }[] = [
     group: "Business",
     items: [
       { href: "/dashboard", label: "Home", icon: Home },
-      { href: "/search", label: "Search", icon: Search },
       { href: "/inventory", label: "Stock", icon: Boxes },
-      { href: "/parties", label: "Customers", icon: Users },
-      { href: "/parties?tab=suppliers", label: "Suppliers", icon: Truck },
+      { href: "/parties", label: "Parties", icon: Users },
       { href: "/quotes", label: "Quotes", icon: Receipt },
       { href: "/orders", label: "Orders", icon: FileText },
       { href: "/money", label: "Money", icon: Wallet },
@@ -27,7 +25,7 @@ export const NAV_GROUPS: { group: string; items: NavItem[] }[] = [
       { href: "/measure", label: "Measurement Sheet", icon: Ruler },
       { href: "/fabrication", label: "Fabrication", icon: Factory },
       { href: "/factory", label: "Factory Floor", icon: HardHat },
-      { href: "/daybook", label: "Daybook", icon: BookOpen },
+      { href: "/daybook", label: "Daybook", icon: BookOpen, need: "owner" },
       { href: "/notes", label: "Voice Notes", icon: StickyNote },
       { href: "/logs", label: "Logs", icon: History },
     ],

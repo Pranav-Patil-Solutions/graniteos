@@ -47,6 +47,12 @@ export async function identifySlab(input: {
 }): Promise<IdentifyResult> {
   await requireSession();
 
+  // PAID feature gate: Gemini calls are metered. Until Google billing is set
+  // up and AI_BILLING_READY=true is set in the environment, refuse to spend.
+  if (process.env.AI_BILLING_READY !== "true") {
+    return { error: "Paid AI feature — not enabled yet. The owner needs to set up Google AI billing first." };
+  }
+
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return { error: "Slab Identifier isn't switched on yet (missing GEMINI_API_KEY)." };

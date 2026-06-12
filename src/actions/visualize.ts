@@ -41,6 +41,12 @@ export async function visualizeStone(input: {
   material: string;
   surface: string;
 }): Promise<VisualizeResult> {
+  // PAID feature gate: this image model only runs on a billed Google plan.
+  // Until AI_BILLING_READY=true is set in the environment, refuse to spend.
+  if (process.env.AI_BILLING_READY !== "true") {
+    return { error: "Paid AI feature — not enabled yet. The owner needs to set up Google AI billing first." };
+  }
+
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return { error: "Photoreal preview isn't switched on yet (missing GEMINI_API_KEY)." };

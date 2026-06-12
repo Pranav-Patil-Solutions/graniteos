@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, X, Search, CornerDownLeft } from "lucide-react";
+import { Mic, X, Search, CornerDownLeft, ArrowRight } from "lucide-react";
 import { useSpeech } from "@/components/voice/useSpeech";
 import { parseCommand } from "@/lib/voice-commands";
 import { transliterate } from "@/lib/transliterate";
@@ -26,6 +26,7 @@ export default function VoiceCommandBar() {
   const [open, setOpen] = useState(false);
   const [lang, setLang] = useState("en-IN");
   const [result, setResult] = useState<string | null>(null);
+  const [typed, setTyped] = useState("");
   const { supported, listening, interim, error, start, stop } = useSpeech(lang);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -60,8 +61,9 @@ export default function VoiceCommandBar() {
 
   const launch = () => {
     setResult(null);
+    setTyped("");
     setOpen(true);
-    start(run);
+    if (supported) start(run); // no mic? the sheet still opens with the typed box
   };
 
   const close = () => {
@@ -69,6 +71,15 @@ export default function VoiceCommandBar() {
     if (idleTimer.current) clearTimeout(idleTimer.current);
     setOpen(false);
     setResult(null);
+    setTyped("");
+  };
+
+  const runTyped = () => {
+    const text = typed.trim();
+    if (!text) return;
+    stop();
+    run(text);
+    setTyped("");
   };
 
   useEffect(() => () => { if (idleTimer.current) clearTimeout(idleTimer.current); }, []);
@@ -99,7 +110,7 @@ export default function VoiceCommandBar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 40 }}
               transition={{ type: "spring", stiffness: 320, damping: 28 }}
-              className="fixed inset-x-0 bottom-0 z-[76] rounded-t-3xl border-t border-graphite-600 bg-[#0c1014] px-5 pt-5 pb-8"
+              className="fixed inset-x-0 bottom-0 z-[76] rounded-t-3xl border-t border-graphite-600 bg-graphite-900 px-5 pt-5 pb-8"
               style={{ paddingBottom: "calc(2rem + env(safe-area-inset-bottom))" }}
             >
               <div className="flex items-center justify-between mb-4">
@@ -139,7 +150,9 @@ export default function VoiceCommandBar() {
                 </div>
 
                 {!supported ? (
-                  <p className="text-sm text-rose-300">Voice isn&apos;t supported in this browser — try Chrome.</p>
+                  <p className="text-sm text-slate-400">
+                    Voice needs Chrome — type your command below instead.
+                  </p>
                 ) : listening ? (
                   <p className="text-sm text-slate-300 min-h-[1.5rem]">
                     {interim ? transliterate(interim) : "Listening… say “open customers” or “search black galaxy”"}
@@ -150,17 +163,40 @@ export default function VoiceCommandBar() {
                     {result}
                   </p>
                 ) : (
-                  <p className="text-sm text-slate-400">Tap the mic and speak a command.</p>
+                  <p className="text-sm text-slate-400">Tap the mic and speak — or type below.</p>
                 )}
 
                 {error && <p className="mt-2 text-xs text-rose-300">{error}</p>}
               </div>
 
+              {/* typed fallback — same commands, works in every browser */}
+              <div className="mt-4 flex gap-2">
+                <input
+                  value={typed}
+                  onChange={(e) => setTyped(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && runTyped()}
+                  placeholder="Type: open customers · search black galaxy"
+                  className="flex-1 text-sm focus:border-gold outline-none"
+                />
+                <button
+                  onClick={runTyped}
+                  disabled={!typed.trim()}
+                  aria-label="Run command"
+                  className="shrink-0 w-[52px] grid place-items-center rounded-xl bg-gold/15 text-gold border border-gold/40 disabled:opacity-40"
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
+
               <div className="mt-4 flex flex-wrap justify-center gap-2">
                 {["customers", "measurement sheet", "daybook", "factory floor", "money"].map((s) => (
-                  <span key={s} className="text-[11px] text-slate-500 bg-white/[0.04] rounded-full px-2.5 py-1">
+                  <button
+                    key={s}
+                    onClick={() => { stop(); run(s); }}
+                    className="min-h-0 text-[11px] text-slate-500 hover:text-gold bg-white/[0.04] rounded-full px-2.5 py-1"
+                  >
                     “{s}”
-                  </span>
+                  </button>
                 ))}
               </div>
             </motion.div>
