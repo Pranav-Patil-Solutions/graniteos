@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { recordBatchPayment } from "@/actions/batch-payment";
 import { formatINR } from "@/lib/money";
+import ConfettiBurst from "@/components/voice/ConfettiBurst";
 
 type Customer = { id: string; name: string; outstanding_paise: number };
 const MODES = ["cash", "upi", "bank", "cheque", "other"] as const;
@@ -13,6 +14,7 @@ export default function BatchPaymentForm({ customers }: { customers: Customer[] 
   const [amount, setAmount] = useState("");
   const [mode, setMode] = useState<string>("upi");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [celebrate, setCelebrate] = useState(0);
   const [pending, startTransition] = useTransition();
 
   const selected = withDues.find((c) => c.id === customerId);
@@ -28,6 +30,7 @@ export default function BatchPaymentForm({ customers }: { customers: Customer[] 
         const left = res.leftover_paise > 0 ? ` · ${formatINR(res.leftover_paise)} left unallocated` : "";
         setMsg({ ok: true, text: `Recorded across ${res.allocated} invoice${res.allocated === 1 ? "" : "s"}${left}.` });
         setAmount("");
+        setCelebrate((c) => c + 1);
       } else {
         setMsg({ ok: false, text: "error" in res && res.error ? res.error : "Something went wrong." });
       }
@@ -36,6 +39,7 @@ export default function BatchPaymentForm({ customers }: { customers: Customer[] 
 
   return (
     <div className="rounded-2xl border border-graphite-600 bg-white/[0.04] backdrop-blur p-4 space-y-4">
+      <ConfettiBurst fire={celebrate} label="Payment recorded 🎉" />
       <label className="block">
         <span className="text-xs text-slate-400">Customer</span>
         <select

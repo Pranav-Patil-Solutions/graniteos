@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import {
   Menu, X, Home, Boxes, Users, Truck, Receipt, FileText, Wallet, Factory,
   Megaphone, Target, Sparkles, BarChart3, Package, Settings, History, Ruler, BookOpen, Banknote,
+  Search, HardHat, StickyNote,
 } from "lucide-react";
 import { can } from "@/lib/permissions";
 import type { Role } from "@/lib/roles";
@@ -21,6 +22,7 @@ const GROUPS: { group: string; items: Item[] }[] = [
     group: "Business",
     items: [
       { href: "/dashboard", label: "Home", icon: Home },
+      { href: "/search", label: "Search", icon: Search },
       { href: "/inventory", label: "Stock", icon: Boxes },
       { href: "/parties", label: "Customers", icon: Users },
       { href: "/parties?tab=suppliers", label: "Suppliers", icon: Truck },
@@ -30,7 +32,9 @@ const GROUPS: { group: string; items: Item[] }[] = [
       { href: "/batch-payment", label: "Batch Payment", icon: Banknote },
       { href: "/measure", label: "Measurement Sheet", icon: Ruler },
       { href: "/fabrication", label: "Fabrication", icon: Factory },
+      { href: "/factory", label: "Factory Floor", icon: HardHat },
       { href: "/daybook", label: "Daybook", icon: BookOpen },
+      { href: "/notes", label: "Voice Notes", icon: StickyNote },
       { href: "/logs", label: "Logs", icon: History },
     ],
   },
