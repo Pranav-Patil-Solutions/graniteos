@@ -7,7 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Menu, X, Home, Boxes, Users, Truck, Receipt, FileText, Wallet, Factory,
-  Megaphone, Target, Sparkles, BarChart3, Package, Settings,
+  Megaphone, Target, Sparkles, BarChart3, Package, Settings, History,
 } from "lucide-react";
 import { can } from "@/lib/permissions";
 import type { Role } from "@/lib/roles";
@@ -28,6 +28,7 @@ const GROUPS: { group: string; items: Item[] }[] = [
       { href: "/orders", label: "Orders", icon: FileText },
       { href: "/money", label: "Money", icon: Wallet },
       { href: "/fabrication", label: "Fabrication", icon: Factory },
+      { href: "/logs", label: "Logs", icon: History },
     ],
   },
   {
