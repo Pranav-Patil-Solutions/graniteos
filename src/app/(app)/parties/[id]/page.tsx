@@ -161,6 +161,11 @@ export default async function PartyPage({ params }: { params: Promise<{ id: stri
         {party.email && <Chip icon={Mail} href={`mailto:${party.email}`}>{party.email}</Chip>}
         {party.city && <Chip icon={MapPin}>{party.city}</Chip>}
       </div>
+      {party.address && (
+        <p className="mt-2 text-xs text-slate-400 flex items-start gap-1">
+          <MapPin className="w-3 h-3 mt-0.5 shrink-0" /> {party.address}
+        </p>
+      )}
       {party.gstin && (
         <p className="mt-2 text-xs text-slate-400">
           <b className="text-slate-300">GSTIN:</b> {party.gstin} · {stateLabel(party.gst_state_code)}

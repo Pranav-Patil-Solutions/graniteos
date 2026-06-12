@@ -5,72 +5,22 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Menu, X, Home, Boxes, Users, Truck, Receipt, FileText, Wallet, Factory,
-  Megaphone, Target, Sparkles, BarChart3, Package, Settings, History, Ruler, BookOpen, Banknote,
-  Search, HardHat, StickyNote,
-} from "lucide-react";
-import { can } from "@/lib/permissions";
+import { Menu, X } from "lucide-react";
 import type { Role } from "@/lib/roles";
+import { NAV_GROUPS, allowedFor, isActive } from "@/components/layout/navConfig";
 import SignOutButton from "@/components/auth/SignOutButton";
-
-type Need = "owner" | "broadcast" | undefined;
-type Item = { href: string; label: string; icon: typeof Home; need?: Need };
-
-const GROUPS: { group: string; items: Item[] }[] = [
-  {
-    group: "Business",
-    items: [
-      { href: "/dashboard", label: "Home", icon: Home },
-      { href: "/search", label: "Search", icon: Search },
-      { href: "/inventory", label: "Stock", icon: Boxes },
-      { href: "/parties", label: "Customers", icon: Users },
-      { href: "/parties?tab=suppliers", label: "Suppliers", icon: Truck },
-      { href: "/quotes", label: "Quotes", icon: Receipt },
-      { href: "/orders", label: "Orders", icon: FileText },
-      { href: "/money", label: "Money", icon: Wallet },
-      { href: "/batch-payment", label: "Batch Payment", icon: Banknote },
-      { href: "/measure", label: "Measurement Sheet", icon: Ruler },
-      { href: "/fabrication", label: "Fabrication", icon: Factory },
-      { href: "/factory", label: "Factory Floor", icon: HardHat },
-      { href: "/daybook", label: "Daybook", icon: BookOpen },
-      { href: "/notes", label: "Voice Notes", icon: StickyNote },
-      { href: "/logs", label: "Logs", icon: History },
-    ],
-  },
-  {
-    group: "Growth",
-    items: [
-      { href: "/stock-alert", label: "Stock Alert", icon: Megaphone, need: "broadcast" },
-      { href: "/marketing", label: "Marketing Helper", icon: Target, need: "broadcast" },
-      { href: "/ai-studio", label: "AI Studio", icon: Sparkles },
-      { href: "/analytics", label: "Insights", icon: BarChart3, need: "owner" },
-    ],
-  },
-  {
-    group: "Account",
-    items: [
-      { href: "/products", label: "Products", icon: Package, need: "owner" },
-      { href: "/team", label: "Team", icon: Users, need: "owner" },
-      { href: "/settings", label: "Settings", icon: Settings, need: "owner" },
-    ],
-  },
-];
 
 export default function NavDrawer({ role }: { role: Role }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  const allowed = (need: Need) =>
-    need === "owner" ? can(role, "inviteTeamMember") : need === "broadcast" ? can(role, "createQuote") : true;
-
   return (
     <>
-      {/* hamburger trigger */}
+      {/* hamburger trigger — mobile/tablet only; desktop uses the sidebar */}
       <button
         onClick={() => setOpen(true)}
         aria-label="Menu"
-        className="fixed top-3 left-3 z-40 w-10 h-10 grid place-items-center rounded-xl bg-[#0b0e11]/70 backdrop-blur border border-line-dark text-ondark hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+        className="fixed top-3 left-3 z-40 w-10 h-10 grid place-items-center rounded-xl bg-[#0b0e11]/70 backdrop-blur border border-line-dark text-ondark hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold lg:hidden"
       >
         <Menu className="w-5 h-5" />
       </button>
@@ -97,15 +47,14 @@ export default function NavDrawer({ role }: { role: Role }) {
         </div>
 
         <nav className="overflow-y-auto h-[calc(100%-56px-72px)] px-3 py-3">
-          {GROUPS.map((g) => {
-            const items = g.items.filter((it) => allowed(it.need));
+          {NAV_GROUPS.map((g) => {
+            const items = g.items.filter((it) => allowedFor(role, it.need));
             if (items.length === 0) return null;
             return (
               <div key={g.group} className="mb-4">
                 <p className="px-2 mb-1 text-[10px] uppercase tracking-[0.16em] text-gold/60 font-semibold">{g.group}</p>
                 {items.map((it) => {
-                  const base = it.href.split("?")[0];
-                  const active = pathname === base || (base !== "/dashboard" && pathname.startsWith(base));
+                  const active = isActive(pathname, it.href);
                   const Icon = it.icon;
                   return (
                     <Link

@@ -99,6 +99,7 @@ export default function PartiesView({
       partyType: fd.get("partyType") ?? "",
       phone: fd.get("phone") ?? "",
       city: (fd.get("city") as string) || autoCity || "",
+      address: fd.get("address") ?? "",
       gstin,
       gstStateCode,
       legalName,
@@ -182,10 +183,13 @@ export default function PartiesView({
               </Select>
               <Field name="city" label="City" placeholder="Hyderabad" />
             </div>
-            <Field name="phone" label="Phone" placeholder="+91 98xxxxxxx" />
+            <div className="grid grid-cols-2 gap-3">
+              <Field name="phone" label="Phone" placeholder="+91 98xxxxxxx" />
+              <Field name="email" label="Email" placeholder="name@firm.com" />
+            </div>
 
             <label className="block">
-              <span className="text-xs font-medium text-slate-300">GSTIN (optional)</span>
+              <span className="text-xs font-medium text-slate-300">GSTIN / business ID (optional)</span>
               <div className="mt-1 flex gap-2">
                 <input
                   suppressHydrationWarning
@@ -209,12 +213,21 @@ export default function PartiesView({
                   {gstMsg.text}
                 </span>
               )}
-              {legalName && (
-                <span className="block text-xs text-slate-400 mt-0.5">
-                  Legal name: <span className="text-slate-200">{legalName}</span>
-                </span>
-              )}
             </label>
+
+            <label className="block">
+              <span className="text-xs font-medium text-slate-300">Owner / legal name</span>
+              <input
+                suppressHydrationWarning
+                value={legalName}
+                onChange={(e) => setLegalName(e.target.value)}
+                placeholder="Proprietor or registered name"
+                className="mt-1 w-full text-base focus:border-gold outline-none"
+              />
+              <span className="text-[11px] text-slate-500">Auto-fills from GSTIN verify — or type it in.</span>
+            </label>
+            <Field name="address" label="Address" placeholder="Shop / street, area" />
+
             <div className="grid grid-cols-2 gap-3">
               <Field
                 name="openingBalanceRupees"
@@ -226,6 +239,17 @@ export default function PartiesView({
                 <Field name="creditLimitRupees" label="Credit limit ₹" placeholder="500000" num />
               )}
             </div>
+
+            <label className="block">
+              <span className="text-xs font-medium text-slate-300">Notes</span>
+              <textarea
+                suppressHydrationWarning
+                name="notes"
+                rows={2}
+                placeholder="Anything to remember about this party…"
+                className="mt-1 w-full text-base focus:border-gold outline-none resize-none"
+              />
+            </label>
             {error && (
               <div className="rounded-lg bg-red-500/10 text-red-300 text-sm px-3 py-2 border border-red-500/20">
                 {error}

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { NAV_TABS_BY_ROLE, TABS, type Role, type TabKey } from "@/lib/roles";
 import NavDrawer from "@/components/layout/NavDrawer";
+import DesktopSidebar from "@/components/layout/DesktopSidebar";
 import VoiceCommandBar from "@/components/voice/VoiceCommandBar";
 
 const ICONS: Record<TabKey, React.ReactNode> = {
@@ -46,12 +47,13 @@ export default function AppShell({
   const tabs = NAV_TABS_BY_ROLE[role] ?? [];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[radial-gradient(1200px_600px_at_70%_-10%,#1c2630,#0b0e11_60%)]">
+    <div className="min-h-screen flex flex-col bg-[radial-gradient(1200px_600px_at_70%_-10%,#1c2630,#0b0e11_60%)] lg:pl-60">
       <NavDrawer role={role} />
+      <DesktopSidebar role={role} />
       <VoiceCommandBar />
-      <main className="flex-1 pb-24 overflow-y-auto">{children}</main>
+      <main className="flex-1 pb-24 lg:pb-10 overflow-y-auto">{children}</main>
       <nav
-        className="fixed bottom-0 inset-x-0 bg-graphite-900/90 backdrop-blur border-t border-graphite-600 z-50"
+        className="fixed bottom-0 inset-x-0 bg-graphite-900/90 backdrop-blur border-t border-graphite-600 z-50 lg:hidden"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="flex justify-around h-16 max-w-lg mx-auto">
