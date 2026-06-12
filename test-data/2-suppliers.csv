@@ -1,0 +1,5 @@
+Name,Type,Phone,Email,City,Address,GSTIN,Legal Name,Opening Balance (Rs),Notes
+TEST Rajasthan Quarries,Quarry,9812345678,info@rajquarry.com,Kishangarh,NH-8 Kishangarh,08ABCDE1234F1Z5,Rajasthan Quarries LLP,120000,Black galaxy source
+TEST Deccan Stone Co,Processor,9845098450,deccan@example.com,Bengaluru,Peenya Industrial Area,,Deccan Stone Co,45000,Polishing partner
+TEST Sharma Transport,Transporter,9911223344,,Jaipur,,,,0,Truck transport to site
+TEST Broken Supplier,SpaceshipVendor,9000000001,,,,,,0,THIS ROW IS BROKEN ON PURPOSE (Type is not a real supplier type) - the wizard must reject it

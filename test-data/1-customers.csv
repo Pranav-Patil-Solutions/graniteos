@@ -1,0 +1,6 @@
+Name,Type,Phone,Email,City,Address,GSTIN,Legal Name,Credit Limit (Rs),Opening Balance (Rs),Notes
+TEST Sai Constructions,Builder,9876543210,sai@example.com,Hyderabad,Plot 12 Madhapur,36ABCDE1234F1Z5,Sai Constructions Pvt Ltd,200000,35000,Repeat client
+TEST Verma Interiors,Architect,9812345670,verma@example.com,Jaipur,MI Road,,Verma Interiors,150000,0,Prefers white marble
+TEST Lakshmi Granites,Dealer,9898989898,,Ongole,,,,100000,12000,Buys black galaxy in bulk
+TEST Mehta Builders,Builder,9765432109,mehta@example.com,Mumbai,Andheri East,,Mehta Builders LLP,500000,80000,
+,Builder,9000000000,bad-row@example.com,Nowhere,,,,,,THIS ROW IS BROKEN ON PURPOSE (no name) - the wizard must reject it

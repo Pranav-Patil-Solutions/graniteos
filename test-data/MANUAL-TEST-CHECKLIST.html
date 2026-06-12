@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GraniteOS — Manual Test Checklist</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { color-scheme: dark; }
+  body { font-family: system-ui, -apple-system, sans-serif; background:#0b0e11; color:#e8e6e1; margin:0; padding:32px 20px 80px; }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  h1 { font-size: 26px; margin: 0 0 4px; } h1 span { color:#c8a24b; }
+  .sub { color:#9aa1a9; font-size:14px; margin-bottom:24px; }
+  h2 { font-size:17px; color:#c8a24b; margin:34px 0 10px; border-bottom:1px solid #1c2228; padding-bottom:8px; }
+  table { width:100%; border-collapse:collapse; font-size:13.5px; }
+  th { text-align:left; color:#9aa1a9; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.08em; padding:8px 10px; border-bottom:1px solid #1c2228; }
+  td { padding:9px 10px; border-bottom:1px solid #14181d; vertical-align:top; }
+  td:first-child { width:26px; color:#5c6470; font-size:16px; }
+  .exp { color:#7fb89a; }
+  code { background:#161c22; border:1px solid #232a31; border-radius:5px; padding:1px 6px; font-size:12px; color:#e4c97e; }
+  .note { background:#14110a; border:1px solid #3a3320; border-radius:10px; padding:10px 14px; font-size:13px; color:#d8c89a; margin:10px 0; }
+  .warn { background:#241010; border-color:#502020; color:#e8b4b4; }
+  kbd { background:#1c2228; border-radius:4px; padding:1px 6px; font-size:12px; }
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>GraniteOS <span>Manual Test Checklist</span></h1>
+<p class="sub">Test on <b>http://localhost:3210</b> (preview) — log in with the Password tab.
+Everything here uses data prefixed <code>TEST</code> so it's easy to spot and delete afterwards.</p>
+
+<h2>1 · Excel Import (use the 5 files in this folder, IN ORDER)</h2>
+<div class="note">Open <b>Settings → Import from Excel</b>. Each file contains <b>one deliberately broken row</b> — the wizard must show it as rejected in the preview and import only the good ones. Import blocks BEFORE slabs (slabs attach by Block Label).</div>
+<table>
+<tr><th></th><th>Step</th><th class="exp">Expect</th></tr>
+<tr><td>☐</td><td>Customers → upload <code>1-customers.csv</code></td><td class="exp">4 valid · 1 rejected (no name) → import → 4 customers appear in Parties</td></tr>
+<tr><td>☐</td><td>Suppliers → upload <code>2-suppliers.csv</code></td><td class="exp">3 valid · 1 rejected (bad Type) → 3 suppliers in Parties → Suppliers tab</td></tr>
+<tr><td>☐</td><td>Blocks → upload <code>3-blocks.csv</code></td><td class="exp">3 valid · 1 rejected (no material) → 3 blocks in Stock</td></tr>
+<tr><td>☐</td><td>Slabs → upload <code>4-slabs.csv</code></td><td class="exp">4 valid · 1 rejected (no width) → slabs visible inside the TEST blocks</td></tr>
+<tr><td>☐</td><td>Production Jobs → upload <code>5-production-jobs.csv</code></td><td class="exp">2 valid · 1 rejected (bad machine) → 2 jobs on Fabrication + Factory Floor</td></tr>
+</table>
+
+<h2>2 · Quote → Order → Invoice → Payment (the money chain)</h2>
+<table>
+<tr><th></th><th>Step</th><th class="exp">Expect</th></tr>
+<tr><td>☐</td><td>Quotes → New quote → customer <b>TEST Sai Constructions</b> → add a TEST slab line</td><td class="exp">Line shows sq.ft × rate; GST calculated; total correct</td></tr>
+<tr><td>☐</td><td>Save the quote, open it → convert / confirm to order</td><td class="exp">Order appears in Orders with the same total</td></tr>
+<tr><td>☐</td><td>From the order create the invoice → open it</td><td class="exp">Tax invoice with your GSTIN + CGST/SGST split</td></tr>
+<tr><td>☐</td><td>Record payment (full amount, UPI)</td><td class="exp">Invoice flips to PAID; payment listed in Money</td></tr>
+</table>
+
+<h2>3 · Products</h2>
+<table>
+<tr><th></th><th>Step</th><th class="exp">Expect</th></tr>
+<tr><td>☐</td><td>Products (owner menu) → add product <b>TEST Adhesive 20kg</b>, any rate + GST %</td><td class="exp">Appears in the list; usable as a quote line</td></tr>
+</table>
+
+<h2>4 · New features (this release)</h2>
+<table>
+<tr><th></th><th>Step</th><th class="exp">Expect</th></tr>
+<tr><td>☐</td><td>Sidebar footer → <b>Light</b> toggle, browse 4–5 screens, toggle back</td><td class="exp">Everything readable in both; briefing card stays dark &amp; legible; choice survives reload</td></tr>
+<tr><td>☐</td><td>Sidebar footer → <b>Mobile</b> button (on your big screen)</td><td class="exp">Phone layout: bottom tabs + ☰; drawer has a "Desktop view" button to switch back</td></tr>
+<tr><td>☐</td><td>Gold mic (bottom-right, use Chrome): say <i>"open customers"</i>, then <i>"search black galaxy"</i>; also try typing in the box instead</td><td class="exp">Navigates / searches; typed command works the same; हिं toggle for Hindi</td></tr>
+<tr><td>☐</td><td>Dashboard search box: type <code>rajesh</code> or a Hindi name, also a phone number</td><td class="exp">Finds parties/stock/invoices; Hindi names found by Latin typing</td></tr>
+<tr><td>☐</td><td>Daybook: speak a task → confirm "Heard this — add it?" → tick it done</td><td class="exp">Confirm step before adding; confetti on completion; unfinished tasks show "carried N days" tomorrow</td></tr>
+<tr><td>☐</td><td>Stock → open a TEST block → <b>Add photo</b> (use your phone for camera)</td><td class="exp">Real photo replaces the initials chip, also in the Stock list</td></tr>
+<tr><td>☐</td><td>Add Block form → attach a photo while creating</td><td class="exp">Block saved with its photo</td></tr>
+<tr><td>☐</td><td>Batch Payment: pick a TEST customer with 2 unpaid invoices, pay a lump sum</td><td class="exp">Oldest invoice fills first; confetti; leftover shown if any</td></tr>
+<tr><td>☐</td><td>Team → invite <b>TEST Member</b> (any phone, Sales Manager)</td><td class="exp">Invite created WITHOUT the gen_random_bytes error (bug fixed)</td></tr>
+<tr><td>☐</td><td>AI Studio → Slab Identifier / Room Visualizer</td><td class="exp">PAID badge + caution, button blocked (until Google billing); Copywriter works free</td></tr>
+<tr><td>☐</td><td>Measurement Sheet, Logs, Factory Floor</td><td class="exp">TEST slabs/jobs appear with sizes, timestamps, stages</td></tr>
+</table>
+
+<h2>5 · After testing</h2>
+<div class="note warn">All test rows start with <b>TEST</b>. Delete them from the app (or tell Claude "wipe the TEST data" and it's removed in one shot). The invited TEST Member should be removed from Team before client handover.</div>
+
+</div></body>
+</html>

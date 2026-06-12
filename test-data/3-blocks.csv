@@ -1,0 +1,5 @@
+Block Label,Material,Color,Length (cm),Width (cm),Height (cm),Weight (tonnes),Origin,Supplier,Cost (Rs)
+TEST-BLK-001,Black Galaxy,Black,280,160,150,18.5,Ongole,TEST Rajasthan Quarries,450000
+TEST-BLK-002,Makrana White Marble,White,260,165,150,17.2,Makrana,TEST Rajasthan Quarries,240000
+TEST-BLK-003,Tan Brown,Brown-maroon,275,170,160,19.1,Karimnagar,TEST Deccan Stone Co,230000
+TEST-BLK-004-BROKEN-ON-PURPOSE,,Grey,270,170,160,18.0,Kuppam,,165000

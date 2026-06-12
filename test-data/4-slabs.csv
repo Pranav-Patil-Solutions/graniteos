@@ -1,0 +1,6 @@
+Block Label,Bundle No,Slab No,Length (in),Width (in),Net Sqft,Thickness (mm),Finish,Grade,Godown,Rate (Rs/sqft)
+TEST-BLK-001,B-101,1,126,78,64,18,Polished,Premium,Godown A,235
+TEST-BLK-001,B-101,2,124,76,61,18,Polished,Premium,Godown A,235
+TEST-BLK-002,B-201,1,118,74,58,18,Polished,Premium,Godown B,145
+TEST-BLK-003,B-301,1,120,75,60,20,Honed,Standard,Godown B,125
+TEST-BLK-001,B-101,3,122,,59,18,Polished,Premium,Godown A,THIS ROW IS BROKEN ON PURPOSE (no width and rate is text) - the wizard must reject it
