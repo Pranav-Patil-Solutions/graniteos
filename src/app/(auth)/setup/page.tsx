@@ -23,6 +23,7 @@ export default function SetupPage() {
       phone: fd.get("phone") ?? "",
       address: fd.get("address") ?? "",
       gstNumber: fd.get("gstNumber") ?? "",
+      productKey: fd.get("productKey") ?? "",
     });
     if (res.error) {
       setLoading(false);
@@ -45,6 +46,13 @@ export default function SetupPage() {
         </p>
       </div>
       <form onSubmit={onSubmit} className="space-y-4">
+        <div>
+          <Field name="productKey" label="Product key" placeholder="GRNT-XXXX-XXXX-XXXX" required />
+          <p className="mt-1.5 text-xs text-slate-500">
+            One key activates one company. You received it with your purchase — no key yet? Message
+            us for a demo.
+          </p>
+        </div>
         <Field name="companyName" label="Company name" placeholder="Sharma Stone Industries" required />
         <Field name="city" label="City" placeholder="Jamnagar" required />
         <Field name="ownerName" label="Your name" placeholder="Ramesh Sharma" required />

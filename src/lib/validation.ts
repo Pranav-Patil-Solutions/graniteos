@@ -36,6 +36,12 @@ export const companySetupSchema = z.object({
   phone: phoneSchema.optional().or(z.literal("")),
   address: z.string().trim().max(300).optional().or(z.literal("")),
   gstNumber: gstSchema.optional().or(z.literal("")),
+  productKey: z
+    .string()
+    .trim()
+    .min(1, "Product key is required")
+    .max(40)
+    .regex(/^[A-Za-z0-9\- ]+$/, "Product key can only contain letters, numbers and dashes"),
 });
 
 const numericFromInput = z.coerce.number();

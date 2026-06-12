@@ -29,11 +29,27 @@ describe("companySetupSchema", () => {
   it("accepts a minimal valid company", () => {
     const r = companySetupSchema.safeParse({
       companyName: "Sharma Stone", city: "Jamnagar", ownerName: "Ramesh",
+      productKey: "GRNT-AB23-CD45-EF67",
     });
     expect(r.success).toBe(true);
   });
   it("rejects a too-short company name", () => {
-    const r = companySetupSchema.safeParse({ companyName: "S", city: "X", ownerName: "Ramesh" });
+    const r = companySetupSchema.safeParse({
+      companyName: "S", city: "X", ownerName: "Ramesh", productKey: "GRNT-AB23-CD45-EF67",
+    });
+    expect(r.success).toBe(false);
+  });
+  it("rejects a missing product key", () => {
+    const r = companySetupSchema.safeParse({
+      companyName: "Sharma Stone", city: "Jamnagar", ownerName: "Ramesh",
+    });
+    expect(r.success).toBe(false);
+  });
+  it("rejects a product key with invalid characters", () => {
+    const r = companySetupSchema.safeParse({
+      companyName: "Sharma Stone", city: "Jamnagar", ownerName: "Ramesh",
+      productKey: "GRNT_$$$$",
+    });
     expect(r.success).toBe(false);
   });
 });

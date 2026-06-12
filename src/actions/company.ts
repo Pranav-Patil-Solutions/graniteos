@@ -24,9 +24,16 @@ export async function setupCompany(input: unknown) {
     p_phone: v.phone || null,
     p_address: v.address || null,
     p_gst_number: v.gstNumber || null,
+    p_product_key: v.productKey,
   });
   if (error) {
     if (error.message.includes("already_setup")) return { error: "Company already set up." };
+    if (error.message.includes("product_key_required"))
+      return { error: "Enter your product key." };
+    if (error.message.includes("invalid_product_key"))
+      return { error: "That product key isn't valid. Check it for typos." };
+    if (error.message.includes("product_key_used"))
+      return { error: "This product key has already been used for another company." };
     return { error: error.message };
   }
   return { ok: true as const };
