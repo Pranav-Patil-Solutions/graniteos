@@ -1,16 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
-import { addBlock } from "@/actions/inventory";
+import { Plus, Camera, X } from "lucide-react";
+import { addBlock, uploadBlockPhoto } from "@/actions/inventory";
 import { Button } from "@/components/ui/Button";
+
+async function fileToBase64(file: File): Promise<string> {
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  let bin = "";
+  for (let i = 0; i < bytes.length; i += 0x8000) {
+    bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  }
+  return btoa(bin);
+}
 
 export default function AddBlockForm() {
   const router = useRouter();
+  const fileRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [photo, setPhoto] = useState<File | null>(null);
   const [l, setL] = useState("");
   const [w, setW] = useState("");
   const [h, setH] = useState("");
@@ -37,12 +48,29 @@ export default function AddBlockForm() {
       supplier: fd.get("supplier") ?? "",
       costRupees: fd.get("costRupees") || undefined,
     });
+    if (res.error) {
+      setLoading(false);
+      return setError(res.error);
+    }
+    // Block saved — attach the photo if one was chosen. A photo failure
+    // shouldn't lose the block: surface it but keep the saved record.
+    if (photo && res.id) {
+      const up = await uploadBlockPhoto({
+        blockId: res.id,
+        imageBase64: await fileToBase64(photo),
+        mimeType: photo.type,
+      });
+      if (up.error) {
+        setLoading(false);
+        return setError(`Block saved, but the photo failed: ${up.error}`);
+      }
+    }
     setLoading(false);
-    if (res.error) return setError(res.error);
     (e.target as HTMLFormElement).reset();
     setL("");
     setW("");
     setH("");
+    setPhoto(null);
     setOpen(false);
     router.refresh();
   }
@@ -88,6 +116,34 @@ export default function AddBlockForm() {
         <Field name="supplier" label="Supplier (opt.)" placeholder="Patel Stone" />
         <Field name="origin" label="Quarry / origin (opt.)" placeholder="Chamarajanagar" />
       </div>
+
+      {/* real block photo — camera on mobile, file picker on desktop */}
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        onChange={(e) => setPhoto(e.target.files?.[0] ?? null)}
+        className="hidden"
+      />
+      {photo ? (
+        <div className="flex items-center gap-3 rounded-lg border border-graphite-600 bg-white/[0.04] px-3 py-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={URL.createObjectURL(photo)} alt="block" className="w-12 h-12 rounded-md object-cover" />
+          <span className="flex-1 text-xs text-slate-300 truncate">{photo.name}</span>
+          <button type="button" onClick={() => setPhoto(null)} aria-label="Remove photo" className="min-h-0 text-slate-500 hover:text-rose-300 p-1">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          className="w-full flex items-center justify-center gap-2 rounded-lg border border-dashed border-graphite-500 text-slate-400 py-2.5 text-sm hover:border-gold hover:text-gold transition-colors"
+        >
+          <Camera className="w-4 h-4" /> Add a photo of this block (optional)
+        </button>
+      )}
 
       {error && <ErrorPill>{error}</ErrorPill>}
       <div className="flex gap-2">

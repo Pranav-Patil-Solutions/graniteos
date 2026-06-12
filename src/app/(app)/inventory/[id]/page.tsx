@@ -4,7 +4,8 @@ import { ChevronLeft } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR, formatINRPrecise } from "@/lib/money";
-import { StoneSwatch } from "@/components/inventory/StoneSwatch";
+import { BlockPhoto } from "@/components/inventory/BlockPhoto";
+import BlockPhotoButton from "@/components/inventory/BlockPhotoButton";
 import AddSlabForm from "@/components/inventory/AddSlabForm";
 import SlabStatus from "@/components/inventory/SlabStatus";
 import SlabQR from "@/components/inventory/SlabQR";
@@ -33,9 +34,8 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
 
   const { data: block } = await supabase
     .from("blocks")
-    .select(
-      "id, label, material, color, weight_tonnes, supplier, origin, cost_paise, length_cm, width_cm, height_cm",
-    )
+    // select * so the page tolerates the photo_path column arriving with 0019
+    .select("*")
     .eq("id", id)
     .single();
   if (!block) notFound();
@@ -78,14 +78,19 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
         <ChevronLeft className="w-4 h-4" /> Stock
       </Link>
 
-      {/* stone surface hero — instant, no WebGL (3D stays on the public
-          Slab Passport share link, where it sells) */}
+      {/* block hero — the REAL photo when uploaded, else an honest neutral
+          chip. (3D stays on the public Slab Passport link, where it sells.) */}
       <div className="mt-3 relative h-44 rounded-3xl overflow-hidden border border-graphite-600 shadow-inner">
-        <StoneSwatch material={block.material} color={block.color} className="absolute inset-0" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+        <BlockPhoto photoPath={block.photo_path} material={block.material} className="absolute inset-0 w-full h-full" />
+        {block.photo_path && (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+        )}
         <div className="absolute left-4 bottom-3">
-          <p className="text-sm font-bold text-slab">{block.material}</p>
-          {block.color && <p className="text-xs text-slab-muted">{block.color}</p>}
+          <p className={`text-sm font-bold ${block.photo_path ? "text-slab" : "text-slate-300"}`}>{block.material}</p>
+          {block.color && <p className={`text-xs ${block.photo_path ? "text-slab-muted" : "text-slate-500"}`}>{block.color}</p>}
+        </div>
+        <div className="absolute right-3 bottom-3">
+          <BlockPhotoButton blockId={block.id} hasPhoto={!!block.photo_path} />
         </div>
       </div>
 
@@ -148,9 +153,9 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
         )}
         {slabs.map((s) => (
           <div key={s.id} className="rounded-2xl border border-graphite-600 bg-white/[0.04] p-3">
-            <StoneSwatch
+            <BlockPhoto
+              photoPath={s.photo_path ?? block.photo_path}
               material={block.material}
-              color={block.color}
               className="w-full h-32 rounded-xl border border-white/10"
             />
             <div className="mt-2.5 flex items-start justify-between gap-2">

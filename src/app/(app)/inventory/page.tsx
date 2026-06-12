@@ -3,7 +3,7 @@ import { ChevronRight, Boxes, Ruler, Wallet } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
-import { StoneSwatch } from "@/components/inventory/StoneSwatch";
+import { BlockPhoto } from "@/components/inventory/BlockPhoto";
 import { formatINR } from "@/lib/money";
 import AddBlockForm from "@/components/inventory/AddBlockForm";
 import ShareCatalog from "@/components/inventory/ShareCatalog";
@@ -18,6 +18,7 @@ type Block = {
   length_cm: number | null;
   width_cm: number | null;
   height_cm: number | null;
+  photo_path?: string | null;
 };
 type Slab = { block_id: string; sqft: number; rate_paise: number; status: string };
 
@@ -35,9 +36,9 @@ export default async function InventoryPage() {
   const [{ data: blocksData }, { data: slabsData }] = await Promise.all([
     supabase
       .from("blocks")
-      .select(
-        "id, label, material, color, weight_tonnes, supplier, length_cm, width_cm, height_cm",
-      )
+      // select * so the page tolerates the photo_path column arriving with
+      // migration 0019 (explicit-column selects 500 on a missing column).
+      .select("*")
       .order("created_at", { ascending: false }),
     supabase.from("slabs").select("block_id, sqft, rate_paise, status"),
   ]);
@@ -88,7 +89,7 @@ export default async function InventoryPage() {
           className="relative mt-4 flex items-center gap-3 rounded-2xl border border-gold/25 bg-gradient-to-br from-[#14110a] to-graphite-800 p-4 overflow-hidden"
         >
           <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(220px 140px at 100% 0%, rgba(201,139,75,.18), transparent 70%)" }} />
-          <StoneSwatch material={best.material} color={best.color} className="relative w-11 h-11 rounded-lg shrink-0 border border-white/10" />
+          <BlockPhoto photoPath={best.photo_path} material={best.material} className="relative w-11 h-11 rounded-lg shrink-0 border border-white/10" />
           <div className="relative min-w-0">
             <p className="text-[11px] uppercase tracking-wide text-gold font-bold">⭐ Best value stone</p>
             <p className="text-sm font-bold text-white truncate">{best.material}</p>
@@ -113,9 +114,9 @@ export default async function InventoryPage() {
             href={`/inventory/${b.id}`}
             className="flex items-center gap-3 rounded-2xl border border-graphite-600 bg-white/[0.04] p-3 hover:border-gold/40 transition-colors"
           >
-            <StoneSwatch
+            <BlockPhoto
+              photoPath={b.photo_path}
               material={b.material}
-              color={b.color}
               className="w-14 h-14 rounded-xl shrink-0 border border-white/10"
             />
             <div className="flex-1 min-w-0">
