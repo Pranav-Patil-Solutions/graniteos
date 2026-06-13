@@ -18,7 +18,11 @@ export async function inviteTeamMember(input: unknown) {
     p_phone: parsed.data.phone,
     p_role: parsed.data.role,
   });
-  if (error) return { error: error.message };
+  if (error) {
+    if (error.message.includes("seat_limit_reached"))
+      return { error: "User limit reached — contact Vyaparwerk to add seats." };
+    return { error: error.message };
+  }
 
   const token = (data as { invite_token: string }).invite_token;
   const base = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";

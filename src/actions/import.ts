@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/permissions";
+import { requireEditAccess } from "@/lib/access-control-guard";
 import { rupeesToPaise } from "@/lib/money";
 import { getImportModule, canonicalEnum } from "@/lib/import/registry";
 import {
@@ -48,7 +49,6 @@ export async function bulkImport(
   moduleKey: string,
   rows: IncomingRow[],
 ): Promise<ImportResult> {
-  const me = await requireSession();
   const base: ImportResult = {
     ok: false,
     module: moduleKey,
@@ -56,6 +56,10 @@ export async function bulkImport(
     inserted: 0,
     failed: [],
   };
+
+  const guard = await requireEditAccess("import");
+  if ("error" in guard) return { ...base, error: guard.error };
+  const me = guard.user;
 
   if (!can(me.role, "viewCompanySettings")) {
     return { ...base, error: "Only the owner can import data." };
@@ -189,6 +193,59 @@ export async function bulkImport(
     const { error } = await supabase.from("production_jobs").insert(dbRows);
     if (error) insertError = error.message;
     else inserted = dbRows.length;
+  } else if (moduleKey === "products") {
+    const dbRows = valid.map(({ v }) => {
+      const gstRaw = v.gstRate;
+      const gstNum =
+        gstRaw === "" || gstRaw === undefined || gstRaw === null
+          ? 18
+          : Number(gstRaw);
+      return {
+        company_id: me.company_id,
+        name: String(v.name).trim(),
+        hsn_code: str(v.hsnCode),
+        uom: str(v.uom) || "SQF",
+        default_rate_paise: paiseOrZero(v.rateRupees),
+        gst_rate: [0, 5, 12, 18, 28].includes(gstNum) ? gstNum : 18,
+        material: str(v.material),
+        finish: str(v.finish),
+        notes: str(v.notes),
+        active: true,
+      };
+    });
+    const { error } = await supabase.from("products").insert(dbRows);
+    if (error) insertError = error.message;
+    else inserted = dbRows.length;
+  } else if (moduleKey === "team") {
+    // Invite each team member via the create_team_invite RPC (same as the
+    // manual invite form). Rows that fail (seat limit, duplicate phone) are
+    // collected as failures rather than aborting the whole batch.
+    for (const { rowNo, v } of valid) {
+      // Normalise the phone: strip spaces/dashes/parens
+      const rawPhone = String(v.phone ?? "").replace(/[\s\-()]/g, "");
+      const phone = rawPhone.startsWith("+") ? rawPhone : rawPhone;
+      const roleCan = ["sales_manager", "store_manager", "fabrication_supervisor"];
+      const roleStr = roleCan.find(
+        (r) => r.toLowerCase() === String(v.role ?? "").trim().toLowerCase(),
+      );
+      if (!roleStr) {
+        failed.push({ rowNo, reason: `Invalid role: "${String(v.role)}"` });
+        continue;
+      }
+      const { error: rpcErr } = await supabase.rpc("create_team_invite", {
+        p_name: String(v.name).trim(),
+        p_phone: phone,
+        p_role: roleStr,
+      });
+      if (rpcErr) {
+        const msg = rpcErr.message.includes("seat_limit_reached")
+          ? "User limit reached — contact Vyaparwerk to add seats."
+          : rpcErr.message;
+        failed.push({ rowNo, reason: msg });
+      } else {
+        inserted++;
+      }
+    }
   } else {
     return { ...base, failed, error: "This module can't be imported." };
   }
@@ -204,6 +261,8 @@ export async function bulkImport(
     blocks: "/inventory",
     slabs: "/inventory",
     jobs: "/fabrication",
+    products: "/products",
+    team: "/team",
   };
   if (paths[moduleKey]) revalidatePath(paths[moduleKey]);
 

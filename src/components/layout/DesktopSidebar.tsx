@@ -6,15 +6,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Smartphone } from "lucide-react";
 import type { Role } from "@/lib/roles";
+import type { AccessConfig } from "@/lib/access-control";
 import { NAV_GROUPS, allowedFor, isActive } from "@/components/layout/navConfig";
 import ThemeToggle from "@/components/layout/ThemeToggle";
 import SignOutButton from "@/components/auth/SignOutButton";
 
 export default function DesktopSidebar({
   role,
+  accessConfig,
   onSwitchToMobile,
 }: {
   role: Role;
+  accessConfig?: AccessConfig | null;
   onSwitchToMobile?: () => void;
 }) {
   const pathname = usePathname();
@@ -28,7 +31,9 @@ export default function DesktopSidebar({
 
       <nav className="flex-1 overflow-y-auto px-3 py-4">
         {NAV_GROUPS.map((g) => {
-          const items = g.items.filter((it) => allowedFor(role, it.need));
+          const items = g.items.filter((it) =>
+            allowedFor(role, it.need, it.module, accessConfig),
+          );
           if (items.length === 0) return null;
           return (
             <div key={g.group} className="mb-4">

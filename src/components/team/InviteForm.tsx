@@ -23,7 +23,7 @@ export default function InviteForm() {
       role: fd.get("role"),
     });
     setLoading(false);
-    if (res.error) return setError(res.error);
+    if ("error" in res) return setError(res.error ?? '');
     setInviteUrl(res.inviteUrl!);
     e.currentTarget.reset();
     router.refresh();

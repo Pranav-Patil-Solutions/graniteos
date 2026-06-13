@@ -20,3 +20,6 @@ license-keys/
 
 # Generated customer licences
 license.json
+
+# Compiled installer binary (built locally, never committed)
+installer/dist/

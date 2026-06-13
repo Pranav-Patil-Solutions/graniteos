@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Pencil, Archive, X } from "lucide-react";
+import { Plus, Pencil, Archive, X, Package } from "lucide-react";
 import { createProduct, updateProduct, archiveProduct } from "@/actions/products";
 import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { formatINR } from "@/lib/money";
 import { GST_RATES, UOM, DEFAULT_UOM, uomLabel } from "@/lib/validation";
 import { HSN_PRESETS, DEFAULT_HSN } from "@/lib/gst";
@@ -91,7 +92,7 @@ export default function ProductsManager({ products }: { products: ProductRow[] }
     };
     const res = editId ? await updateProduct(editId, payload) : await createProduct(payload);
     setLoading(false);
-    if (res.error) return setError(res.error);
+    if ("error" in res) return setError(res.error ?? '');
     setOpen(false);
     router.refresh();
   }
@@ -245,9 +246,13 @@ export default function ProductsManager({ products }: { products: ProductRow[] }
 
       <div className="mt-5 space-y-2">
         {products.length === 0 && !open && (
-          <p className="text-center text-sm text-slate-500 py-10">
-            No products yet. Tap <b className="text-gold">New</b> to create your first one.
-          </p>
+          <EmptyState
+            heading="No products yet"
+            subtext="Products are reusable line items — stone types, services, or standard cuts — that auto-fill on quotes so you quote faster."
+            actionLabel="Import products from Excel"
+            actionHref="/import"
+            icon={<Package className="w-10 h-10" />}
+          />
         )}
         {products.map((p) => (
           <div

@@ -1,8 +1,11 @@
 import Link from "next/link";
-import { requireSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { Eye, ShoppingBag } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR } from "@/lib/money";
+import { getAccessLevel } from "@/lib/access-control-guard";
 import OrderInvoiceButton from "@/components/money/OrderInvoiceButton";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 const STATUS_STYLE: Record<string, string> = {
   confirmed: "bg-blue-500/15 text-blue-300",
@@ -13,7 +16,11 @@ const STATUS_STYLE: Record<string, string> = {
 };
 
 export default async function OrdersPage() {
-  await requireSession();
+  const { level } = await getAccessLevel("orders");
+  if (level === "none") redirect("/dashboard");
+
+  const viewOnly = level === "view";
+
   const supabase = await createClient();
   const [{ data }, { data: invData }] = await Promise.all([
     supabase
@@ -39,14 +46,33 @@ export default async function OrdersPage() {
 
   return (
     <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
-      <h1 className="text-2xl font-bold text-white">Orders</h1>
-      <p className="text-sm text-slate-400">Confirmed from quotes</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Orders</h1>
+          <p className="text-sm text-slate-400">Confirmed from quotes</p>
+        </div>
+        {viewOnly && (
+          <span className="inline-flex items-center gap-1.5 rounded-xl bg-blue-500/15 text-blue-300 px-3 py-1.5 text-xs font-semibold border border-blue-500/20">
+            <Eye className="w-3.5 h-3.5" /> View only
+          </span>
+        )}
+      </div>
+
+      {viewOnly && (
+        <p className="mt-2 text-xs text-blue-300/70">
+          You have read-only access. Ask the owner to enable editing for your role.
+        </p>
+      )}
 
       <div className="mt-5 space-y-2">
         {orders.length === 0 && (
-          <p className="text-center text-sm text-slate-500 py-8">
-            No orders yet — confirm a quote to create one.
-          </p>
+          <EmptyState
+            heading="No orders yet"
+            subtext="Orders are created when a customer confirms a quote. Start by creating a quote — then convert it to an order when they agree."
+            actionLabel={!viewOnly ? "Go to Quotes" : undefined}
+            actionHref={!viewOnly ? "/quotes" : undefined}
+            icon={<ShoppingBag className="w-10 h-10" />}
+          />
         )}
         {orders.map((o) => (
           <div
@@ -66,9 +92,11 @@ export default async function OrdersPage() {
             </Link>
             <div className="text-right shrink-0">
               <div className="font-extrabold text-gold">{formatINR(o.total_paise)}</div>
-              <div className="mt-1">
-                <OrderInvoiceButton orderId={o.id} invoiceId={invoiceForOrder.get(o.id) ?? null} />
-              </div>
+              {!viewOnly && (
+                <div className="mt-1">
+                  <OrderInvoiceButton orderId={o.id} invoiceId={invoiceForOrder.get(o.id) ?? null} />
+                </div>
+              )}
             </div>
           </div>
         ))}

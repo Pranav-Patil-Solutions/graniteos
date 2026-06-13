@@ -32,7 +32,7 @@ export default function RecordPaymentForm({
       reference: fd.get("reference") ?? "",
     });
     setLoading(false);
-    if (res.error) return setError(res.error);
+    if ("error" in res) return setError(res.error ?? '');
     (e.target as HTMLFormElement).reset();
     setOpen(false);
     router.refresh();

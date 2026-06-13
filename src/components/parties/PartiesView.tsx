@@ -3,11 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Phone, MapPin, BadgeCheck, ChevronRight } from "lucide-react";
+import { Plus, Phone, MapPin, BadgeCheck, ChevronRight, Eye, Users } from "lucide-react";
 import { addParty } from "@/actions/parties";
 import { verifyGstin } from "@/actions/gst";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { formatINR } from "@/lib/money";
 import { CUSTOMER_TYPES, SUPPLIER_TYPES } from "@/lib/validation";
 import { validateGstin, parseStateFromGstin, stateName } from "@/lib/gst";
@@ -28,9 +29,11 @@ type Party = {
 export default function PartiesView({
   parties,
   initialKind,
+  viewOnly = false,
 }: {
   parties: Party[];
   initialKind: Kind;
+  viewOnly?: boolean;
 }) {
   const router = useRouter();
   const [kind, setKind] = useState<Kind>(initialKind);
@@ -109,7 +112,7 @@ export default function PartiesView({
       notes: fd.get("notes") ?? "",
     });
     setLoading(false);
-    if (res.error) return setError(res.error);
+    if ("error" in res) return setError(res.error ?? '');
     (e.target as HTMLFormElement).reset();
     resetGst();
     setOpen(false);
@@ -118,8 +121,22 @@ export default function PartiesView({
 
   return (
     <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
-      <h1 className="text-2xl font-bold text-white">Parties</h1>
-      <p className="text-sm text-slate-400">Who you sell to &amp; buy from</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Parties</h1>
+          <p className="text-sm text-slate-400">Who you sell to &amp; buy from</p>
+        </div>
+        {viewOnly && (
+          <span className="inline-flex items-center gap-1.5 rounded-xl bg-blue-500/15 text-blue-300 px-3 py-1.5 text-xs font-semibold border border-blue-500/20">
+            <Eye className="w-3.5 h-3.5" /> View only
+          </span>
+        )}
+      </div>
+      {viewOnly && (
+        <p className="mt-1 text-xs text-blue-300/70">
+          You have read-only access. Ask the owner to enable editing for your role.
+        </p>
+      )}
 
       {/* tabs */}
       <div className="mt-4 grid grid-cols-2 gap-1 p-1 rounded-xl bg-white/[0.04] border border-graphite-600">
@@ -156,14 +173,14 @@ export default function PartiesView({
 
       {/* add */}
       <div className="mt-4">
-        {!open ? (
+        {!open && !viewOnly ? (
           <button
             onClick={() => setOpen(true)}
             className="w-full flex items-center justify-center gap-2 rounded-2xl border border-dashed border-graphite-500 text-slate-300 py-3.5 hover:border-gold hover:text-gold transition-colors"
           >
             <Plus className="w-4 h-4" /> Add {kind === "customer" ? "customer" : "supplier"}
           </button>
-        ) : (
+        ) : open ? (
           <form
             onSubmit={onSubmit}
             className="rounded-2xl border border-graphite-600 bg-white/[0.04] p-4 space-y-3"
@@ -268,15 +285,23 @@ export default function PartiesView({
               </button>
             </div>
           </form>
-        )}
+        ) : null}
       </div>
 
       {/* list */}
       <div className="mt-4 space-y-2">
         {list.length === 0 && (
-          <p className="text-center text-sm text-slate-500 py-6">
-            No {kind === "customer" ? "customers" : "suppliers"} yet — add one above.
-          </p>
+          <EmptyState
+            heading={kind === "customer" ? "No customers yet" : "No suppliers yet"}
+            subtext={
+              kind === "customer"
+                ? "Customers are your buyers — builders, architects, dealers. Add them here or import from Excel."
+                : "Suppliers are your quarries, block vendors and processors. Add them here or import from Excel."
+            }
+            actionLabel={`Import ${kind === "customer" ? "customers" : "suppliers"} from Excel`}
+            actionHref="/import"
+            icon={<Users className="w-10 h-10" />}
+          />
         )}
         {list.map((p) => (
           <Link

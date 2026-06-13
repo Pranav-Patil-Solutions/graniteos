@@ -37,7 +37,7 @@ function LoginInner() {
     setLoading(true);
     const res = await sendOtp(channel, value);
     setLoading(false);
-    if (res.error) return setError(res.error);
+    if ("error" in res) return setError(res.error ?? '');
     setStep("otp");
   }
 
@@ -46,9 +46,9 @@ function LoginInner() {
     setError("");
     setLoading(true);
     const res = await verifyOtp(channel, value, otp);
-    if (res.error) {
+    if ("error" in res) {
       setLoading(false);
-      return setError(res.error);
+      return setError(res.error ?? '');
     }
     goNext(res.next!);
   }
@@ -61,9 +61,9 @@ function LoginInner() {
       pwMode === "signin"
         ? await signInPassword(value, password)
         : await signUpPassword(value, password);
-    if (res.error) {
+    if ("error" in res) {
       setLoading(false);
-      return setError(res.error);
+      return setError(res.error ?? '');
     }
     goNext(res.next!);
   }

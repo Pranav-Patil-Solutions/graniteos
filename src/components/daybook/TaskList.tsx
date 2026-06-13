@@ -57,7 +57,7 @@ export default function TaskList({
     setError("");
     start(async () => {
       const res = await addTask(text);
-      if (res.error) return setError(res.error);
+      if ("error" in res) return setError(res.error ?? '');
       setDraft("");
       setConfirming(false);
       router.refresh();
@@ -67,7 +67,7 @@ export default function TaskList({
   const complete = (id: string) =>
     start(async () => {
       const res = await setTaskDone(id, true);
-      if (res.error) return setError(res.error);
+      if ("error" in res) return setError(res.error ?? '');
       setFire((f) => f + 1);
       router.refresh();
     });
@@ -75,14 +75,14 @@ export default function TaskList({
   const reopen = (id: string) =>
     start(async () => {
       const res = await setTaskDone(id, false);
-      if (res.error) return setError(res.error);
+      if ("error" in res) return setError(res.error ?? '');
       router.refresh();
     });
 
   const remove = (id: string) =>
     start(async () => {
       const res = await deleteTask(id);
-      if (res.error) return setError(res.error);
+      if ("error" in res) return setError(res.error ?? '');
       router.refresh();
     });
 

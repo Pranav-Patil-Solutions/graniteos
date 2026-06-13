@@ -31,7 +31,7 @@ export default function OrderInvoiceButton({
       onClick={async () => {
         setBusy(true);
         const r = await createInvoiceFromOrder(orderId);
-        if (r.ok) {
+        if ('ok' in r) {
           router.push(`/invoices/${r.id}`);
           router.refresh();
         } else {

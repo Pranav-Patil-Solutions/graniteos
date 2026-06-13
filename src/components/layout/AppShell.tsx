@@ -8,6 +8,8 @@ import { NAV_TABS_BY_ROLE, TABS, type Role, type TabKey } from "@/lib/roles";
 import NavDrawer from "@/components/layout/NavDrawer";
 import DesktopSidebar from "@/components/layout/DesktopSidebar";
 import VoiceCommandBar from "@/components/voice/VoiceCommandBar";
+import InstallBanner from "@/components/layout/InstallBanner";
+import type { AccessConfig } from "@/lib/access-control";
 
 const ICONS: Record<TabKey, React.ReactNode> = {
   home: <path d="M3 11l9-8 9 8M5 10v10h14V10" />,
@@ -39,9 +41,11 @@ const ICONS: Record<TabKey, React.ReactNode> = {
 
 export default function AppShell({
   role,
+  accessConfig,
   children,
 }: {
   role: Role;
+  accessConfig?: AccessConfig | null;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -64,9 +68,21 @@ export default function AppShell({
 
   return (
     <div className={`min-h-screen flex flex-col app-bg ${forceMobile ? "" : "lg:pl-60"}`}>
-      <NavDrawer role={role} forceMobile={forceMobile} onSwitchToDesktop={() => setLayout(false)} />
-      {!forceMobile && <DesktopSidebar role={role} onSwitchToMobile={() => setLayout(true)} />}
+      <NavDrawer
+        role={role}
+        accessConfig={accessConfig}
+        forceMobile={forceMobile}
+        onSwitchToDesktop={() => setLayout(false)}
+      />
+      {!forceMobile && (
+        <DesktopSidebar
+          role={role}
+          accessConfig={accessConfig}
+          onSwitchToMobile={() => setLayout(true)}
+        />
+      )}
       <VoiceCommandBar />
+      <InstallBanner />
       <main className={`flex-1 pb-24 overflow-y-auto ${forceMobile ? "" : "lg:pb-10"}`}>{children}</main>
       <nav
         className={`fixed bottom-0 inset-x-0 bg-graphite-900/90 backdrop-blur border-t border-graphite-600 z-50 ${forceMobile ? "" : "lg:hidden"}`}

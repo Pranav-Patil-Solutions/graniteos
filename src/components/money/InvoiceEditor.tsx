@@ -89,9 +89,9 @@ export default function InvoiceEditor({
         gstRate: it.gstRate || "0",
       })),
     });
-    if (res.error) {
+    if ("error" in res) {
       setLoading(false);
-      return setError(res.error);
+      return setError(res.error ?? '');
     }
     router.replace(`/invoices/${invoiceId}`);
     router.refresh();

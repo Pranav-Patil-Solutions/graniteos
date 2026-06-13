@@ -6,9 +6,12 @@ import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/permissions";
 import { partySchema } from "@/lib/validation";
 import { rupeesToPaise } from "@/lib/money";
+import { requireEditAccess } from "@/lib/access-control-guard";
 
 export async function addParty(input: unknown) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("parties");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   const parsed = partySchema.safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const v = parsed.data;
@@ -52,7 +55,9 @@ export async function setStockNotify(partyId: string, on: boolean) {
 }
 
 export async function deleteParty(id: string) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("parties");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "viewCompanySettings")) return { error: "Only the owner can delete a customer or supplier." };
   const supabase = await createClient();
   const { error } = await supabase.from("parties").delete().eq("id", id);

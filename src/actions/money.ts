@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/permissions";
+import { requireEditAccess } from "@/lib/access-control-guard";
 import { paymentSchema, invoiceEditSchema } from "@/lib/validation";
 import { rupeesToPaise } from "@/lib/money";
 import {
@@ -28,7 +29,9 @@ type QuoteLine = {
 };
 
 export async function createInvoiceFromOrder(orderId: string) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("money");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "confirmOrder")) return { error: "You don't have permission to create invoices." };
   const supabase = await createClient();
 
@@ -168,7 +171,9 @@ export async function createInvoiceFromOrder(orderId: string) {
 }
 
 export async function updateInvoice(invoiceId: string, input: unknown) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("money");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "confirmOrder")) return { error: "You don't have permission to edit invoices." };
   const parsed = invoiceEditSchema.safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
@@ -253,7 +258,9 @@ export async function updateInvoice(invoiceId: string, input: unknown) {
 }
 
 export async function recordPayment(input: unknown) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("money");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "confirmOrder")) return { error: "You don't have permission to record payments." };
   const parsed = paymentSchema.safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0].message };

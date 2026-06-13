@@ -7,16 +7,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Monitor } from "lucide-react";
 import type { Role } from "@/lib/roles";
+import type { AccessConfig } from "@/lib/access-control";
 import { NAV_GROUPS, allowedFor, isActive } from "@/components/layout/navConfig";
 import ThemeToggle from "@/components/layout/ThemeToggle";
 import SignOutButton from "@/components/auth/SignOutButton";
 
 export default function NavDrawer({
   role,
+  accessConfig,
   forceMobile = false,
   onSwitchToDesktop,
 }: {
   role: Role;
+  accessConfig?: AccessConfig | null;
   forceMobile?: boolean;
   onSwitchToDesktop?: () => void;
 }) {
@@ -57,7 +60,9 @@ export default function NavDrawer({
 
         <nav className="overflow-y-auto h-[calc(100%-56px-116px)] px-3 py-3">
           {NAV_GROUPS.map((g) => {
-            const items = g.items.filter((it) => allowedFor(role, it.need));
+            const items = g.items.filter((it) =>
+              allowedFor(role, it.need, it.module, accessConfig),
+            );
             if (items.length === 0) return null;
             return (
               <div key={g.group} className="mb-4">

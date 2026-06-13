@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/permissions";
+import { requireEditAccess } from "@/lib/access-control-guard";
 import { rupeesToPaise } from "@/lib/money";
 import { allocateFifo } from "@/lib/allocate";
 
@@ -14,7 +15,9 @@ type BatchInput = { customerId: string; amountRupees: number | string; mode: str
 /** Record one payment from a customer, allocated FIFO across their open
  *  invoices (oldest first). Mirrors recordPayment's status-recompute. */
 export async function recordBatchPayment(input: BatchInput) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("money");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "confirmOrder")) return { error: "You don't have permission to record payments." };
 
   const customerId = String(input?.customerId || "");

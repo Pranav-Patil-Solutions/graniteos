@@ -57,7 +57,7 @@ export default function AiTryOn({ materials }: { materials: VizMaterial[] }) {
       surface,
     });
     setLoading(false);
-    if ("error" in res) return setError(res.error);
+    if ("error" in res) return setError(res.error ?? '');
     setResult(res.image);
     setCompare(false);
   }

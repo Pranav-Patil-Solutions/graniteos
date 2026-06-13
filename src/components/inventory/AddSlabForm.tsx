@@ -38,7 +38,7 @@ export default function AddSlabForm({ blockId }: { blockId: string }) {
       rateRupees: fd.get("rateRupees") || undefined,
     });
     setLoading(false);
-    if (res.error) return setError(res.error);
+    if ("error" in res) return setError(res.error ?? '');
     (e.target as HTMLFormElement).reset();
     setLength("");
     setWidth("");

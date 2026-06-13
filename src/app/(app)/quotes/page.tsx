@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { Plus, ChevronRight } from "lucide-react";
-import { requireSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { Plus, ChevronRight, Eye, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR } from "@/lib/money";
+import { getAccessLevel } from "@/lib/access-control-guard";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 const STATUS_STYLE: Record<string, string> = {
   draft: "bg-slate-500/15 text-slate-300",
@@ -13,7 +15,12 @@ const STATUS_STYLE: Record<string, string> = {
 };
 
 export default async function QuotesPage() {
-  await requireSession();
+  const { level } = await getAccessLevel("quotes");
+  // 'none' → redirect away; 'view' and 'edit' → show page.
+  if (level === "none") redirect("/dashboard");
+
+  const viewOnly = level === "view";
+
   const supabase = await createClient();
   const { data } = await supabase
     .from("quotes")
@@ -32,19 +39,39 @@ export default async function QuotesPage() {
     <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Quotes</h1>
-        <Link
-          href="/quotes/new"
-          className="inline-flex items-center gap-1.5 rounded-xl bg-granite-green2 text-white px-3.5 py-2 text-sm font-bold"
-        >
-          <Plus className="w-4 h-4" /> New
-        </Link>
+        {viewOnly ? (
+          <span className="inline-flex items-center gap-1.5 rounded-xl bg-blue-500/15 text-blue-300 px-3.5 py-2 text-sm font-semibold border border-blue-500/20">
+            <Eye className="w-4 h-4" /> View only
+          </span>
+        ) : (
+          <Link
+            href="/quotes/new"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-granite-green2 text-white px-3.5 py-2 text-sm font-bold"
+          >
+            <Plus className="w-4 h-4" /> New
+          </Link>
+        )}
       </div>
+
+      {viewOnly && (
+        <p className="mt-2 text-xs text-blue-300/70">
+          You have read-only access. Ask the owner to enable editing for your role.
+        </p>
+      )}
 
       <div className="mt-5 space-y-2">
         {quotes.length === 0 && (
-          <p className="text-center text-sm text-slate-500 py-8">
-            No quotes yet — tap <b className="text-slate-300">New</b> to create one.
-          </p>
+          <EmptyState
+            heading="No quotes yet"
+            subtext={
+              viewOnly
+                ? "Quotes are professional price proposals sent to customers. Contact the owner to create one."
+                : "A quote is a price proposal for a customer. Create one here — it auto-calculates GST and can be converted to an order."
+            }
+            actionLabel={!viewOnly ? "Create your first quote" : undefined}
+            actionHref={!viewOnly ? "/quotes/new" : undefined}
+            icon={<FileText className="w-10 h-10" />}
+          />
         )}
         {quotes.map((q) => (
           <Link key={q.id} href={`/quotes/${q.id}`} className="block">

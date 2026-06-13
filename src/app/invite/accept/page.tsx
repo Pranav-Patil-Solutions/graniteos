@@ -20,7 +20,7 @@ export default async function AcceptInvitePage({
   }
 
   const res = await acceptInvite(token);
-  if (res.error) {
+  if ("error" in res) {
     return (
       <div className="min-h-screen grid place-items-center px-5 bg-graphite-900">
         <div className="max-w-sm text-center">

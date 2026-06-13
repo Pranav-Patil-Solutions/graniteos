@@ -60,7 +60,7 @@ export default function SlabIdentifier() {
     setError("");
     const res = await identifySlab({ imageBase64: p.base64, mimeType: p.mime });
     setLoading(false);
-    if ("error" in res) return setError(res.error);
+    if ("error" in res) return setError(res.error ?? '');
     setSlab(res.slab);
   }
 

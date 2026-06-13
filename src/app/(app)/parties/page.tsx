@@ -1,5 +1,6 @@
-import { requireSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getAccessLevel } from "@/lib/access-control-guard";
 import PartiesView from "@/components/parties/PartiesView";
 
 export default async function PartiesPage({
@@ -7,7 +8,9 @@ export default async function PartiesPage({
 }: {
   searchParams: Promise<{ tab?: string }>;
 }) {
-  await requireSession();
+  const { level } = await getAccessLevel("parties");
+  if (level === "none") redirect("/dashboard");
+
   const { tab } = await searchParams;
   const initialKind = tab === "supplier" || tab === "suppliers" ? "supplier" : "customer";
 
@@ -19,5 +22,11 @@ export default async function PartiesPage({
     )
     .order("created_at", { ascending: false });
 
-  return <PartiesView parties={(data ?? []) as never} initialKind={initialKind} />;
+  return (
+    <PartiesView
+      parties={(data ?? []) as never}
+      initialKind={initialKind}
+      viewOnly={level === "view"}
+    />
+  );
 }

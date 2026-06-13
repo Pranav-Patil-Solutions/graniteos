@@ -6,53 +6,80 @@ import {
   HardHat, StickyNote,
 } from "lucide-react";
 import { can } from "@/lib/permissions";
+import { accessFor, type AccessConfig, type AccessModule } from "@/lib/access-control";
 import type { Role } from "@/lib/roles";
 
 export type Need = "owner" | "broadcast" | undefined;
-export type NavItem = { href: string; label: string; icon: typeof Home; need?: Need };
+export type NavItem = {
+  href: string;
+  label: string;
+  icon: typeof Home;
+  need?: Need;
+  /** Access-control module key — if set, 'none' access hides this item. */
+  module?: AccessModule;
+};
 
 export const NAV_GROUPS: { group: string; items: NavItem[] }[] = [
   {
     group: "Business",
     items: [
-      { href: "/dashboard", label: "Home", icon: Home },
-      { href: "/inventory", label: "Stock", icon: Boxes },
-      { href: "/parties", label: "Parties", icon: Users },
-      { href: "/quotes", label: "Quotes", icon: Receipt },
-      { href: "/orders", label: "Orders", icon: FileText },
-      { href: "/money", label: "Money", icon: Wallet },
-      { href: "/batch-payment", label: "Batch Payment", icon: Banknote },
-      { href: "/measure", label: "Measurement Sheet", icon: Ruler },
-      { href: "/fabrication", label: "Fabrication", icon: Factory },
-      { href: "/factory", label: "Factory Floor", icon: HardHat },
-      { href: "/daybook", label: "Daybook", icon: BookOpen, need: "owner" },
-      { href: "/notes", label: "Voice Notes", icon: StickyNote },
-      { href: "/logs", label: "Logs", icon: History },
+      { href: "/dashboard",     label: "Home",              icon: Home },
+      { href: "/inventory",     label: "Stock",             icon: Boxes,    module: "inventory" },
+      { href: "/parties",       label: "Parties",           icon: Users,    module: "parties" },
+      { href: "/quotes",        label: "Quotes",            icon: Receipt,  module: "quotes" },
+      { href: "/orders",        label: "Orders",            icon: FileText, module: "orders" },
+      { href: "/money",         label: "Money",             icon: Wallet,   module: "money" },
+      { href: "/batch-payment", label: "Batch Payment",     icon: Banknote, module: "money" },
+      { href: "/measure",       label: "Measurement Sheet", icon: Ruler },
+      { href: "/fabrication",   label: "Fabrication",       icon: Factory,  module: "fabrication" },
+      { href: "/factory",       label: "Factory Floor",     icon: HardHat,  module: "fabrication" },
+      { href: "/daybook",       label: "Daybook",           icon: BookOpen, need: "owner" },
+      { href: "/notes",         label: "Voice Notes",       icon: StickyNote },
+      { href: "/logs",          label: "Logs",              icon: History },
     ],
   },
   {
     group: "Growth",
     items: [
-      { href: "/stock-alert", label: "Stock Alert", icon: Megaphone, need: "broadcast" },
-      { href: "/marketing", label: "Marketing Helper", icon: Target, need: "broadcast" },
-      { href: "/ai-studio", label: "AI Studio", icon: Sparkles },
-      { href: "/analytics", label: "Insights", icon: BarChart3, need: "owner" },
+      { href: "/stock-alert", label: "Stock Alert",      icon: Megaphone, need: "broadcast" },
+      { href: "/marketing",   label: "Marketing Helper", icon: Target,    need: "broadcast" },
+      { href: "/ai-studio",   label: "AI Studio",        icon: Sparkles },
+      { href: "/analytics",   label: "Insights",         icon: BarChart3, need: "owner", module: "analytics" },
     ],
   },
   {
     group: "Account",
     items: [
-      { href: "/products", label: "Products", icon: Package, need: "owner" },
-      { href: "/team", label: "Team", icon: Users, need: "owner" },
-      { href: "/settings", label: "Settings", icon: Settings, need: "owner" },
+      { href: "/products",  label: "Products",  icon: Package,  need: "owner", module: "products" },
+      { href: "/team",      label: "Team",      icon: Users,    need: "owner", module: "team" },
+      { href: "/settings",  label: "Settings",  icon: Settings, need: "owner", module: "settings" },
     ],
   },
 ];
 
-/** Is a nav item visible to this role? */
-export function allowedFor(role: Role, need: Need): boolean {
+/**
+ * Is a nav item visible to this role?
+ * Checks two layers:
+ *  1. The hard `need` (owner/broadcast) — overrides everything.
+ *  2. The access config `module` — if level is 'none', hide the item.
+ */
+export function allowedFor(
+  role: Role,
+  need: Need,
+  module?: AccessModule,
+  accessConfig?: AccessConfig | null,
+): boolean {
+  // Layer 1: hard need gate (unchanged from before).
   if (need === "owner") return can(role, "inviteTeamMember");
   if (need === "broadcast") return can(role, "createQuote");
+
+  // Layer 2: access control module gate.
+  // Owners are always allowed (accessFor returns 'edit' for owner).
+  if (module && accessConfig && role !== "owner") {
+    const level = accessFor(accessConfig, role, module);
+    if (level === "none") return false;
+  }
+
   return true;
 }
 

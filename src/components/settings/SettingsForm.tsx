@@ -53,7 +53,7 @@ export default function SettingsForm({ company }: { company: Company }) {
       quoteTerms: fd.get("quoteTerms") ?? "",
     });
     setLoading(false);
-    if (res.error) return setError(res.error);
+    if ("error" in res) return setError(res.error ?? '');
     setSaved(true);
     router.refresh();
   }

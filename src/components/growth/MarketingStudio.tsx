@@ -30,7 +30,7 @@ export default function MarketingStudio({ materials }: { materials: string[] }) 
     setResult("");
     const res = await generateMarketing({ type, context, language });
     setLoading(false);
-    if (res.error) return setError(res.error);
+    if ("error" in res) return setError(res.error ?? '');
     setResult(res.text ?? "");
   }
 

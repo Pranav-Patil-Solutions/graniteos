@@ -7,6 +7,7 @@ import { BlockPhoto } from "@/components/inventory/BlockPhoto";
 import { formatINR } from "@/lib/money";
 import AddBlockForm from "@/components/inventory/AddBlockForm";
 import ShareCatalog from "@/components/inventory/ShareCatalog";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 type Block = {
   id: string;
@@ -104,9 +105,12 @@ export default async function InventoryPage() {
 
       <div className="mt-4 space-y-2.5">
         {enriched.length === 0 && (
-          <p className="text-center text-sm text-slate-500 py-6">
-            No blocks yet — add your first stone block above.
-          </p>
+          <EmptyState
+            heading="No stock yet"
+            subtext="Blocks are raw stone units. Add one above, or import your opening stock from an Excel file."
+            actionLabel="Import blocks from Excel"
+            actionHref="/import"
+          />
         )}
         {enriched.map((b) => (
           <Link

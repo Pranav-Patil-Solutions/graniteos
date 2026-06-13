@@ -13,7 +13,17 @@ const fraunces = Fraunces({ subsets: ["latin"], weight: ["500", "600"], variable
 export const metadata: Metadata = {
   title: "GraniteOS",
   description: "The operating system for granite & marble businesses",
-  manifest: "/manifest.webmanifest",
+  manifest: "/manifest.json",
+  // iOS PWA support
+  appleWebApp: {
+    capable: true,
+    title: "GraniteOS",
+    statusBarStyle: "black-translucent",
+  },
+  // Apple touch icon (used when the user taps "Add to Home Screen" on iOS)
+  icons: {
+    apple: "/icon-192.png",
+  },
 };
 
 export const viewport: Viewport = {

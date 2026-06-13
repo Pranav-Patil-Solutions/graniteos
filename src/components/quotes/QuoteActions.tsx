@@ -24,7 +24,7 @@ export default function QuoteActions({
     setError("");
     const r = await setQuoteStatus(quoteId, "sent");
     setBusy(false);
-    if (r.error) return setError(r.error);
+    if ("error" in r) return setError(r.error ?? '');
     router.refresh();
   }
 
@@ -32,9 +32,9 @@ export default function QuoteActions({
     setBusy(true);
     setError("");
     const r = await confirmOrder(quoteId);
-    if (r.error) {
+    if ("error" in r) {
       setBusy(false);
-      return setError(r.error);
+      return setError(r.error ?? '');
     }
     router.push("/orders");
     router.refresh();

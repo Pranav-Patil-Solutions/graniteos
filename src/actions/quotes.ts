@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/permissions";
+import { requireEditAccess } from "@/lib/access-control-guard";
 import { quoteSchema } from "@/lib/validation";
 import { rupeesToPaise } from "@/lib/money";
 import {
@@ -28,7 +29,9 @@ async function displayNumber(
 }
 
 export async function createQuote(input: unknown) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("quotes");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "createQuote")) return { error: "You don't have permission to create quotes." };
   const parsed = quoteSchema.safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
@@ -120,7 +123,9 @@ export async function createQuote(input: unknown) {
 }
 
 export async function updateQuote(quoteId: string, input: unknown) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("quotes");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "createQuote")) return { error: "You don't have permission to edit quotes." };
   const parsed = quoteSchema.safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
@@ -226,7 +231,9 @@ export async function setQuoteStatus(
   id: string,
   status: "draft" | "sent" | "accepted" | "rejected" | "expired",
 ) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("quotes");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "createQuote")) return { error: "You don't have permission to change quotes." };
   const supabase = await createClient();
   const { error } = await supabase.from("quotes").update({ status }).eq("id", id);
@@ -240,7 +247,9 @@ export async function setOrderStatus(
   orderId: string,
   status: "confirmed" | "in_production" | "dispatched" | "delivered" | "cancelled",
 ) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("orders");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "confirmOrder")) return { error: "You don't have permission to change orders." };
   const supabase = await createClient();
   const { error } = await supabase.from("orders").update({ status }).eq("id", orderId);
@@ -251,7 +260,9 @@ export async function setOrderStatus(
 }
 
 export async function confirmOrder(quoteId: string) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("orders");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "confirmOrder")) return { error: "You don't have permission to confirm orders." };
   const supabase = await createClient();
 

@@ -25,11 +25,11 @@ export default function SetupPage() {
       gstNumber: fd.get("gstNumber") ?? "",
       productKey: fd.get("productKey") ?? "",
     });
-    if (res.error) {
+    if ("error" in res) {
       setLoading(false);
-      return setError(res.error);
+      return setError(res.error ?? '');
     }
-    router.replace("/dashboard");
+    router.replace("/import?welcome=1");
     router.refresh();
   }
 

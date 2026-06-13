@@ -128,9 +128,9 @@ export default function QuoteBuilder({
       })),
     };
     const res = editing ? await updateQuote(quoteId!, payload) : await createQuote(payload);
-    if (res.error) {
+    if ("error" in res) {
       setLoading(false);
-      return setError(res.error);
+      return setError(res.error ?? '');
     }
     router.replace(`/quotes/${res.id}`);
     router.refresh();

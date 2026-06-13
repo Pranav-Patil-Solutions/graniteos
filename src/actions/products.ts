@@ -6,6 +6,7 @@ import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/permissions";
 import { productSchema } from "@/lib/validation";
 import { rupeesToPaise } from "@/lib/money";
+import { requireEditAccess } from "@/lib/access-control-guard";
 
 function toRow(v: ReturnType<typeof productSchema.parse>, companyId: string) {
   return {
@@ -22,7 +23,9 @@ function toRow(v: ReturnType<typeof productSchema.parse>, companyId: string) {
 }
 
 export async function createProduct(input: unknown) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("products");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "viewCompanySettings"))
     return { error: "Only the owner can manage products." };
   const parsed = productSchema.safeParse(input);
@@ -41,7 +44,9 @@ export async function createProduct(input: unknown) {
 }
 
 export async function updateProduct(id: string, input: unknown) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("products");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "viewCompanySettings"))
     return { error: "Only the owner can manage products." };
   const parsed = productSchema.safeParse(input);
@@ -60,7 +65,9 @@ export async function updateProduct(id: string, input: unknown) {
 
 /** Soft-delete: keep the row (it may be referenced by old quotes) but hide it. */
 export async function archiveProduct(id: string) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("products");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "viewCompanySettings"))
     return { error: "Only the owner can manage products." };
   const supabase = await createClient();

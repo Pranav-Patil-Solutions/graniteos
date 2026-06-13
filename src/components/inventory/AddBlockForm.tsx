@@ -48,9 +48,9 @@ export default function AddBlockForm() {
       supplier: fd.get("supplier") ?? "",
       costRupees: fd.get("costRupees") || undefined,
     });
-    if (res.error) {
+    if ("error" in res) {
       setLoading(false);
-      return setError(res.error);
+      return setError(res.error ?? '');
     }
     // Block saved — attach the photo if one was chosen. A photo failure
     // shouldn't lose the block: surface it but keep the saved record.
@@ -60,7 +60,7 @@ export default function AddBlockForm() {
         imageBase64: await fileToBase64(photo),
         mimeType: photo.type,
       });
-      if (up.error) {
+      if ("error" in up) {
         setLoading(false);
         return setError(`Block saved, but the photo failed: ${up.error}`);
       }

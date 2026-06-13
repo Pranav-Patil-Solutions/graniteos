@@ -6,6 +6,8 @@ import {
   CUSTOMER_TYPES,
   SUPPLIER_TYPES,
   FAB_MACHINES,
+  UOM_CODES,
+  GST_RATES,
 } from "@/lib/validation";
 
 /**
@@ -45,6 +47,8 @@ export type ImportModule = {
   columns: ImportColumn[];
   /** Validates a single mapped row ({field: value}). */
   schema: z.ZodType<Record<string, unknown>>;
+  /** Whether this module is a required setup step (required) or optional. */
+  setupPriority?: "required" | "optional";
 };
 
 /* ------------------------------------------------------------------ helpers */
@@ -82,6 +86,17 @@ const enumField = (vals: readonly string[]) =>
       { message: `Must be one of: ${vals.join(", ")}` },
     );
 
+/** Required value from a fixed list — blank is NOT allowed. */
+const reqEnum = (vals: readonly string[], label: string) =>
+  z
+    .string()
+    .trim()
+    .min(1, `${label} is required`)
+    .refine(
+      (v) => vals.some((x) => x.toLowerCase() === v.toLowerCase()),
+      { message: `${label} must be one of: ${vals.join(", ")}` },
+    );
+
 /** Canonicalise an enum value to the exact stored casing (e.g. "polished" -> "Polished"). */
 export function canonicalEnum(
   value: string | undefined | null,
@@ -98,6 +113,7 @@ const customers: ImportModule = {
   key: "customers",
   label: "Customers",
   table: "parties",
+  setupPriority: "required",
   blurb: "Your buyers — builders, architects, dealers. Put what they already owe you in Opening Balance.",
   columns: [
     { header: "Name", field: "name", type: "text", required: true, example: "Sai Constructions", note: "Required. The customer / firm name." },
@@ -131,6 +147,7 @@ const suppliers: ImportModule = {
   key: "suppliers",
   label: "Suppliers",
   table: "parties",
+  setupPriority: "optional",
   blurb: "Quarries, block suppliers, processors, transporters. Opening Balance = what you owe them.",
   columns: [
     { header: "Name", field: "name", type: "text", required: true, example: "Rajasthan Quarries", note: "Required." },
@@ -160,8 +177,9 @@ const suppliers: ImportModule = {
 
 const blocks: ImportModule = {
   key: "blocks",
-  label: "Blocks",
+  label: "Blocks (Opening Stock)",
   table: "blocks",
+  setupPriority: "optional",
   blurb: "Raw stone blocks. Import these first — slabs attach to a block by its label.",
   columns: [
     { header: "Block Label", field: "label", type: "text", required: true, example: "BLK-001", note: "Required. Your block number / name. Must be unique enough to match slabs to." },
@@ -244,13 +262,179 @@ const jobs: ImportModule = {
   }),
 };
 
+/** Non-owner roles available for team invite import. */
+export const TEAM_ROLES = [
+  "sales_manager",
+  "store_manager",
+  "fabrication_supervisor",
+] as const;
+
+/** Valid GST rate strings for the products template (matches GST_RATES). */
+const GST_RATE_STRINGS = GST_RATES.map(String);
+
+const products: ImportModule = {
+  key: "products",
+  label: "Products",
+  table: "products",
+  setupPriority: "required",
+  blurb:
+    "Your standard stone types and services — name, rate and GST rate. These become quick-fill options on every quote.",
+  columns: [
+    {
+      header: "Name",
+      field: "name",
+      type: "text",
+      required: true,
+      example: "Black Galaxy 18mm Polished",
+      note: "Required. Product / stone type name.",
+    },
+    {
+      header: "HSN Code",
+      field: "hsnCode",
+      type: "text",
+      example: "68022190",
+      note: "Optional. 6-8 digit GST HSN code.",
+    },
+    {
+      header: "Unit",
+      field: "uom",
+      type: "enum",
+      enumValues: UOM_CODES as unknown as string[],
+      example: "SQF",
+      note: `Optional. Defaults to SQF. Allowed: ${UOM_CODES.join(", ")}`,
+    },
+    {
+      header: "Rate (Rs)",
+      field: "rateRupees",
+      type: "money",
+      example: 220,
+      note: "Optional. Default selling rate per unit, in rupees.",
+    },
+    {
+      header: "GST Rate (%)",
+      field: "gstRate",
+      type: "enum",
+      enumValues: GST_RATE_STRINGS,
+      example: 18,
+      note: "Required. Must be one of: 0, 5, 12, 18 or 28.",
+    },
+    {
+      header: "Material",
+      field: "material",
+      type: "text",
+      example: "Black Galaxy",
+      note: "Optional. Stone variety / material name.",
+    },
+    {
+      header: "Finish",
+      field: "finish",
+      type: "text",
+      example: "Polished",
+      note: "Optional. E.g. Polished, Honed, Leather.",
+    },
+    {
+      header: "Notes",
+      field: "notes",
+      type: "text",
+      example: "Best seller in Unit-2",
+      note: "Optional. Internal notes.",
+    },
+  ],
+  schema: z.object({
+    name: reqText(120),
+    hsnCode: text(8),
+    uom: enumField(UOM_CODES as unknown as readonly string[]),
+    rateRupees: num(),
+    gstRate: z
+      .union([
+        blank,
+        z.coerce
+          .number()
+          .refine(
+            (v) => (GST_RATES as readonly number[]).includes(v),
+            "GST rate must be 0, 5, 12, 18 or 28",
+          ),
+      ])
+      .optional(),
+    material: text(60),
+    finish: text(30),
+    notes: text(200),
+  }),
+};
+
+const team: ImportModule = {
+  key: "team",
+  label: "Team Members",
+  table: "users",
+  setupPriority: "optional",
+  blurb:
+    "Invite your staff. Each person will receive an invite link — they join using their mobile number.",
+  columns: [
+    {
+      header: "Name",
+      field: "name",
+      type: "text",
+      required: true,
+      example: "Ravi Kumar",
+      note: "Required. Staff member's full name.",
+    },
+    {
+      header: "Phone",
+      field: "phone",
+      type: "text",
+      required: true,
+      example: "+919876543210",
+      note: "Required. Mobile number with country code (e.g. +91 for India).",
+    },
+    {
+      header: "Role",
+      field: "role",
+      type: "enum",
+      enumValues: TEAM_ROLES as unknown as string[],
+      required: true,
+      example: "sales_manager",
+      note: `Required. One of: ${TEAM_ROLES.join(", ")}`,
+    },
+  ],
+  schema: z.object({
+    name: reqText(60),
+    phone: z.preprocess(
+      (v) => (v !== null && v !== undefined ? String(v).replace(/[\s\-()]/g, "") : v),
+      z
+        .string()
+        .min(7, "Phone number is required")
+        .regex(
+          /^\+?[1-9]\d{6,14}$/,
+          "Enter a valid phone number (e.g. +919876543210 or 9876543210)",
+        ),
+    ),
+    role: reqEnum(TEAM_ROLES as unknown as readonly string[], "Role"),
+  }),
+};
+
 export const IMPORT_MODULES: ImportModule[] = [
+  products,
   customers,
   suppliers,
   blocks,
   slabs,
   jobs,
+  team,
 ];
+
+/**
+ * The modules shown in the Setup Wizard (ordered for first-time onboarding).
+ * These are the master-data keys a new company should set up before going live.
+ */
+export const WIZARD_MODULE_KEYS = [
+  "products",
+  "customers",
+  "suppliers",
+  "blocks",
+  "team",
+] as const;
+
+export type WizardModuleKey = (typeof WIZARD_MODULE_KEYS)[number];
 
 export function getImportModule(key: string): ImportModule | undefined {
   return IMPORT_MODULES.find((m) => m.key === key);

@@ -26,7 +26,7 @@ export default function AddJobForm() {
       notes: fd.get("notes") ?? "",
     });
     setLoading(false);
-    if (res.error) return setError(res.error);
+    if ("error" in res) return setError(res.error ?? '');
     (e.target as HTMLFormElement).reset();
     setOpen(false);
     router.refresh();

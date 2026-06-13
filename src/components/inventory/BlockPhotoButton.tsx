@@ -37,7 +37,7 @@ export default function BlockPhotoButton({
       mimeType: file.type,
     });
     setBusy(false);
-    if (res.error) return setError(res.error);
+    if ("error" in res) return setError(res.error ?? '');
     router.refresh();
   }
 

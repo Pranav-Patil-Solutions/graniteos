@@ -5,6 +5,7 @@ import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/permissions";
+import { requireEditAccess } from "@/lib/access-control-guard";
 import { blockSchema, slabSchema } from "@/lib/validation";
 import { rupeesToPaise } from "@/lib/money";
 
@@ -56,7 +57,9 @@ export async function uploadBlockPhoto(input: { blockId: string; imageBase64: st
 }
 
 export async function addBlock(input: unknown) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("inventory");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   const parsed = blockSchema.safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const v = parsed.data;
@@ -86,7 +89,9 @@ export async function addBlock(input: unknown) {
 }
 
 export async function addSlab(input: unknown) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("inventory");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   const parsed = slabSchema.safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const v = parsed.data;
@@ -118,7 +123,9 @@ export async function setSlabStatus(
   status: "in_stock" | "reserved" | "sold",
   blockId: string,
 ) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("inventory");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "logInwardReceipt")) return { error: "You don't have permission to change stock." };
   const supabase = await createClient();
   const { error } = await supabase.from("slabs").update({ status }).eq("id", slabId);

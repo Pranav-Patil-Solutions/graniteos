@@ -6,6 +6,9 @@ import { can } from "@/lib/permissions";
 import { RoleBadge } from "@/components/ui/RoleBadge";
 import SignOutButton from "@/components/auth/SignOutButton";
 import MorningCard from "@/components/dashboard/MorningCard";
+import GettingStartedCard from "@/components/dashboard/GettingStartedCard";
+import CoachMarksTour from "@/components/dashboard/CoachMarksTour";
+import type { ChecklistCounts } from "@/lib/import/checklist";
 
 function greeting() {
   const h = new Date().getHours();
@@ -24,6 +27,29 @@ export default async function DashboardPage() {
     .single();
 
   const isOwner = can(user.role, "inviteTeamMember");
+
+  // Fetch the counts needed by the Getting Started checklist.
+  // All fail-safe with defaults — never crash the dashboard.
+  let checklistCounts: ChecklistCounts = { products: 0, users: 1, quotes: 0, orders: 0 };
+  if (isOwner) {
+    const [prodRes, usersRes, quotesRes, ordersRes] = await Promise.allSettled([
+      supabase.from("products").select("*", { count: "exact", head: true }).eq("active", true),
+      supabase.from("users").select("*", { count: "exact", head: true }),
+      supabase.from("quotes").select("*", { count: "exact", head: true }),
+      supabase.from("orders").select("*", { count: "exact", head: true }),
+    ]);
+
+    function safeCount(r: PromiseSettledResult<{ count: number | null; error: unknown }>): number {
+      return r.status === "fulfilled" ? (r.value.count ?? 0) : 0;
+    }
+
+    checklistCounts = {
+      products: safeCount(prodRes as PromiseSettledResult<{ count: number | null; error: unknown }>),
+      users: safeCount(usersRes as PromiseSettledResult<{ count: number | null; error: unknown }>),
+      quotes: safeCount(quotesRes as PromiseSettledResult<{ count: number | null; error: unknown }>),
+      orders: safeCount(ordersRes as PromiseSettledResult<{ count: number | null; error: unknown }>),
+    };
+  }
 
   return (
     <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
@@ -60,9 +86,15 @@ export default async function DashboardPage() {
 
       <MorningCard role={user.role} />
 
+      {/* Getting Started checklist (owners only — client component, localStorage-backed) */}
+      {isOwner && <GettingStartedCard counts={checklistCounts} />}
+
       <p className="mt-6 text-center text-xs text-slate-500">
         Tap <span className="text-gold font-semibold">☰</span> at the top-left for all sections.
       </p>
+
+      {/* First-visit coach-marks tour (owners only) */}
+      {isOwner && <CoachMarksTour />}
     </div>
   );
 }

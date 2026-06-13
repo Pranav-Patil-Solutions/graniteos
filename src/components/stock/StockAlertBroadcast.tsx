@@ -81,7 +81,7 @@ export default function StockAlertBroadcast({
     const next = !opt[id];
     setOpt((o) => ({ ...o, [id]: next })); // optimistic
     const res = await setStockNotify(id, next);
-    if (res.error) setOpt((o) => ({ ...o, [id]: !next })); // revert on failure
+    if ("error" in res) setOpt((o) => ({ ...o, [id]: !next })); // revert on failure
   }
 
   function copyMsg() {
