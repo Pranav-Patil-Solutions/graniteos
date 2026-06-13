@@ -22,11 +22,14 @@ create table if not exists public.access_control (
 alter table public.access_control enable row level security;
 
 -- Any active company member can read.
-create policy if not exists "ac_read_own" on public.access_control
+-- NB: Postgres policies have no IF-NOT-EXISTS form, so drop-then-create for idempotency.
+drop policy if exists "ac_read_own" on public.access_control;
+create policy "ac_read_own" on public.access_control
   for select using (company_id = public.current_company_id());
 
 -- Only the owner can write.
-create policy if not exists "ac_write_owner" on public.access_control
+drop policy if exists "ac_write_owner" on public.access_control;
+create policy "ac_write_owner" on public.access_control
   for all using (
     company_id = public.current_company_id()
     and public.current_user_role() = 'owner'
