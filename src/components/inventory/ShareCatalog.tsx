@@ -20,6 +20,14 @@ export default function ShareCatalog({ companyId }: { companyId: string }) {
       .catch(() => setQr(""));
   }, [open, link]);
 
+  // Close on Escape key (WCAG 2.1.2 / 4.1.2)
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [open]);
+
   async function copy() {
     await navigator.clipboard.writeText(link);
     setCopied(true);
@@ -42,13 +50,17 @@ export default function ShareCatalog({ companyId }: { companyId: string }) {
           className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4"
           onClick={() => setOpen(false)}
         >
+          {/* role=dialog + aria-modal give AT the modal semantics (WCAG 2.1.2 / 4.1.2) */}
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Share your catalogue"
             className="w-full max-w-sm rounded-2xl border border-graphite-600 bg-graphite-800 p-5"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-white">Share your catalogue</h3>
-              <button onClick={() => setOpen(false)} className="text-slate-400 hover:text-white">
+              <button onClick={() => setOpen(false)} aria-label="Close" className="text-slate-400 hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -72,7 +84,7 @@ export default function ShareCatalog({ companyId }: { companyId: string }) {
 
             <div className="mt-4 flex items-center gap-2 rounded-xl border border-graphite-600 bg-white/[0.04] px-3 py-2">
               <span className="flex-1 truncate text-xs text-slate-300">{link}</span>
-              <button onClick={copy} className="text-slate-400 hover:text-gold">
+              <button onClick={copy} aria-label={copied ? "Link copied" : "Copy link"} className="text-slate-400 hover:text-gold">
                 {copied ? <Check className="w-4 h-4 text-granite-green2" /> : <Copy className="w-4 h-4" />}
               </button>
             </div>

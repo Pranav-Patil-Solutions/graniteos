@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraniteOS — The Sales Pitch</title>
+<style>
+  :root{--bg:#0c0a08;--card:rgba(255,255,255,.04);--stroke:rgba(255,255,255,.10);--txt:#f4f1ec;--dim:#a39b8e;--gold:#e0b07a;--gold2:#c8a24b;--good:#34d399;--red:#f87171;--info:#6c8cff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(1200px 700px at 80% -12%,rgba(201,139,75,.24),transparent 58%),radial-gradient(900px 600px at -8% 110%,rgba(31,138,112,.14),transparent 55%),var(--bg);color:var(--txt);min-height:100vh;padding:46px 24px 80px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1100px;margin:0 auto}
+  .eyebrow{letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:var(--gold);font-weight:600}
+  .stamp{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--dim);border:1px solid var(--stroke);padding:6px 12px;border-radius:999px;background:var(--card)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 12px var(--good)}
+  .sec-h{margin:36px 0 12px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;display:flex;align-items:center;gap:10px}
+  .sec-h::after{content:"";flex:1;height:1px;background:var(--stroke)}
+
+  .hero{margin-top:22px;border:1px solid rgba(201,139,75,.35);background:linear-gradient(180deg,rgba(201,139,75,.10),rgba(255,255,255,.02));border-radius:22px;padding:30px;position:relative;overflow:hidden}
+  .hero .claim{font-size:14px;color:var(--gold);font-weight:600;letter-spacing:.02em}
+  .hero h1{font-size:clamp(30px,5.2vw,50px);line-height:1.08;margin:14px 0;font-weight:800;letter-spacing:-.02em}
+  .hero h1 .g{color:var(--gold)}
+  .hooks{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+  .hooks span{font-size:12.5px;color:var(--dim);border:1px solid var(--stroke);background:rgba(0,0,0,.2);border-radius:999px;padding:6px 12px}
+
+  .elev{border-left:3px solid var(--gold2);background:linear-gradient(90deg,rgba(201,139,75,.07),transparent);padding:14px 18px;border-radius:0 12px 12px 0;font-size:15px;line-height:1.6;color:var(--txt)}
+  .elev b{color:var(--gold)}
+
+  .demo{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  .demo .c{border:1px solid var(--stroke);background:var(--card);border-radius:14px;padding:16px}
+  .demo .n{font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.08em}
+  .demo h3{font-size:15px;margin:6px 0 5px}
+  .demo p{font-size:12.8px;color:var(--dim);line-height:1.5}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px}
+  th,td{padding:9px 8px;border-bottom:1px solid var(--stroke);text-align:center}
+  th:first-child,td:first-child{text-align:left}
+  th{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--dim);font-weight:600}
+  .us{color:var(--gold);font-weight:800}
+  .y{color:var(--good);font-weight:700}.x{color:var(--red)}.tilde{color:var(--dim)}
+  td.feat{color:var(--txt);font-weight:600}
+
+  .three{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:10px}
+  .three .l{border:1px solid var(--stroke);background:var(--card);border-radius:14px;padding:16px;font-size:13px;color:var(--dim);line-height:1.55}
+  .three .l b{color:var(--txt)}
+
+  .obj{width:100%;border-collapse:collapse;font-size:13px}
+  .obj td{padding:10px;border-bottom:1px solid var(--stroke);vertical-align:top;line-height:1.5}
+  .obj td:first-child{color:var(--red);font-weight:700;white-space:nowrap;width:34%}
+  .obj td:last-child{color:var(--dim)}
+
+  .crazy{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+  .crazy .c{border:1px solid var(--stroke);background:var(--card);border-radius:14px;padding:14px 16px;transition:transform .15s,border-color .15s}
+  .crazy .c:hover{transform:translateY(-3px);border-color:rgba(201,139,75,.45)}
+  .crazy h3{font-size:14px;margin-bottom:4px;display:flex;gap:8px}
+  .crazy p{font-size:12.5px;color:var(--dim);line-height:1.5}
+  .note{margin-top:24px;border:1px solid rgba(248,113,113,.25);background:rgba(248,113,113,.06);border-radius:14px;padding:16px;font-size:12.8px;color:var(--dim);line-height:1.6}
+  .note b{color:#fca5a5}
+  .foot{margin-top:26px;border-top:1px solid var(--stroke);padding-top:14px;font-size:12px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stamp"><span class="dot"></span>GraniteOS · sales pitch · June 2026</div>
+
+  <div class="hero">
+    <p class="claim">The only billing-and-stock app built for India's granite &amp; marble trade</p>
+    <h1>Your whole stone yard — <span class="g">every slab, every rupee owed</span> — in your pocket.</h1>
+    <div class="hooks">
+      <span>📸 Snap a slab → it's in stock → GST bill in 10 seconds</span>
+      <span>Tally is for your accountant. GraniteOS is for <b style="color:var(--gold)">you</b>.</span>
+      <span>Never lose a slab. Never forget who owes you.</span>
+    </div>
+  </div>
+
+  <div class="sec-h">30-second elevator</div>
+  <div class="elev">Most granite traders still run the yard on a <b>notebook and WhatsApp</b> — so every month a few slabs walk out <b>unbilled</b>, customers' udhaar slips through, and GST filing is a scramble. <b>GraniteOS is the only app built for the stone trade</b>: snap a slab and it's in inventory, raise a perfect GST bill in 10 seconds, and see exactly who owes you the moment you open the app — all from your phone. Give me 5 minutes and I'll load your first 50 slabs <b>free</b>.</div>
+
+  <div class="sec-h">The 2-minute demo (the one that closes)</div>
+  <div class="demo">
+    <div class="c"><div class="n">1 · Villain</div><h3>Name the leak</h3><p>"Can you tell me <i>right now</i> which slabs are paid for, and how much udhaar is out? Nobody can from a notebook — and that not-knowing costs you every month."</p></div>
+    <div class="c"><div class="n">2 · Reframe</div><h3>Recovery-Rate Radar</h3><p>"Your loss isn't breakage — it's <b style="color:var(--gold)">invisible</b>: unbilled slabs + un-chased udhaar + a recovery rate you can't see. We turn it into a number on your screen."</p></div>
+    <div class="c"><div class="n">3 · Show</div><h3>Snap · Tap · Get paid</h3><p>📸 snap → in stock · 🧾 tap → GST invoice on WhatsApp + UPI · 💰 tomorrow it greets you: "₹2.4L pending — chase now" + confetti when money lands.</p></div>
+    <div class="c"><div class="n">4 · De-risk + CTA</div><h3>No reason to say no</h3><p>Free trial · we load your first 50 slabs · your data exports to Excel anytime · start before this month's GST filing.</p></div>
+  </div>
+
+  <div class="sec-h">Why us &gt; everyone</div>
+  <table>
+    <thead><tr><th>Capability</th><th class="us">GraniteOS</th><th>Tally / BUSY</th><th>Vyapar</th><th>Zoho</th><th>DONOZ (IN)</th><th>Moraware / Slabsmith (intl)</th></tr></thead>
+    <tbody>
+      <tr><td class="feat">Built for the stone trade</td><td class="y">✓</td><td class="x">✗</td><td class="x">✗</td><td class="x">✗</td><td class="y">✓</td><td class="tilde">~ countertop</td></tr>
+      <tr><td class="feat">Mobile-first / phone-native</td><td class="y">✓</td><td class="x">✗ desktop</td><td class="y">✓</td><td class="y">✓</td><td class="tilde">~</td><td class="x">✗ desktop</td></tr>
+      <tr><td class="feat">India GST done right</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="x">✗ no GST</td></tr>
+      <tr><td class="feat">Udhaar / receivables ledger</td><td class="y">✓ first thing</td><td class="tilde">~</td><td class="tilde">basic</td><td class="tilde">~</td><td class="tilde">~</td><td class="x">✗</td></tr>
+      <tr><td class="feat">Public AR + 3D catalogue</td><td class="y">✓</td><td class="x">✗</td><td class="x">✗</td><td class="x">✗</td><td class="x">✗</td><td class="tilde">~</td></tr>
+      <tr><td class="feat">Daily briefing + habit loop</td><td class="y">✓</td><td class="x">✗</td><td class="x">✗</td><td class="x">✗</td><td class="x">✗</td><td class="x">✗</td></tr>
+      <tr><td class="feat">Price reality</td><td class="us">SMB ₹/mo</td><td class="tilde">₹22.5k once</td><td class="tilde">₹0.7–3.6k/yr</td><td class="tilde">₹0.9–3k/mo</td><td class="tilde">private</td><td class="tilde">$200–35k+/mo</td></tr>
+    </tbody>
+  </table>
+  <div class="three">
+    <div class="l"><b>1.</b> The tools you already use — Tally, Vyapar, BUSY, Zoho — are <b>horizontal accounting apps. None of them know what a slab is.</b></div>
+    <div class="l"><b>2.</b> The world's stone software — Moraware, Slabsmith, ActionFlow — is <b>priced in dollars, blind to GST, built for American countertop shops.</b></div>
+    <div class="l"><b>3.</b> GraniteOS is <b>the only one that's stone-deep, GST-correct, AND in your pocket.</b></div>
+  </div>
+
+  <div class="sec-h">Objection handling</div>
+  <table class="obj">
+    <tr><td>"Too expensive."</td><td>"₹X/month. One slab a month slips out unbilled — that's more than a year's subscription. Pays for itself in <b style="color:var(--gold)">week one.</b>"</td></tr>
+    <tr><td>"My accountant uses Tally."</td><td>"Keep Tally for your CA at month-end. GraniteOS is for <b style="color:var(--gold)">you, in the yard, today.</b> One-tap Excel export feeds your accountant. Different job."</td></tr>
+    <tr><td>"I'm not technical."</td><td>"If you can use WhatsApp, you can use this. Snap, tap, bill — 10 seconds. We load your first 50 slabs for you."</td></tr>
+    <tr><td>"Is my data safe?"</td><td>"Safer than a notebook that can be lost or burnt. Daily cloud backup, export to Excel anytime. <b style="color:var(--gold)">It's yours.</b>"</td></tr>
+    <tr><td>"I'll think about it."</td><td>"Don't commit — just start the free trial before this month's GST filing, so you feel it on a real bill. 5 minutes."</td></tr>
+  </table>
+
+  <div class="sec-h">The "crazy ideas" arsenal</div>
+  <div class="crazy">
+    <div class="c"><h3>📸 Snap-a-slab onboarding</h3><p>Point your camera at the yard — AI reads size/finish into stock. Onboarding becomes a magic trick.</p></div>
+    <div class="c"><h3>📡 Recovery-Rate Radar</h3><p>Earned vs should-have-earned per block. "Find the money you're already losing."</p></div>
+    <div class="c"><h3>🛋️ Showroom in their pocket</h3><p>Share an AR/3D catalogue link; the customer sees the slab on their own kitchen via WhatsApp.</p></div>
+    <div class="c"><h3>🔍 Stone Finder AI</h3><p>A buyer photographs a slab they love anywhere — you match it from your stock instantly.</p></div>
+    <div class="c"><h3>💬 WhatsApp morning briefing</h3><p>"₹2.4L pending, 3 quotes expiring, 2 jobs ready." The hook runs where traders already live.</p></div>
+    <div class="c"><h3>💸 Udhaar → money</h3><p>One-tap reminder + UPI, then invoice financing on receivables you can prove.</p></div>
+    <div class="c"><h3>🔄 Slab Bazaar</h3><p>List idle slabs to other yards. The more shops on it, the more every shop earns — a network rivals can't match.</p></div>
+    <div class="c"><h3>🔥 The streak habit</h3><p>Day-streaks + confetti. The only stone ERP people actually enjoy opening.</p></div>
+    <div class="c"><h3>🗣️ Vernacular + voice</h3><p>Bill by speaking in Hindi/Kannada/Tamil — unlock the trader rivals gave up on.</p></div>
+    <div class="c"><h3>📊 Benchmarks</h3><p>"Your recovery rate vs similar yards in your district." A reason to never leave.</p></div>
+  </div>
+
+  <div class="note"><b>Honesty guardrails (so the pitch never breaks):</b> Don't say "no stone software exists in India" — <b>DONOZ</b> (Kishangarh) is real; say it's "fragmented &amp; factory-focused — no one made it mobile-first, udhaar-deep, showroom-ready." Don't invent a "% on pen-and-paper" stat (none verifiable). Industry size <i>is</i> real: Indian marble ~$4B→$6.2B by 2030; India ≈20% of world granite.</div>
+
+  <div class="foot">Built on verified rival pricing + the StoryBrand / Challenger / Dunford "only" / PAS frameworks. Lock the category claim + one quantified number (recovery-rate); all copy flows from those.</div>
+</div>
+</body>
+</html>

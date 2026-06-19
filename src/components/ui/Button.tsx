@@ -106,7 +106,7 @@ export function Button({
         />
         <motion.span
           className="relative z-10"
-          variants={{ rest: { color: "#c9a24b" }, hover: { color: "#1a1407" } }}
+          variants={{ rest: { color: "var(--btn-outline-ink)" }, hover: { color: "#1a1407" } }}
           transition={{ duration: 0.3 }}
         >
           {children}

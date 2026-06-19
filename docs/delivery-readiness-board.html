@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraniteOS — Delivery Readiness</title>
+<style>
+  :root{--bg:#0c0a08;--card:rgba(255,255,255,.04);--stroke:rgba(255,255,255,.10);--txt:#f4f1ec;--dim:#a39b8e;--gold:#e0b07a;--good:#34d399;--red:#f87171;--amber:#f5a524;--info:#6c8cff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(1200px 700px at 80% -12%,rgba(52,211,153,.16),transparent 58%),radial-gradient(900px 600px at -8% 110%,rgba(201,139,75,.16),transparent 55%),var(--bg);color:var(--txt);min-height:100vh;padding:46px 24px 80px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto}
+  .eyebrow{letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:var(--gold);font-weight:600}
+  h1{font-size:clamp(34px,5.5vw,56px);line-height:1.04;margin:8px 0 8px;font-weight:700;letter-spacing:-.02em}
+  .stamp{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--dim);border:1px solid var(--stroke);padding:6px 12px;border-radius:999px;background:var(--card)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 12px var(--good)}
+
+  .verdict{margin-top:22px;border:1px solid rgba(52,211,153,.35);background:linear-gradient(180deg,rgba(52,211,153,.10),rgba(255,255,255,.02));border-radius:22px;padding:26px 28px;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+  .verdict .big{font-size:54px;line-height:1}
+  .verdict h2{font-size:24px;font-weight:700;letter-spacing:-.01em}
+  .verdict p{color:var(--dim);font-size:15px;margin-top:4px;max-width:640px;line-height:1.5}
+  .verdict .score{margin-left:auto;text-align:center}
+  .verdict .score .n{font-size:40px;font-weight:800;color:var(--good)}
+  .verdict .score .l{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
+
+  .sec-h{margin:38px 0 14px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;display:flex;align-items:center;gap:10px}
+  .sec-h::after{content:"";flex:1;height:1px;background:var(--stroke)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+  .cat{border:1px solid var(--stroke);background:var(--card);border-radius:16px;padding:18px;border-top-width:3px}
+  .cat.ready{border-top-color:var(--good)} .cat.partial{border-top-color:var(--amber)}
+  .cat h3{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .cat .badge{margin-left:auto;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px}
+  .b-ready{background:rgba(52,211,153,.15);color:var(--good)} .b-partial{background:rgba(245,165,36,.15);color:var(--amber)}
+  .cat ul{list-style:none;margin-top:8px}
+  .cat li{font-size:12.6px;color:var(--dim);line-height:1.5;padding-left:20px;position:relative;margin-bottom:2px}
+  .cat li.y::before{content:"✓";color:var(--good);position:absolute;left:0}
+  .cat li.n::before{content:"→";color:var(--amber);position:absolute;left:0}
+  .cat li b{color:var(--txt)}
+
+  .gates{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+  .gate{flex:1;min-width:150px;border:1px solid var(--stroke);background:var(--card);border-radius:14px;padding:14px 16px;text-align:center}
+  .gate .n{font-size:26px;font-weight:800;color:var(--good)}
+  .gate .l{font-size:11.5px;color:var(--dim);margin-top:2px}
+
+  .todo{margin-top:24px;border:1px solid rgba(245,165,36,.3);background:rgba(245,165,36,.06);border-radius:16px;padding:18px}
+  .todo h2{font-size:15px;color:var(--amber);margin-bottom:10px}
+  .todo ol{margin-left:18px}
+  .todo li{font-size:13px;color:var(--dim);line-height:1.6;margin-bottom:4px}
+  .todo li b{color:var(--txt)}
+  .foot{margin-top:28px;border-top:1px solid var(--stroke);padding-top:16px;font-size:12.5px;color:var(--dim);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stamp"><span class="dot"></span>GraniteOS · delivery readiness · June 2026</div>
+  <p class="eyebrow" style="margin-top:18px">Is it ready to deliver?</p>
+  <h1>Yes — ship-ready for beta &amp; demos</h1>
+
+  <div class="verdict">
+    <span class="big">🟢</span>
+    <div>
+      <h2>Live, hardened, and stable</h2>
+      <p>The product is deployed at <b>graniteos.vercel.app</b>, passes every quality &amp; security gate, and runs end-to-end. It's ready to <b>demo, onboard beta customers, and sell</b>. A short legal/ops checklist remains before charging real money at scale.</p>
+    </div>
+    <div class="score"><div class="n">9/10</div><div class="l">readiness</div></div>
+  </div>
+
+  <div class="sec-h">Quality gates — all green</div>
+  <div class="gates">
+    <div class="gate"><div class="n">0</div><div class="l">TypeScript errors</div></div>
+    <div class="gate"><div class="n">30/30</div><div class="l">build pages</div></div>
+    <div class="gate"><div class="n">41/41</div><div class="l">unit tests</div></div>
+    <div class="gate"><div class="n">10</div><div class="l">e2e passing</div></div>
+    <div class="gate"><div class="n">0</div><div class="l">high/critical vulns</div></div>
+  </div>
+
+  <div class="sec-h">Readiness by area</div>
+  <div class="grid">
+    <div class="cat ready"><h3>🧩 Product <span class="badge b-ready">READY</span></h3><ul>
+      <li class="y">Full flow works: stock → quote → order → fabrication → invoice → payment → udhaar</li>
+      <li class="y">GST-correct billing (Rule 46, CGST/SGST/IGST, HSN)</li>
+      <li class="y">Catalogue, analytics, marketing &amp; stock-alert tools</li>
+    </ul></div>
+    <div class="cat ready"><h3>🎨 UX <span class="badge b-ready">READY</span></h3><ul>
+      <li class="y">Premium Stone redesign across key screens</li>
+      <li class="y">☰ menu + simplified, glanceable screens</li>
+      <li class="y">Mobile-first, WhatsApp + UPI native</li>
+    </ul></div>
+    <div class="cat ready"><h3>🔒 Security <span class="badge b-ready">READY</span></h3><ul>
+      <li class="y">RLS tenant isolation, no secrets exposed</li>
+      <li class="y">Role gates, CSP + HSTS, AI rate-limit</li>
+      <li class="y">0 high/critical dependency vulns (xlsx patched)</li>
+    </ul></div>
+    <div class="cat ready"><h3>🚀 Deployment <span class="badge b-ready">READY</span></h3><ul>
+      <li class="y">Live on Vercel, GitHub auto-deploy</li>
+      <li class="y">Local &amp; prod in sync; build verified</li>
+      <li class="y">Licensing wired (off until you flip it on)</li>
+    </ul></div>
+    <div class="cat partial"><h3>⚖️ Legal <span class="badge b-partial">FINALIZE</span></h3><ul>
+      <li class="y">DPDP-aligned Privacy + Terms drafted</li>
+      <li class="n">Fill entity, Grievance Officer, jurisdiction</li>
+      <li class="n">Lawyer sign-off before scaling messaging</li>
+    </ul></div>
+    <div class="cat partial"><h3>⚙️ Go-live ops <span class="badge b-partial">BEFORE SALE</span></h3><ul>
+      <li class="n">Production <b>SMS provider</b> for phone-OTP</li>
+      <li class="n"><b>WhatsApp Business API</b> for hands-off auto-send (Path B)</li>
+      <li class="n">Apply perf migration 0014; pick a pricing/licence model</li>
+    </ul></div>
+  </div>
+
+  <div class="todo">
+    <h2>Pre-commercial checklist (none block a demo/beta)</h2>
+    <ol>
+      <li><b>Legal:</b> fill the entity / Grievance Officer / jurisdiction placeholders and get a lawyer to confirm the DPDP notice + DPA.</li>
+      <li><b>Auth at scale:</b> connect a real SMS provider so phone-OTP works for everyone (password login already works).</li>
+      <li><b>WhatsApp Path B:</b> connect a Business-API provider + approved templates to enable hands-off broadcasts (the one-tap Path A already works free).</li>
+      <li><b>Licensing:</b> decide the model, then set <code>LICENSE_ENFORCE=1</code> + <code>GRANITEOS_LICENSE</code> in Vercel to enforce.</li>
+      <li><b>Polish:</b> apply migration 0014 (perf indexes); a real catalogue domain; finish elevating the remaining list screens.</li>
+    </ol>
+  </div>
+
+  <div class="foot">
+    <b style="color:var(--txt)">Bottom line:</b> GraniteOS is a complete, secure, GST-correct stone-trade platform, live in production and stable enough to <b style="color:var(--good)">put in front of customers today</b>. The remaining items are commercial/legal hygiene for charging at scale — not engineering blockers.
+  </div>
+</div>
+</body>
+</html>

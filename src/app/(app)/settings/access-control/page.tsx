@@ -29,7 +29,7 @@ export default async function AccessControlPage() {
   const config = await loadAccessConfig(me.company_id);
 
   return (
-    <div className="max-w-2xl mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-2xl lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <Link
         href="/settings"
         className="inline-flex items-center gap-1 text-sm text-slate-400 hover:text-slate-200"

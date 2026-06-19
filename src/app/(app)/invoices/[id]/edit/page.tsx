@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { requireSession } from "@/lib/auth";
+import { requireModuleAccess } from "@/lib/access-control-guard";
 import { createClient } from "@/lib/supabase/server";
 import InvoiceEditor from "@/components/money/InvoiceEditor";
 
@@ -9,7 +9,7 @@ export default async function EditInvoicePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  await requireSession();
+  await requireModuleAccess("money", { needEdit: true });
   const supabase = await createClient();
 
   const { data: invoice } = await supabase

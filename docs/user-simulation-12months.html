@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraniteOS — 12-Month User Simulation</title>
+<style>
+  :root{
+    --bg:#0b0d0f; --card:#15191d; --line:#252b31;
+    --ink:#e8ebee; --mut:#9aa4ad; --dim:#6b757d;
+    --gold:#c8a24a; --green:#4a9d6b; --amber:#d99a2b; --red:#c75c5c; --blue:#5b8fb0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0b0d0f,#0e1113);color:var(--ink);
+    font:15px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:48px 28px 96px}
+  h1{font-size:33px;letter-spacing:-.5px;margin:0 0 6px;background:linear-gradient(90deg,#fff,var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  h2{font-size:23px;margin:56px 0 8px;border-top:1px solid var(--line);padding-top:32px;letter-spacing:-.3px}
+  h3{font-size:19px;margin:34px 0 4px;color:#fff}
+  h4{font-size:13px;margin:18px 0 4px;color:var(--gold);text-transform:uppercase;letter-spacing:.6px}
+  .lede{color:var(--mut);font-size:16px;max-width:780px}
+  .meta{color:var(--dim);font-size:13px;margin-top:10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 24px;margin:16px 0}
+  .diary{border-left:3px solid var(--blue);background:#12161a;padding:14px 18px;border-radius:8px;margin:14px 0;font-style:italic;color:#cdd9e2}
+  .diary b{color:#fff;font-style:normal}
+  .callout{border-left:3px solid var(--gold);background:#16161a;padding:14px 18px;border-radius:8px;margin:16px 0;color:var(--mut)}
+  .warn{border-left:3px solid var(--red);background:#1a1414}
+  .ok{border-left:3px solid var(--green);background:#121a15}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--gold);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px}
+  .full{color:var(--green);font-weight:600}.part{color:var(--amber);font-weight:600}.none{color:var(--red);font-weight:600}
+  ul{margin:6px 0;padding-left:20px}li{margin:3px 0}
+  .mut li{color:var(--mut)}
+  code{background:#0c0e10;border:1px solid var(--line);padding:1px 6px;border-radius:5px;font-size:12.5px;color:#cdd5db}
+  .scores{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+  .sbox{flex:1;min-width:150px;background:#0e1114;border:1px solid var(--line);border-radius:10px;padding:12px 14px;text-align:center}
+  .sbox b{display:block;font-size:28px;color:var(--gold);line-height:1.1}
+  .sbox span{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.4px}
+  .tag{display:inline-block;font-size:11px;padding:2px 9px;border-radius:20px;border:1px solid var(--line);color:var(--mut);margin:2px 5px 2px 0}
+  .verdict{font-size:13px;color:var(--dim);margin:4px 0 8px}
+  .toc a{color:var(--blue);text-decoration:none;display:block;padding:3px 0}.toc a:hover{color:var(--gold)}
+  @media(max-width:720px){.scores{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>GraniteOS — 12-Month User Simulation</h1>
+<p class="lede">Not an analyst's review. Four real users adopt GraniteOS, live with it for a year, and we watch whether it becomes habit, dependency, and an operating system — or quietly dies on the home screen.</p>
+<p class="meta">Companion to <code>stakeholder-panel-review.html</code> · Grounded in the actual build at <code>D:\vyaparwerk\graniteos</code> · Simulated 2026-06-10</p>
+
+<div class="callout warn">
+<strong>The single fact that shapes every month below:</strong> GraniteOS today has <strong>no notifications, no push, no email/SMS, no automated reminders, and is online-only.</strong> Every "reminder" (udhaar, follow-up) is a <em>manual</em> WhatsApp message the user must choose to send. That means the platform cannot <em>pull</em> a user back in — there is no daily trigger the app itself fires. Habit therefore has to form from the user's own routine ("I check my money every morning"), not from the product nudging them. This is the difference between a tool people open when they have a task and an operating system they can't start the day without. I simulate that honestly — including the users who drift away because nothing reminds them to come back.
+</div>
+
+<div class="card toc">
+<h4>Contents</h4>
+<a href="#u1">User 1 · Manufacturing Business Owner — the diary (M1→M12)</a>
+<a href="#u2">User 2 · Operations Manager</a>
+<a href="#u3">User 3 · Procurement &amp; Supply Chain Manager</a>
+<a href="#u4">User 4 · Distributor / Dealer / Showroom Manager</a>
+<a href="#habit">Daily Habit Analysis</a>
+<a href="#engage">Addiction &amp; Engagement Analysis</a>
+<a href="#churn">Churn Simulation</a>
+<a href="#top20">Top 20 Features to Increase Daily Usage</a>
+<a href="#pmf">Product-Market Fit Test</a>
+<a href="#founder">Founder Report &amp; Final Verdict</a>
+</div>
+
+<!-- ============ USER 1 ============ -->
+<h2 id="u1">User 1 · Rajesh — Manufacturing Business Owner</h2>
+<p class="verdict">Runs a granite factory + sales in Hyderabad. ~₹6 Cr/yr. Lives on his phone, books in Tally via his CA, chases payments by calling people.</p>
+
+<h3>Month 1 — Onboarding</h3>
+<div class="diary"><b>Rajesh:</b> "My nephew set it up in an evening. The setup asked my GST number, I imported my customer list from Excel. First time I saw a screen that knew what a <em>slab</em> and a <em>godown</em> is — not some American software pretending. I made a quote, it built the GST split itself, I WhatsApp'd it with a UPI link. Customer paid in two hours. That sold me."</p>
+<table>
+<tr><th>Why adopt?</th><td>Stone-native. The GST invoice + WhatsApp/UPI quote replaced a 20-minute manual job.</td></tr>
+<tr><th>What excites?</th><td><b>Recovery Radar</b> — first time he could see Machine #2 wastes more stone. And Udhaar Radar showing exactly who owes him.</td></tr>
+<tr><th>What confuses?</th><td>Block→slab data entry is tedious upfront. "GST Auto-Pilot" input-ITC at flat 5% — he isn't sure if it matches his CA's number.</td></tr>
+<tr><th>First win?</th><td>A quote-to-payment in hours via UPI link. Tangible, day-one.</td></tr>
+<tr><th>What prevents daily use?</th><td>Nothing pings him. He has to <em>remember</em> to open it. His books still live in Tally, so he double-checks there.</td></tr>
+</table>
+
+<h3>Month 3</h3>
+<table>
+<tr><th>Used regularly</th><td>Money/Udhaar page (most days), quote builder, invoice generation.</td></tr>
+<tr><th>Abandoned</th><td>AI marketing copy (used twice for novelty), 3D slab viewer (his customers are trade, not retail).</td></tr>
+<tr><th>Now dependent on</th><td>Quoting + GST invoicing run through GraniteOS, not Excel.</td></tr>
+<tr><th>Frustrations</th><td>Has to re-enter what his CA already has; no Tally export. No credit note when a customer returns a slab — he voids manually. Wants to know which <em>job</em> made money, can't.</td></tr>
+<tr><th>Login cadence</th><td><b>Daily-ish</b> — driven by checking collections, not by the app.</td></tr>
+</table>
+
+<h3>Month 6</h3>
+<table>
+<tr><th>Operationally critical?</th><td>For sell-side billing &amp; collections: yes. For the business as a whole: not yet (books still Tally).</td></tr>
+<tr><th>Breaks if it disappears</th><td>His quoting + GST invoices + the single view of "who owes me ₹". He'd revert to Excel/diary and feel real pain.</td></tr>
+<tr><th>Reports relied on</th><td>Udhaar list, revenue this-month, stock value, Recovery Radar before buying blocks.</td></tr>
+<tr><th>Departments using / avoiding</th><td>Using: he + sales. Avoiding: accounts (CA stays in Tally), purchase (no PO module).</td></tr>
+</table>
+<div class="scores">
+<div class="sbox"><b>8</b><span>Stickiness</span></div>
+<div class="sbox"><b>6</b><span>Habit Formation</span></div>
+<div class="sbox"><b>7</b><span>Business Dependency</span></div>
+</div>
+
+<h3>Month 12</h3>
+<table>
+<tr><th>Primary OS?</th><td>It's his <em>commercial</em> OS (sell + collect), not his <em>full</em> OS. Tally + WhatsApp still co-exist.</td></tr>
+<tr><th>Modules demanded</th><td>Tally/Zoho export, e-invoicing, credit notes, job profitability, auto payment-reminders, a daily morning summary.</td></tr>
+<tr><th>Manual still</th><td>Books, purchase orders, payment reminders (he must hit send), reconciliation.</td></tr>
+<tr><th>Renew?</th><td><span class="full">Yes</span> — the recovery + collections value pays for itself.</td></tr>
+<tr><th>Recommend?</th><td><span class="full">Yes</span>, to other stone owners — this is the referral engine.</td></tr>
+</table>
+<div class="card ok"><strong>Retention ~85%</strong> · Expansion: <span class="full">high</span> (compliance + costing tiers) · Referral: <span class="full">high</span> (peer trade) · Churn risk: <span class="part">moderate</span> — only if a rival ships Tally+e-invoice first.</div>
+
+<!-- ============ USER 2 ============ -->
+<h2 id="u2">User 2 · Suresh — Operations Manager</h2>
+<p class="verdict">Runs the shop floor. Cares about throughput, WIP, dispatch. Pragmatic, allergic to data entry that doesn't help him.</p>
+
+<h3>Month 1</h3>
+<div class="diary"><b>Suresh:</b> "Boss told me to update job stages here. The board is clean — queued, cutting, polishing, QC, ready. On my phone, fine. But it doesn't tell me <em>what to do next</em> or which machine is free. I still keep my whiteboard."</p>
+<table>
+<tr><th>Why adopt?</th><td>Mandated by owner, not chosen. Adoption is top-down.</td></tr>
+<tr><th>Excites?</th><td>Everyone seeing the same job status without phone calls.</td></tr>
+<tr><th>Confuses?</th><td>Jobs don't auto-create from orders; he creates them. No link to which slab is consumed.</td></tr>
+<tr><th>First win?</th><td>Owner stopped calling to ask "is the Statuario job ready?" — he can see it.</td></tr>
+<tr><th>Prevents daily use?</th><td>No scheduling, no capacity view, no alerts. The whiteboard still plans; the app only records.</td></tr>
+</table>
+
+<h3>Month 3</h3>
+<table>
+<tr><th>Used regularly</th><td>Moving jobs through stages, marking QC pass/fail.</td></tr>
+<tr><th>Abandoned</th><td>Nothing else — he never used anything else.</td></tr>
+<tr><th>Dependent on</th><td>Status communication to office/sales.</td></tr>
+<tr><th>Frustrations</th><td>It's a logbook, not a planner. No machine load, no WIP aging, no rework reason. Double work: whiteboard + app.</td></tr>
+<tr><th>Login cadence</th><td><b>Daily but shallow</b> — a few taps to update status, then closes it.</td></tr>
+</table>
+
+<h3>Month 6</h3>
+<table>
+<tr><th>Operationally critical?</th><td>As a shared status board, mildly. As a planning tool, no.</td></tr>
+<tr><th>Breaks if gone</th><td>Cross-team visibility of job stage. He'd go back to phone calls — annoying but survivable.</td></tr>
+<tr><th>Reports relied on</th><td>Active/WIP/ready counts. That's it.</td></tr>
+<tr><th>Depts using/avoiding</th><td>Using: floor supervisors lightly. Avoiding: nobody plans in it.</td></tr>
+</table>
+<div class="scores">
+<div class="sbox"><b>5</b><span>Stickiness</span></div>
+<div class="sbox"><b>5</b><span>Habit Formation</span></div>
+<div class="sbox"><b>4</b><span>Business Dependency</span></div>
+</div>
+
+<h3>Month 12</h3>
+<table>
+<tr><th>Primary OS?</th><td>No. For ops it's a thin status layer over a whiteboard-run floor.</td></tr>
+<tr><th>Modules demanded</th><td>Scheduling/capacity, slab-to-job consumption, job costing, WIP-age alerts, QC defect codes, dispatch + E-way bill.</td></tr>
+<tr><th>Manual still</th><td>Planning, material issue, costing, dispatch.</td></tr>
+<tr><th>Renew?</th><td><span class="part">Indifferent</span> — he wouldn't fight to keep it, wouldn't kill it. Owner decides.</td></tr>
+<tr><th>Recommend?</th><td><span class="part">Lukewarm</span> — "good board, not a production system."</td></tr>
+</table>
+<div class="card"><strong>Retention ~60%</strong> (rides on owner) · Expansion: <span class="part">medium</span> (scheduling/costing modules) · Referral: <span class="part">low</span> · Churn risk: <span class="part">moderate</span> — high if a competitor ships real production planning.</div>
+
+<!-- ============ USER 3 ============ -->
+<h2 id="u3">User 3 · Anil — Procurement &amp; Supply Chain Manager</h2>
+<p class="verdict">Buys blocks from quarries, manages godown stock and dispatch. The persona the product serves <em>least</em>.</p>
+
+<h3>Month 1</h3>
+<div class="diary"><b>Anil:</b> "I went looking for purchase orders. There aren't any. I add a block with a cost and that's it — no PO to the quarry, no goods-receipt, no match against the bill. My buying still happens in Excel and on the phone. The supplier list is nice but it's half a CRM, not procurement."</p>
+<table>
+<tr><th>Why adopt?</th><td>Hoped it covered buy-side. It doesn't.</td></tr>
+<tr><th>Excites?</th><td>Stock value visible; supplier GSTINs captured.</td></tr>
+<tr><th>Confuses?</th><td>"Where do I raise a PO? Where's GRN?" — absent.</td></tr>
+<tr><th>First win?</th><td>Minor — seeing total in-stock value once.</td></tr>
+<tr><th>Prevents daily use?</th><td>His entire core workflow (PO→GRN→bill match) isn't in the product.</td></tr>
+</table>
+
+<h3>Month 3</h3>
+<table>
+<tr><th>Used regularly</th><td>Almost nothing. Occasionally checks stock value.</td></tr>
+<tr><th>Abandoned</th><td>The whole thing, effectively.</td></tr>
+<tr><th>Dependent on</th><td>Nothing.</td></tr>
+<tr><th>Frustrations</th><td>No PO, GRN, 3-way match, price history, multi-godown, transfers, or dispatch/E-way bill.</td></tr>
+<tr><th>Login cadence</th><td><b>Rarely</b> — only when the owner asks him to add a block.</td></tr>
+</table>
+
+<h3>Month 6</h3>
+<table>
+<tr><th>Operationally critical?</th><td>No. He runs procurement entirely outside GraniteOS.</td></tr>
+<tr><th>Breaks if gone</th><td>Nothing of his would break.</td></tr>
+<tr><th>Reports relied on</th><td>None.</td></tr>
+<tr><th>Depts using/avoiding</th><td>Procurement actively avoids it.</td></tr>
+</table>
+<div class="scores">
+<div class="sbox"><b>2</b><span>Stickiness</span></div>
+<div class="sbox"><b>2</b><span>Habit Formation</span></div>
+<div class="sbox"><b>2</b><span>Business Dependency</span></div>
+</div>
+
+<h3>Month 12</h3>
+<table>
+<tr><th>Primary OS?</th><td>No — irrelevant to his role.</td></tr>
+<tr><th>Modules demanded</th><td>Full procure-to-pay, price-variance tracking, multi-godown + transfers, dispatch/logistics + E-way bill, reorder logic.</td></tr>
+<tr><th>Manual still</th><td>All of procurement and inbound logistics.</td></tr>
+<tr><th>Renew?</th><td><span class="none">Wouldn't pay for his seat.</span></td></tr>
+<tr><th>Recommend?</th><td><span class="none">No</span> — "not for procurement people yet."</td></tr>
+</table>
+<div class="card warn"><strong>Retention ~25%</strong> · Expansion: <span class="full">high IF procurement ships</span> (biggest untapped seat-expansion) · Referral: <span class="none">low</span> · Churn risk: <span class="none">very high</span> — already effectively churned in M1.</div>
+
+<!-- ============ USER 4 ============ -->
+<h2 id="u4">User 4 · Meena — Distributor / Dealer / Showroom Manager</h2>
+<p class="verdict">Runs a marble showroom + supplies smaller dealers. Sells experience and fast quotes. Second-best fit after the owner.</p>
+
+<h3>Month 1</h3>
+<div class="diary"><b>Meena:</b> "I shared a live catalog link on WhatsApp and a customer browsed slabs from home. The slab passport — 3D, finish, size, a 'WhatsApp enquiry' button — looked premium. I quoted on the spot with GST and a pay link. Customers think I'm organised now."</p>
+<table>
+<tr><th>Why adopt?</th><td>The customer-facing catalog + slab passport — a sales weapon.</td></tr>
+<tr><th>Excites?</th><td>3D viewer, shareable catalog, instant GST quote with UPI.</td></tr>
+<tr><th>Confuses?</th><td>No dealer-specific price tiers; no portal for her sub-dealers to order; catalog link isn't discoverable (she must send it).</td></tr>
+<tr><th>First win?</th><td>Closed a walk-in faster with a 3D passport + on-the-spot quote.</td></tr>
+<tr><th>Prevents daily use?</th><td>No leads pipeline, no follow-up automation — open quotes slip unless she remembers.</td></tr>
+</table>
+
+<h3>Month 3</h3>
+<table>
+<tr><th>Used regularly</th><td>Catalog sharing, quotes, slab passports, invoices.</td></tr>
+<tr><th>Abandoned</th><td>AI copy after the novelty; analytics (owner-only / not her role).</td></tr>
+<tr><th>Dependent on</th><td>Quoting + catalog are now her sales motion.</td></tr>
+<tr><th>Frustrations</th><td>No follow-up reminders, no dealer portal/price tiers, no order-status link to send customers, no returns/credit note.</td></tr>
+<tr><th>Login cadence</th><td><b>Daily</b> when she has walk-ins/enquiries — genuinely workflow-driven.</td></tr>
+</table>
+
+<h3>Month 6</h3>
+<table>
+<tr><th>Operationally critical?</th><td>For her sales floor, yes — quoting + catalog run on it.</td></tr>
+<tr><th>Breaks if gone</th><td>Her quoting speed and the "premium" catalog experience. She'd lose a differentiator.</td></tr>
+<tr><th>Reports relied on</th><td>Quote funnel, what's in stock to sell.</td></tr>
+<tr><th>Depts using/avoiding</th><td>Using: showroom sales. Avoiding: her sub-dealers (no portal for them).</td></tr>
+</table>
+<div class="scores">
+<div class="sbox"><b>7</b><span>Stickiness</span></div>
+<div class="sbox"><b>6</b><span>Habit Formation</span></div>
+<div class="sbox"><b>6</b><span>Business Dependency</span></div>
+</div>
+
+<h3>Month 12</h3>
+<table>
+<tr><th>Primary OS?</th><td>Her <em>sales</em> OS, yes; not her back office.</td></tr>
+<tr><th>Modules demanded</th><td>Dealer/B2B ordering portal, price tiers, follow-up automation, customer order-tracking link, returns/credit notes, samples/appointments.</td></tr>
+<tr><th>Manual still</th><td>Follow-ups, dealer orders (phone), returns.</td></tr>
+<tr><th>Renew?</th><td><span class="full">Yes</span> — the catalog/quote combo is worth it.</td></tr>
+<tr><th>Recommend?</th><td><span class="full">Yes</span>, to other showrooms.</td></tr>
+</table>
+<div class="card ok"><strong>Retention ~75%</strong> · Expansion: <span class="full">high</span> (dealer portal = multi-seat) · Referral: <span class="full">high</span> (showroom peers) · Churn risk: <span class="part">moderate</span> — drifts if follow-ups keep slipping for lack of reminders.</div>
+
+<!-- ============ DAILY HABIT ============ -->
+<h2 id="habit">Daily Habit Analysis</h2>
+<table>
+<tr><th>User</th><th>What pulls them back</th><th>Habit type formed</th></tr>
+<tr><td>Owner (Rajesh)</td><td>Checking collections / udhaar; revenue this month; recovery before buying.</td><td><span class="full">Decision-Making + Reporting Habit</span> (strongest of the four)</td></tr>
+<tr><td>Ops (Suresh)</td><td>Updating job stages so others can see them.</td><td><span class="part">Workflow Habit (shallow)</span> — record, not plan</td></tr>
+<tr><td>Procurement (Anil)</td><td>Nothing reliable.</td><td><span class="none">No habit</span> — core workflow absent</td></tr>
+<tr><td>Dealer (Meena)</td><td>Quoting walk-ins; sharing catalog/passport.</td><td><span class="full">Utility + Workflow Habit</span></td></tr>
+</table>
+<table>
+<tr><th>Habit type</th><th>Does GraniteOS create it?</th></tr>
+<tr><td>Utility Habit</td><td><span class="full">Yes</span> — quote/invoice/catalog are genuine daily utilities for owner &amp; dealer.</td></tr>
+<tr><td>Workflow Habit</td><td><span class="part">Partial</span> — sell-side flows yes; ops/procurement no.</td></tr>
+<tr><td>Reporting Habit</td><td><span class="part">Partial</span> — owner checks money/recovery; others don't (analytics owner-only, no digests).</td></tr>
+<tr><td>Team Collaboration Habit</td><td><span class="part">Weak</span> — shared status exists, but no comments, mentions, tasks, or notifications to make it collaborative.</td></tr>
+<tr><td>Decision-Making Habit</td><td><span class="part">Owner only</span> — Recovery/Udhaar/GST radars drive his decisions; nobody else gets a decision surface.</td></tr>
+</table>
+<div class="callout warn"><strong>Why habit is capped:</strong> the product never initiates contact. No morning push ("₹2.3L overdue, 3 quotes expiring"), no daily digest, no alerts. Habit depends entirely on the user's own discipline. Add a daily trigger and habit scores jump 2–3 points across every persona.</div>
+
+<!-- ============ ENGAGEMENT ============ -->
+<h2 id="engage">Addiction &amp; Engagement Analysis <span style="font-size:13px;color:var(--dim)">(as a product-growth lead)</span></h2>
+<table>
+<tr><th>Trigger</th><th>Today</th><th>What it should be</th></tr>
+<tr><td>Why open every morning?</td><td>Only the owner does — to see money owed. Others have no morning reason.</td><td>A "Good morning" command-center: cash in, overdue ₹, quotes expiring, jobs due, low stock.</td></tr>
+<tr><td>Daily trigger</td><td><span class="none">None fired by the app.</span> Self-motivated only.</td><td>Push/WhatsApp: overdue payments, today's dispatches, expiring quotes.</td></tr>
+<tr><td>Weekly trigger</td><td>None.</td><td>Weekly business digest: revenue, collections, recovery rate, top customers.</td></tr>
+<tr><td>Monthly trigger</td><td>Implicitly GST filing time — but no export, so they leave for the CA/Tally.</td><td>Month-end GST-ready pack + P&amp;L snapshot → keeps them inside at the highest-intent moment.</td></tr>
+</table>
+<div class="card">
+<h4>Lock-in &amp; switching costs</h4>
+<table>
+<tr><td><b>Fear losing access to</b></td><td>The udhaar ledger (who owes what), historical GST invoices, and the slab/recovery history. Losing these = real pain. <span class="part">Medium-high data gravity.</span></td></tr>
+<tr><td><b>Actions that create dependency</b></td><td>Issuing all invoices here (legal record), tracking all receivables here, building the slab catalog here.</td></tr>
+<tr><td><b>What creates lock-in</b></td><td>Accumulated invoice history + customer ledger + slab inventory = the system of record. The more months in, the harder to leave.</td></tr>
+<tr><td><b>Switching costs today</b></td><td><span class="part">Moderate</span> — data export isn't built, so leaving means abandoning history (ironically a lock-in by friction, not love). True lock-in (integrations, multi-user dependence, automation) is thin.</td></tr>
+</table>
+</div>
+
+<!-- ============ CHURN ============ -->
+<h2 id="churn">Churn Simulation</h2>
+<div class="card"><h4>Owner — Rajesh · churn scenario</h4>
+<p class="verdict">Month 8: turnover crosses the e-invoice threshold. GraniteOS can't generate IRN/QR e-invoices and can't export to Tally. His CA demands proper e-invoices; he starts billing from a Tally add-on "just for compliance," then realises he's now invoicing in two places. Within two months he stops invoicing in GraniteOS and keeps it only for Recovery Radar — then forgets it.</p>
+<p><b>Cause:</b> compliance gap at the exact moment he scaled. <b>Disappointing feature:</b> GST Auto-Pilot looked like compliance but wasn't filing-grade. <b>Unsupported workflow:</b> e-invoice + accounting handoff. <b>Competitor considered:</b> Zoho Books / Vyapar / a Tally add-on.</p>
+</div>
+<div class="card"><h4>Ops — Suresh · churn scenario</h4>
+<p class="verdict">Month 5: a rush season hits. He needs to <em>plan</em> which job runs on which machine when. The board can't schedule, so he goes back to the whiteboard for planning and updates the app less and less, until the board goes stale and others stop trusting it.</p>
+<p><b>Cause:</b> it records but doesn't plan. <b>Disappointing feature:</b> fabrication board with no scheduling/capacity. <b>Unsupported workflow:</b> production planning + costing. <b>Competitor:</b> a dedicated job-shop/MES tool, or just the whiteboard.</p>
+</div>
+<div class="card warn"><h4>Procurement — Anil · churn scenario (already churned)</h4>
+<p class="verdict">Month 1: looks for POs, finds none, never returns. He never adopted, so there's nothing to lose.</p>
+<p><b>Cause:</b> core role unsupported. <b>Disappointing feature:</b> "supplier" being CRM, not procurement. <b>Unsupported workflow:</b> procure-to-pay. <b>Competitor:</b> Excel, or Zoho Inventory/Books, or any ERP with PO.</p>
+</div>
+<div class="card"><h4>Dealer — Meena · churn scenario</h4>
+<p class="verdict">Month 7: she's losing deals because open quotes go cold — nothing reminds her to follow up, and her sub-dealers keep phoning orders because there's no portal. A rival showroom tool offers auto follow-ups + a dealer ordering app. She trials it for the follow-up automation and her catalog motion gradually migrates.</p>
+<p><b>Cause:</b> no follow-up automation / no dealer portal. <b>Disappointing feature:</b> manual-only reminders. <b>Unsupported workflow:</b> lead nurture + B2B ordering. <b>Competitor:</b> a CRM-led showroom/dealer app.</p>
+</div>
+
+<!-- ============ TOP 20 ============ -->
+<h2 id="top20">Top 20 Features to Increase Daily Usage (ranked by impact)</h2>
+<table>
+<tr><th>#</th><th>Feature</th><th>Lever</th><th>Why it moves the needle</th></tr>
+<tr><td>1</td><td>Push/WhatsApp notifications + daily morning digest</td><td>DAU</td><td>Creates the missing daily trigger — the #1 unlock for habit.</td></tr>
+<tr><td>2</td><td>Automated payment reminders (scheduled, not manual)</td><td>DAU, Retention</td><td>Turns the udhaar radar into a money machine that runs itself.</td></tr>
+<tr><td>3</td><td>GST e-invoicing (IRN/QR) + GSTR-1/3B export</td><td>Retention</td><td>Removes the #1 churn trigger as customers scale.</td></tr>
+<tr><td>4</td><td>Tally / Zoho Books export</td><td>Retention</td><td>Keeps the CA/accounts dept from pulling users out.</td></tr>
+<tr><td>5</td><td>Procure-to-pay (PO → GRN → bill → 3-way match)</td><td>Cross-Dept</td><td>Activates the entire procurement seat (currently 0% adoption).</td></tr>
+<tr><td>6</td><td>Production scheduling + machine capacity</td><td>Cross-Dept</td><td>Converts ops from logbook to planning tool → deep daily use.</td></tr>
+<tr><td>7</td><td>Job costing → real per-job profit</td><td>Retention</td><td>Answers the owner's biggest unanswered question.</td></tr>
+<tr><td>8</td><td>Dealer/B2B ordering portal + price tiers</td><td>Team, Cross-Dept</td><td>Pulls sub-dealers in as users (network + seats).</td></tr>
+<tr><td>9</td><td>Quote follow-up automation / cadence</td><td>WAU, Retention</td><td>Stops dealers losing deals → keeps them loyal.</td></tr>
+<tr><td>10</td><td>Customer order-tracking link</td><td>Retention</td><td>Customers re-engage; sellers look professional.</td></tr>
+<tr><td>11</td><td>Credit/debit notes + returns</td><td>Retention</td><td>Removes a daily compliance workaround.</td></tr>
+<tr><td>12</td><td>Multi-godown / multi-location + transfers</td><td>Cross-Dept</td><td>Unlocks larger customers + warehouse seat.</td></tr>
+<tr><td>13</td><td>Payment gateway + auto-reconcile</td><td>DAU</td><td>Faster cash, fewer manual entries.</td></tr>
+<tr><td>14</td><td>Mobile QR scan for slab pick / stock-take</td><td>DAU (warehouse)</td><td>Gives godown staff a daily reason to open it.</td></tr>
+<tr><td>15</td><td>Offline / poor-connectivity capture</td><td>DAU</td><td>Godowns/quarries have bad signal — kills a real blocker.</td></tr>
+<tr><td>16</td><td>Leads / enquiry pipeline before quote</td><td>WAU</td><td>Sales lives in the funnel daily, not just at quote time.</td></tr>
+<tr><td>17</td><td>Rep performance / targets / leaderboard</td><td>Team</td><td>Makes the sales <em>manager</em> a daily user.</td></tr>
+<tr><td>18</td><td>In-app tasks / comments / @mentions</td><td>Team Collab</td><td>Turns shared records into actual collaboration.</td></tr>
+<tr><td>19</td><td>Weekly business digest (auto email/WhatsApp)</td><td>WAU</td><td>Re-engages the owner even on quiet weeks.</td></tr>
+<tr><td>20</td><td>WhatsApp Business API (2-way) for enquiries</td><td>DAU</td><td>Inbound enquiries land in-app → constant reason to open.</td></tr>
+</table>
+<p class="verdict">Pattern: <strong>#1, #2, #19</strong> (the app reaching out) are the cheapest and highest-leverage — they manufacture the daily trigger the product structurally lacks. Everything else deepens specific seats.</p>
+
+<!-- ============ PMF ============ -->
+<h2 id="pmf">Product-Market Fit Test — "If GraniteOS disappeared tomorrow…"</h2>
+<table>
+<tr><th>User</th><th>Answer</th><th>Why</th></tr>
+<tr><td>Owner (Rajesh)</td><td><span class="full">C — Operational disruption</span></td><td>Loses his receivables ledger, GST invoice history, and recovery insight. Reverts to Excel/diary with real pain.</td></tr>
+<tr><td>Dealer (Meena)</td><td><span class="part">B→C — Inconvenienced, trending to disruption</span></td><td>Loses her quoting speed + premium catalog differentiator; survivable but a competitive setback.</td></tr>
+<tr><td>Ops (Suresh)</td><td><span class="part">B — Mildly inconvenienced</span></td><td>Back to phone calls + whiteboard. Annoying, not breaking.</td></tr>
+<tr><td>Procurement (Anil)</td><td><span class="none">A — Wouldn't notice</span></td><td>Never depended on it.</td></tr>
+</table>
+<div class="callout"><strong>PMF read:</strong> Strong, <em>narrow</em> product-market fit — real for owners and dealers (the sell-side + money seats), absent for procurement, shallow for ops. By the Sean-Ellis bar, the owner persona would say "very disappointed" if it vanished; that's a genuine PMF beachhead. The job now is to widen the "C" answers from 1.5 personas to 3–4 by closing the seats above.</div>
+
+<!-- ============ FOUNDER ============ -->
+<h2 id="founder">Founder Report</h2>
+<div class="grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div class="card ok"><h4>Features users love</h4><ul class="mut"><li>Recovery-Rate Radar (owner's "aha")</li><li>Udhaar Radar + one-tap reminders</li><li>GST quote/invoice with WhatsApp + UPI</li><li>Slab passport + 3D + shareable catalog (dealer's weapon)</li></ul></div>
+<div class="card"><h4>Features users ignore</h4><ul class="mut"><li>AI marketing copy (novelty, then dropped)</li><li>Analytics dashboard (owner-only; others never see it)</li><li>3D viewer for pure-trade owners</li></ul></div>
+<div class="card"><h4>Features users misunderstand</h4><ul class="mut"><li>"GST Auto-Pilot" — read as filing-grade; it's an estimate</li><li>"Suppliers" — expected procurement, got CRM</li><li>Fabrication board — expected planning, got a logbook</li></ul></div>
+<div class="card warn"><h4>Features users expect but can't find</h4><ul class="mut"><li>Purchase orders / GRN</li><li>Tally export &amp; e-invoicing</li><li>Credit notes / returns</li><li>Payment &amp; follow-up reminders (automated)</li><li>Notifications / a morning dashboard</li><li>Dealer ordering portal</li></ul></div>
+<div class="card"><h4>Most likely to drive retention</h4><ul class="mut"><li>E-invoice + GST returns + Tally export</li><li>Automated reminders + daily digest</li><li>Job costing</li><li>Dealer portal</li></ul></div>
+<div class="card warn"><h4>Most likely to drive churn (by absence)</h4><ul class="mut"><li>No e-invoice at scale (owner)</li><li>No scheduling (ops)</li><li>No procurement (procurement)</li><li>No follow-up automation (dealer)</li></ul></div>
+</div>
+
+<div class="card">
+<h4>The three founder answers</h4>
+<p><b>What would make users open it every day?</b> A daily trigger the product fires itself — a morning digest + push/WhatsApp on overdue money, expiring quotes, and jobs due. Today nothing pulls them back; that's the biggest single gap between "tool" and "OS."</p>
+<p><b>What would make them recommend it to peers?</b> They already do, for the recovery radar + GST/UPI quoting + catalog. Referral is the strongest growth asset — and it's free, peer-to-peer in a tight trade. Amplify it with an in-app "share to a fellow stone owner."</p>
+<p><b>What's required to become mission-critical?</b> Become the <em>system of record</em> for money (e-invoice + returns + Tally export so they never leave for compliance), add the <em>daily trigger</em> (notifications/digest), and widen from 1.5 seats to 4 (procurement + ops planning + dealer portal). Then losing it = unable to run the business.</p>
+</div>
+
+<div class="card" style="border-color:var(--gold)">
+<h4>Final verdict — tool, platform, or operating system?</h4>
+<p style="font-size:16px"><strong>Today: a very good <span style="color:var(--gold)">tool</span>, evolving into a <span style="color:var(--gold)">platform</span> — not yet an operating system.</strong></p>
+<p>It's a <em>tool</em> because it does a few jobs (quote, invoice, collect, catalog, recovery) excellently and is opened when those jobs arise. It's becoming a <em>platform</em> for the owner and dealer, who run their sell-side and money on it and would feel real loss without it. It is <strong>not yet an operating system</strong> because (1) it doesn't fire its own daily trigger, so it can't make itself indispensable; (2) two of four core seats (procurement, ops-planning) live outside it; and (3) at the highest-intent moment — GST filing — it pushes users <em>out</em> to Tally instead of holding them.</p>
+<p class="verdict" style="margin-top:10px">Close the compliance loop, add notifications/digest, and light up procurement + production planning + a dealer portal, and GraniteOS crosses from "the app I bill from" to "the system I run my stone business on." The wedge and the love are already there — what's missing is the gravity to keep all four users inside it every day.</p>
+</div>
+
+<p class="meta" style="margin-top:36px">Simulated in-character across 12 months, grounded in source inspection of <code>D:\vyaparwerk\graniteos</code>. Behaviours reflect features that exist (credited) and the absence of features that don't (the cause of every churn scenario above).</p>
+
+</div>
+</body>
+</html>

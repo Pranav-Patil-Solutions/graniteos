@@ -55,7 +55,12 @@ export function TrendChart({
         )}
       </div>
 
-      <div className="mt-3 h-44">
+      {/* role=img + aria-label give AT users a text summary of the chart (WCAG 1.1.1) */}
+      <div
+        className="mt-3 h-44"
+        role="img"
+        aria-label={`${title} trend chart showing ${data.length} data point${data.length !== 1 ? "s" : ""}${data.length > 0 ? ` from ${data[0].label} to ${data[data.length - 1].label}` : ""}`}
+      >
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 8, right: 4, bottom: 0, left: 4 }}>
             <defs>

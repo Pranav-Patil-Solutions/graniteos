@@ -13,6 +13,7 @@ export default function OrderInvoiceButton({
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
 
   if (invoiceId) {
     return (
@@ -26,21 +27,26 @@ export default function OrderInvoiceButton({
   }
 
   return (
-    <button
-      disabled={busy}
-      onClick={async () => {
-        setBusy(true);
-        const r = await createInvoiceFromOrder(orderId);
-        if ('ok' in r) {
-          router.push(`/invoices/${r.id}`);
-          router.refresh();
-        } else {
-          setBusy(false);
-        }
-      }}
-      className="rounded-lg bg-gold/15 text-gold border border-gold/40 px-2.5 py-1.5 text-xs font-bold disabled:opacity-60"
-    >
-      {busy ? "..." : "Create invoice"}
-    </button>
+    <div className="flex flex-col items-end gap-1">
+      <button
+        disabled={busy}
+        onClick={async () => {
+          setBusy(true);
+          setErr("");
+          const r = await createInvoiceFromOrder(orderId);
+          if ("ok" in r) {
+            router.push(`/invoices/${r.id}`);
+            router.refresh();
+          } else {
+            setErr(r.error ?? "Couldn't create the invoice.");
+            setBusy(false);
+          }
+        }}
+        className="rounded-lg bg-gold/15 text-gold border border-gold/40 px-2.5 py-1.5 text-xs font-bold disabled:opacity-60"
+      >
+        {busy ? "..." : "Create invoice"}
+      </button>
+      {err && <p className="text-[11px] text-red-400 max-w-[12rem] text-right">{err}</p>}
+    </div>
   );
 }

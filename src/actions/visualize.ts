@@ -26,6 +26,14 @@ function rateLimited(ip: string): boolean {
   return false;
 }
 
+// Prompt-injection guard for this public, unauthenticated endpoint. Stone names and
+// surfaces are plain words (e.g. "Black Galaxy", "kitchen platform"), so we strip
+// everything except letters/spaces/hyphens — this removes newlines, backticks,
+// braces, "###"-style delimiters and any instruction the caller tries to smuggle in.
+function cleanPromptField(s: string, max = 40): string {
+  return (s || "").replace(/[^a-zA-Z\s-]/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
+}
+
 export type VisualizeResult =
   | { ok: true; image: string } // data URL
   | { error: string };
@@ -53,19 +61,31 @@ export async function visualizeStone(input: {
   }
   if (!input.imageBase64) return { error: "No photo provided." };
 
+  // Sanitise free-text fields before they reach the model prompt (anti prompt-injection).
+  const surface = cleanPromptField(input.surface);
+  const material = cleanPromptField(input.material);
+  if (!surface || !material)
+    return { error: "Please choose a surface and a stone before generating a preview." };
+
   // Abuse guards (public, unauthenticated, paid call).
   if (Math.floor(input.imageBase64.length * 0.75) > MAX_IMG_BYTES)
     return { error: "That photo is too large — please use one under ~6 MB." };
-  const ip = ((await headers()).get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
+  // NOTE: in-memory per-IP limiter is best-effort on serverless; a KV/Upstash limiter
+  // is the production-grade upgrade (tracked as a HIGH item in the audit report).
+  const hdrs = await headers();
+  const ip =
+    (hdrs.get("x-forwarded-for") ?? "").split(",")[0].trim() ||
+    (hdrs.get("x-real-ip") ?? "").trim() ||
+    "unknown";
   if (rateLimited(ip))
     return { error: "Too many previews from this device — please wait a few minutes." };
 
   const prompt =
-    `Edit this real photo of a room. Replace ONLY the ${input.surface} surface so it is made of ` +
-    `polished ${input.material} (an Indian granite/marble). ` +
+    `Edit this real photo of a room. Replace ONLY the ${surface} surface so it is made of ` +
+    `polished ${material} (an Indian granite/marble). ` +
     `Keep everything else in the photo exactly the same — same layout, objects, people, ` +
     `camera angle, perspective and lighting. Match the stone's reflections and shadows to the ` +
-    `existing light in the room, and keep the veining at a realistic scale for a ${input.surface}. ` +
+    `existing light in the room, and keep the veining at a realistic scale for a ${surface}. ` +
     `Photorealistic result. Return only the edited image.`;
 
   try {

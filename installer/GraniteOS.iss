@@ -9,7 +9,7 @@
 
 #define AppName      "GraniteOS"
 #define AppVersion   "1.0"
-#define AppPublisher "Vyaparwerk"
+#define AppPublisher "GraniteOS"
 #define AppURL       "https://graniteos.vercel.app"
 ; Edge app-mode command — two common install paths handled via Check functions
 #define EdgeExe32    "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"

@@ -2,12 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { requireSession } from "@/lib/auth";
+import { requireEditAccess } from "@/lib/access-control-guard";
 import { can } from "@/lib/permissions";
 import { jobSchema, FAB_STAGES } from "@/lib/validation";
 
 export async function createJob(input: unknown) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("fabrication");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "manageProduction")) return { error: "You don't have permission to manage production." };
   const parsed = jobSchema.safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
@@ -31,11 +33,14 @@ export async function createJob(input: unknown) {
   if (error) return { error: error.message };
 
   revalidatePath("/fabrication");
+  revalidatePath("/factory");
   return { ok: true as const };
 }
 
 export async function advanceStage(jobId: string, current: string) {
-  const me = await requireSession();
+  const guard = await requireEditAccess("fabrication");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "manageProduction")) return { error: "You don't have permission to manage production." };
   const idx = FAB_STAGES.indexOf(current as (typeof FAB_STAGES)[number]);
   const next = FAB_STAGES[Math.min(idx + 1, FAB_STAGES.length - 1)];
@@ -46,11 +51,14 @@ export async function advanceStage(jobId: string, current: string) {
     .eq("id", jobId);
   if (error) return { error: error.message };
   revalidatePath("/fabrication");
+  revalidatePath("/factory");
   return { ok: true as const };
 }
 
 export async function setQC(jobId: string, status: "passed" | "failed") {
-  const me = await requireSession();
+  const guard = await requireEditAccess("fabrication");
+  if ("error" in guard) return guard;
+  const me = guard.user;
   if (!can(me.role, "manageProduction")) return { error: "You don't have permission to manage production." };
   const supabase = await createClient();
   // pass → move on to ready; fail → send back to polishing for rework
@@ -61,5 +69,6 @@ export async function setQC(jobId: string, status: "passed" | "failed") {
     .eq("id", jobId);
   if (error) return { error: error.message };
   revalidatePath("/fabrication");
+  revalidatePath("/factory");
   return { ok: true as const };
 }

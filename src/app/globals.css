@@ -17,7 +17,7 @@
   --c-slate-200: 226 232 240;
   --c-slate-300: 203 213 225;
   --c-slate-400: 148 163 184;
-  --c-slate-500: 100 116 139;
+  --c-slate-500: 112 128 152; /* bumped for ≥4.5:1 on #0b0e11 (WCAG 1.4.3) */
   --c-slate-600: 71 85 105;
   /* graphite = surfaces */
   --c-graphite-900: 11 14 17;
@@ -47,7 +47,7 @@
   --bg-glow: #1c2630;
   --input-border: #232a31;
   --input-ink: #e8e6e1;
-  --input-placeholder: #5c6470;
+  --input-placeholder: #787e8a; /* bumped for ≥4.5:1 on #0b0e11 (WCAG 1.4.3) */
   --scrollbar: #232a31;
 
   /* ── Premium Stone design tokens (redesign spec §2, unchanged) ── */
@@ -61,6 +61,7 @@
   --text-on-light-muted: #5c636b;
   --gold: #c8a24b;
   --gold-soft: #e4c97e;
+  --btn-outline-ink: #c9a24b; /* outline-button rest text — flips darker in light */
   --green: #7c8c5d;
   --positive: #1f8a70;
   --negative: #d96a5b;
@@ -107,6 +108,7 @@ html.light {
   --input-ink: #14181c;
   --input-placeholder: #8a8f98;
   --scrollbar: #c9c4b8;
+  --btn-outline-ink: #87661c; /* darker gold for 4.5:1 on the light background */
 }
 
 html,
@@ -124,7 +126,7 @@ body {
   --c-slate-200: 226 232 240;
   --c-slate-300: 203 213 225;
   --c-slate-400: 148 163 184;
-  --c-slate-500: 100 116 139;
+  --c-slate-500: 112 128 152; /* matches :root (WCAG 1.4.3) */
   --c-slate-600: 71 85 105;
   --c-graphite-900: 11 14 17;
   --c-graphite-800: 17 22 27;
@@ -195,7 +197,15 @@ input::placeholder {
   color: var(--input-placeholder);
 }
 button {
-  min-height: 44px;
+  min-height: 48px; /* mobile touch-target floor (Material 48dp); compact controls opt out with !min-h-0 */
+}
+
+/* Tactile press feedback for raw buttons (the ~130 that don't already animate).
+   Low specificity (0,1,1): framer-motion CTAs override it with their inline
+   whileTap transform, and components with their own active:scale-* (0,2,0) win.
+   Disabled buttons never receive :active, so they're untouched. */
+button:active {
+  transform: scale(0.97);
 }
 
 /* Premium scrollbar */
@@ -206,3 +216,27 @@ button {
   background: var(--scrollbar);
   border-radius: 8px;
 }
+
+/* ── Light-mode button & control contrast fixes ──────────────────────────────
+   Scoped to html.light ONLY — dark mode is untouched. The brand colour vars
+   invert for surfaces (text-white → ink, bg-white/.04 → dark tint), which left
+   some solid + ghost buttons low-contrast. These re-pin buttons/borders so text
+   meets ~4.5:1 and outlines stay visible on the warm off-white background.
+   Specificity (html.light .class = 0,2,0) beats the Tailwind utilities. */
+
+/* Solid PRIMARY (green) buttons — keep WHITE text on green.
+   Without this, text-white inverts to dark ink → dark-on-dark green (~3:1). */
+html.light .bg-granite-green2 { color: #fff; }
+
+/* Solid GOLD buttons — bright gold background + dark ink (on-brand, ~7:1).
+   Light-mode gold is muted, so the inverted white-on-muted-gold fails 4.5:1. */
+html.light .bg-gold,
+html.light .bg-gold\/90 { background-color: #c8a24b; color: #1a1407; }
+
+/* Ghost / outline / dashed controls — make borders clearly visible. */
+html.light .border-graphite-600 { border-color: #d1c9bc; }
+html.light .border-graphite-500 { border-color: #c2b8a6; }
+html.light .border-gold\/40 { border-color: rgba(150, 113, 38, 0.55); }
+
+/* Gold text / labels — darken slightly to clear 4.5:1 on the light background. */
+html.light .text-gold { color: #87661c; }

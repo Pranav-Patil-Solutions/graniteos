@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraniteOS — Visual Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0b0d0f; --card:#15191d; --line:#252b31;
+    --ink:#e8ebee; --mut:#9aa4ad; --dim:#6b757d;
+    --gold:#c8a24a; --green:#4a9d6b; --amber:#d99a2b; --red:#c75c5c; --blue:#5b8fb0; --purple:#9b7fc4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 600px at 70% -10%,#15191f,#0b0d0f);color:var(--ink);
+    font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:44px 26px 90px}
+  h1{font-size:32px;letter-spacing:-.5px;margin:0 0 4px;background:linear-gradient(90deg,#fff,var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .sub{color:var(--mut);font-size:15px;max-width:760px}
+  .meta{color:var(--dim);font-size:12.5px;margin-top:8px}
+  h2{font-size:15px;text-transform:uppercase;letter-spacing:.8px;color:var(--gold);margin:42px 0 4px}
+  .h2sub{color:var(--dim);font-size:12.5px;margin:0 0 14px}
+  .grid{display:grid;gap:16px}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .card{background:linear-gradient(180deg,#16191e,#13161a);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+  .card h3{margin:0 0 2px;font-size:14px;color:#fff}
+  .card .cap{color:var(--dim);font-size:11.5px;margin:0 0 12px}
+  .kpi b{display:block;font-size:40px;line-height:1;color:var(--gold);font-weight:700}
+  .kpi small{color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  .kpi .bar{height:6px;border-radius:6px;background:#0c0e10;margin-top:10px;overflow:hidden}
+  .kpi .bar i{display:block;height:100%;border-radius:6px}
+  canvas{max-height:300px}
+  .tall canvas{max-height:340px}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--mut);margin-top:8px}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  .pill{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--line);color:var(--mut);margin:2px 4px 2px 0}
+  .trig{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+  .trig:last-child{border:0}
+  .badge{font-size:10.5px;padding:2px 8px;border-radius:20px;font-weight:600}
+  .b-no{background:#2a1414;color:var(--red);border:1px solid #4a2020}
+  .b-mid{background:#2a2314;color:var(--amber);border:1px solid #4a3d20}
+  .b-yes{background:#142a1c;color:var(--green);border:1px solid #205a3a}
+  @media(max-width:880px){.g2,.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.g2,.g3,.g4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>GraniteOS — Visual Dashboard</h1>
+<p class="sub">The stakeholder panel + 12-month user simulation, as charts. Personas: <b style="color:#5b8fb0">Owner</b> · <b style="color:#4a9d6b">Dealer</b> · <b style="color:#d99a2b">Ops</b> · <b style="color:#c75c5c">Procurement</b>.</p>
+<p class="meta">Grounded in source at <code>D:\vyaparwerk\graniteos</code> · Companion to the two report HTML files · 2026-06-10</p>
+
+<!-- KPI ROW -->
+<h2>Investor scorecard</h2>
+<p class="h2sub">From the stakeholder panel — out of 10.</p>
+<div class="grid g4">
+  <div class="card kpi"><small>Product</small><b>6.0</b><div class="bar"><i style="width:60%;background:var(--green)"></i></div></div>
+  <div class="card kpi"><small>Investment</small><b>5.0</b><div class="bar"><i style="width:50%;background:var(--amber)"></i></div></div>
+  <div class="card kpi"><small>Go-to-market</small><b>2.5</b><div class="bar"><i style="width:25%;background:var(--red)"></i></div></div>
+  <div class="card kpi"><small>PMF (beachhead)</small><b style="font-size:26px;line-height:1.4">Narrow<br>but real</b></div>
+</div>
+
+<!-- PERSONA RADAR + SCORES -->
+<h2>Persona engagement profile</h2>
+<p class="h2sub">Five dimensions, 0–10. The shape tells the story: Owner &amp; Dealer fill the space; Procurement collapses to the centre.</p>
+<div class="grid g2">
+  <div class="card tall"><h3>Engagement radar</h3><p class="cap">Stickiness · Habit · Dependency · Referral · Retention</p><canvas id="radar"></canvas></div>
+  <div class="card tall"><h3>Month-6 scores</h3><p class="cap">Stickiness / Habit-formation / Business-dependency (1–10)</p><canvas id="scores"></canvas></div>
+</div>
+
+<!-- TRAJECTORY -->
+<h2>12-month engagement trajectory</h2>
+<p class="h2sub">Composite engagement (0–10) across onboarding → M3 → M6 → M12. Owner climbs, Dealer holds, Ops slides, Procurement flatlines.</p>
+<div class="card tall"><canvas id="traj" style="max-height:320px"></canvas></div>
+
+<!-- RETENTION + PMF -->
+<h2>Retention &amp; product-market fit</h2>
+<div class="grid g2">
+  <div class="card tall"><h3>12-month retention probability</h3><p class="cap">Bar colour = churn risk (green low → red high)</p><canvas id="ret"></canvas></div>
+  <div class="card tall"><h3>"If it vanished tomorrow"</h3><p class="cap">A: not notice · B: inconvenienced · C: operational disruption · D: can't operate</p><canvas id="pmf"></canvas>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--red)"></span>A Owner-none</span>
+      <span><span class="dot" style="background:var(--amber)"></span>B Ops</span>
+      <span><span class="dot" style="background:var(--blue)"></span>B→C Dealer</span>
+      <span><span class="dot" style="background:var(--green)"></span>C Owner</span>
+    </div>
+  </div>
+</div>
+
+<!-- DOMAIN READINESS -->
+<h2>What's actually built — domain readiness</h2>
+<p class="h2sub">% of the workflow a real user can run inside GraniteOS today, by domain. The cliff after "Money" is the roadmap.</p>
+<div class="card tall"><canvas id="domain" style="max-height:420px"></canvas></div>
+
+<!-- HABIT MATRIX + FEATURE IMPACT -->
+<h2>Habit formation &amp; the daily trigger</h2>
+<div class="grid g2">
+  <div class="card"><h3>Which habits form?</h3><p class="cap">Strength the product creates, 0–10</p><canvas id="habit"></canvas></div>
+  <div class="card">
+    <h3>The trigger gap</h3><p class="cap">Does the app pull users back on its own?</p>
+    <div class="trig">Daily trigger <span style="flex:1"></span><span class="badge b-no">NONE — app fires nothing</span></div>
+    <div class="trig">Weekly trigger <span style="flex:1"></span><span class="badge b-no">NONE</span></div>
+    <div class="trig">Monthly trigger <span style="flex:1"></span><span class="badge b-mid">Implicit (GST) — but pushes users OUT to Tally</span></div>
+    <div class="trig">Notifications / push <span style="flex:1"></span><span class="badge b-no">Not built</span></div>
+    <div class="trig">Automated reminders <span style="flex:1"></span><span class="badge b-no">Manual WhatsApp only</span></div>
+    <div class="trig">Offline capture <span style="flex:1"></span><span class="badge b-no">Online-only</span></div>
+    <div class="trig">Data gravity / lock-in <span style="flex:1"></span><span class="badge b-mid">Medium — invoice + udhaar history</span></div>
+    <p class="cap" style="margin-top:12px;color:var(--mut)">The #1 structural gap: nothing the product does brings a user back. Habit rides on personal discipline, not product pull.</p>
+  </div>
+</div>
+
+<!-- FEATURE IMPACT -->
+<h2>Top features to increase daily usage</h2>
+<p class="h2sub">Ranked by impact. The top three (in gold) <em>manufacture the missing daily trigger</em> — cheapest, highest leverage.</p>
+<div class="card tall"><canvas id="feat" style="max-height:480px"></canvas></div>
+
+<p class="meta" style="margin-top:34px">Charts render from the two grounded reports. Open <code>stakeholder-panel-review.html</code> and <code>user-simulation-12months.html</code> for the full narrative behind every number.</p>
+
+</div>
+
+<script>
+const C={blue:'#5b8fb0',green:'#4a9d6b',amber:'#d99a2b',red:'#c75c5c',gold:'#c8a24a',purple:'#9b7fc4',mut:'#9aa4ad',line:'#252b31',ink:'#e8ebee'};
+Chart.defaults.color=C.mut;
+Chart.defaults.font.family="-apple-system,Segoe UI,Roboto,sans-serif";
+Chart.defaults.font.size=11.5;
+const grid={color:'rgba(255,255,255,.06)'};
+const noLeg={legend:{display:false}};
+
+// RADAR
+new Chart(radar,{type:'radar',data:{
+ labels:['Stickiness','Habit','Dependency','Referral','Retention'],
+ datasets:[
+  {label:'Owner',data:[8,6,7,9,8.5],borderColor:C.blue,backgroundColor:'rgba(91,143,176,.18)',borderWidth:2,pointBackgroundColor:C.blue},
+  {label:'Dealer',data:[7,6,6,8,7.5],borderColor:C.green,backgroundColor:'rgba(74,157,107,.15)',borderWidth:2,pointBackgroundColor:C.green},
+  {label:'Ops',data:[5,5,4,3,6],borderColor:C.amber,backgroundColor:'rgba(217,154,43,.12)',borderWidth:2,pointBackgroundColor:C.amber},
+  {label:'Procurement',data:[2,2,2,1,2.5],borderColor:C.red,backgroundColor:'rgba(199,92,92,.12)',borderWidth:2,pointBackgroundColor:C.red}
+ ]},
+ options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12}}},
+  scales:{r:{min:0,max:10,grid,angleLines:{color:'rgba(255,255,255,.08)'},pointLabels:{color:C.ink,font:{size:11}},ticks:{display:false,stepSize:2}}}}});
+
+// SCORES grouped bar
+new Chart(scores,{type:'bar',data:{
+ labels:['Owner','Dealer','Ops','Procurement'],
+ datasets:[
+  {label:'Stickiness',data:[8,7,5,2],backgroundColor:C.blue,borderRadius:4},
+  {label:'Habit',data:[6,6,5,2],backgroundColor:C.gold,borderRadius:4},
+  {label:'Dependency',data:[7,6,4,2],backgroundColor:C.green,borderRadius:4}
+ ]},
+ options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12}}},
+  scales:{x:{grid:{display:false}},y:{min:0,max:10,grid,ticks:{stepSize:2}}}}});
+
+// TRAJECTORY
+new Chart(traj,{type:'line',data:{
+ labels:['Month 1','Month 3','Month 6','Month 12'],
+ datasets:[
+  {label:'Owner',data:[6,7,8,8.5],borderColor:C.blue,backgroundColor:C.blue,tension:.35,borderWidth:3,pointRadius:4},
+  {label:'Dealer',data:[6,7,7,7],borderColor:C.green,backgroundColor:C.green,tension:.35,borderWidth:3,pointRadius:4},
+  {label:'Ops',data:[5,5,5,4.5],borderColor:C.amber,backgroundColor:C.amber,tension:.35,borderWidth:3,pointRadius:4},
+  {label:'Procurement',data:[3,2,2,1.5],borderColor:C.red,backgroundColor:C.red,tension:.35,borderWidth:3,pointRadius:4,borderDash:[5,4]}
+ ]},
+ options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:14}}},
+  scales:{x:{grid:{display:false}},y:{min:0,max:10,grid,title:{display:true,text:'Engagement (0–10)'}}}}});
+
+// RETENTION
+new Chart(ret,{type:'bar',data:{
+ labels:['Owner','Dealer','Ops','Procurement'],
+ datasets:[{data:[85,75,60,25],backgroundColor:[C.green,'#6aa86a',C.amber,C.red],borderRadius:6}]},
+ options:{indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.x+'% retention'}}},
+  scales:{x:{min:0,max:100,grid,ticks:{callback:v=>v+'%'}},y:{grid:{display:false}}}}});
+
+// PMF doughnut (position on A/B/C scale)
+new Chart(pmf,{type:'doughnut',data:{
+ labels:['Owner → C (disruption)','Dealer → B/C','Ops → B (mild)','Procurement → A (none)'],
+ datasets:[{data:[1,1,1,1],backgroundColor:[C.green,C.blue,C.amber,C.red],borderColor:'#13161a',borderWidth:3}]},
+ options:{cutout:'58%',plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:8,font:{size:10.5}}}}}});
+
+// DOMAIN readiness
+const dom=[['GST invoicing',90],['Sales / quoting',85],['Inventory + Recovery Radar',80],['CRM / parties',70],['Money / collections',70],['Catalog / customer experience',65],['Analytics / reporting',55],['Production / fabrication',35],['Finance & compliance (e-invoice, returns, books)',20],['Multi-location',10],['Procurement (PO/GRN)',5],['Integrations / API',5],['Automation / notifications',5]];
+new Chart(domain,{type:'bar',data:{
+ labels:dom.map(d=>d[0]),
+ datasets:[{data:dom.map(d=>d[1]),borderRadius:5,
+   backgroundColor:dom.map(d=>d[1]>=70?C.green:d[1]>=40?C.amber:C.red)}]},
+ options:{indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.x+'% of workflow covered'}}},
+  scales:{x:{min:0,max:100,grid,ticks:{callback:v=>v+'%'}},y:{grid:{display:false},ticks:{font:{size:11}}}}}});
+
+// HABIT types
+new Chart(habit,{type:'bar',data:{
+ labels:['Utility','Workflow','Reporting','Team collab','Decision-making'],
+ datasets:[{data:[8,6,5,3,5],borderRadius:5,
+   backgroundColor:['#4a9d6b','#6a9a8a','#d99a2b','#c75c5c','#d99a2b']}]},
+ options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y+'/10'}}},
+  scales:{x:{grid:{display:false},ticks:{font:{size:10.5}}},y:{min:0,max:10,grid,ticks:{stepSize:2}}}}});
+
+// FEATURE IMPACT (top 12)
+const feat=[['Push / WhatsApp notifications + morning digest',100],['Automated payment reminders',95],['GST e-invoicing + GSTR export',92],['Tally / Zoho Books export',86],['Procure-to-pay (PO→GRN→match)',82],['Production scheduling + capacity',78],['Job costing → per-job profit',74],['Dealer / B2B ordering portal + price tiers',70],['Quote follow-up automation',66],['Customer order-tracking link',60],['Credit notes / returns',56],['Multi-godown + transfers',52]];
+new Chart(document.getElementById('feat'),{type:'bar',data:{
+ labels:feat.map(f=>f[0]),
+ datasets:[{data:feat.map(f=>f[1]),borderRadius:5,
+   backgroundColor:feat.map((f,i)=>i<3?C.gold:i<7?C.blue:'#3f5e72')}]},
+ options:{indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'Impact '+c.parsed.x}}},
+  scales:{x:{min:0,max:105,grid,ticks:{display:false}},y:{grid:{display:false},ticks:{font:{size:11}}}}}});
+</script>
+</body>
+</html>

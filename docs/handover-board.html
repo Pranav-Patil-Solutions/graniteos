@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraniteOS — Market Readiness × Customer Handover</title>
+<style>
+  :root{--bg:#0c0a08;--card:rgba(255,255,255,.04);--stroke:rgba(255,255,255,.10);--txt:#f4f1ec;--dim:#a39b8e;--gold:#e0b07a;--good:#34d399;--red:#f87171;--amber:#f5a524;--info:#6c8cff}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(1200px 700px at 80% -12%,rgba(52,211,153,.14),transparent 58%),radial-gradient(900px 600px at -8% 110%,rgba(201,139,75,.16),transparent 55%),var(--bg);color:var(--txt);min-height:100vh;padding:46px 24px 80px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto}
+  .stamp{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--dim);border:1px solid var(--stroke);padding:6px 12px;border-radius:999px;background:var(--card)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+  h1{margin-top:18px;font-size:clamp(26px,4vw,38px);letter-spacing:-.5px}
+  h1 span{color:var(--gold)}
+  .sub{color:var(--dim);margin-top:8px;font-size:15px;max-width:760px;line-height:1.6}
+  .verdict{margin-top:26px;border:1px solid rgba(224,176,122,.4);background:linear-gradient(180deg,rgba(224,176,122,.10),rgba(255,255,255,.02));border-radius:22px;padding:26px 28px;display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+  .score{font-size:54px;font-weight:800;color:var(--gold);line-height:1}
+  .score small{font-size:18px;color:var(--dim);font-weight:600}
+  .verdict .vt{flex:1;min-width:280px}
+  .verdict .vt b{font-size:19px}
+  .verdict .vt p{color:var(--dim);font-size:14px;margin-top:6px;line-height:1.6}
+  .minis{display:flex;gap:12px;flex-wrap:wrap}
+  .mini{border:1px solid var(--stroke);background:var(--card);border-radius:14px;padding:12px 18px;text-align:center;min-width:104px}
+  .mini b{font-size:22px;display:block}
+  .mini span{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+  .mini.g b{color:var(--good)} .mini.a b{color:var(--amber)} .mini.r b{color:var(--red)}
+  .sec-h{display:flex;align-items:center;gap:14px;margin:42px 0 18px;font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+  .sec-h::after{content:"";flex:1;height:1px;background:var(--stroke)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+  .cat{border:1px solid var(--stroke);background:var(--card);border-radius:16px;padding:18px;border-top-width:3px}
+  .cat.ok{border-top-color:var(--good)} .cat.warn{border-top-color:var(--amber)} .cat.bad{border-top-color:var(--red)}
+  .cat h3{font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .badge{font-size:10px;font-weight:700;letter-spacing:.08em;border-radius:6px;padding:3px 8px;text-transform:uppercase;white-space:nowrap}
+  .b-ready{background:rgba(52,211,153,.15);color:var(--good)} .b-partial{background:rgba(245,165,36,.15);color:var(--amber)} .b-none{background:rgba(248,113,113,.15);color:var(--red)}
+  .cat p{font-size:13px;color:var(--dim);margin-top:10px;line-height:1.6}
+  .blockers{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+  .blk{border:1px solid rgba(248,113,113,.35);background:rgba(248,113,113,.05);border-radius:16px;padding:20px}
+  .blk.medium{border-color:rgba(245,165,36,.35);background:rgba(245,165,36,.05)}
+  .blk .no{font-size:30px;font-weight:800;color:var(--red)} .blk.medium .no{color:var(--amber)}
+  .blk h3{font-size:16px;margin-top:6px}
+  .blk p{font-size:13px;color:var(--dim);margin-top:8px;line-height:1.6}
+  .blk .fix{margin-top:12px;font-size:12px;color:var(--good);font-weight:600}
+  .strong{display:flex;gap:12px;flex-wrap:wrap}
+  .chip{border:1px solid rgba(52,211,153,.3);background:rgba(52,211,153,.06);border-radius:999px;padding:9px 18px;font-size:13px}
+  .chip b{color:var(--good)}
+  .journey{position:relative;margin-top:6px}
+  .stage{display:flex;gap:18px;padding:0 0 26px 0;position:relative}
+  .stage::before{content:"";position:absolute;left:21px;top:46px;bottom:0;width:2px;background:linear-gradient(180deg,var(--gold),transparent)}
+  .stage:last-child::before{display:none}
+  .snum{width:44px;height:44px;border-radius:50%;border:1px solid rgba(224,176,122,.5);background:rgba(224,176,122,.1);color:var(--gold);font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .sbody{flex:1;border:1px solid var(--stroke);background:var(--card);border-radius:16px;padding:18px 20px}
+  .sbody h3{font-size:16px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+  .sbody h3 em{font-style:normal;font-size:12px;color:var(--dim);font-weight:500}
+  .sbody ul{margin:10px 0 0 18px;font-size:13.5px;color:var(--dim);line-height:1.85}
+  .sbody li b{color:var(--txt);font-weight:600}
+  .sbody .key{color:var(--gold);font-weight:600}
+  .honesty{margin-top:24px;border:1px solid rgba(108,140,255,.35);background:rgba(108,140,255,.06);border-radius:16px;padding:20px 22px}
+  .honesty h3{font-size:15px;color:var(--info)}
+  .honesty p{font-size:13px;color:var(--dim);margin-top:8px;line-height:1.7}
+  .path{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+  .step{border:1px solid rgba(224,176,122,.35);background:rgba(224,176,122,.05);border-radius:16px;padding:20px}
+  .step .wk{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:700}
+  .step h3{font-size:16px;margin-top:8px}
+  .step p{font-size:13px;color:var(--dim);margin-top:8px;line-height:1.6}
+  .foot{margin-top:46px;font-size:12px;color:var(--dim);text-align:center;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stamp"><span class="dot"></span>GraniteOS · audited 12 Jun 2026 · evidence-based (repo + boards + live site)</div>
+  <h1>Market Readiness <span>×</span> Customer Handover</h1>
+  <p class="sub">One board to answer two questions: <b>can I sell this yet?</b> and <b>how do I hand it to a customer?</b> Every status below is backed by code in the repo — not opinion.</p>
+
+  <div class="verdict">
+    <div class="score">6<small>/10</small></div>
+    <div class="vt">
+      <b>Beta-ready today. Not yet charge-ready at scale.</b>
+      <p>A complete, secure, GST-correct stone-trade SaaS hiding behind a blank front door. Onboard beta customers this week; fix three blockers to take money.</p>
+    </div>
+    <div class="minis">
+      <div class="mini g"><b>9/10</b><span>Product</span></div>
+      <div class="mini g"><b>9/10</b><span>Security</span></div>
+      <div class="mini a"><b>6/10</b><span>Legal</span></div>
+      <div class="mini r"><b>3/10</b><span>GTM</span></div>
+    </div>
+  </div>
+
+  <div class="sec-h">Readiness Scorecard</div>
+  <div class="grid">
+    <div class="cat ok"><h3>GST Invoicing <span class="badge b-ready">Strong</span></h3><p>Rule-46 compliant: per-line HSN, CGST/SGST/IGST split, GSTIN validation, place-of-supply, FY numbering. Tighter than the competition ships.</p></div>
+    <div class="cat ok"><h3>Product Core <span class="badge b-ready">Wedge live</span></h3><p>Stock → quote → order → fabrication → invoice → payment, all real Supabase data. Recovery Radar, Udhaar Radar, Slab Passport + 3D working.</p></div>
+    <div class="cat ok"><h3>Onboarding <span class="badge b-ready">Self-serve</span></h3><p>Setup wizard creates the tenant; Excel bulk import for customers, suppliers, products, blocks, slabs. Handover is a 2-hour job.</p></div>
+    <div class="cat ok"><h3>Security <span class="badge b-ready">Audited</span></h3><p>RLS tenant isolation, 4-role gates on all mutations, CSP + HSTS, rate-limited AI endpoints. All 4 audit findings fixed. 41 unit + 10 e2e tests green.</p></div>
+    <div class="cat warn"><h3>Legal <span class="badge b-partial">Finalize</span></h3><p>DPDP-aligned Privacy + Terms drafted and routed — but entity, jurisdiction and Grievance Officer are still placeholders. Lawyer sign-off pending.</p></div>
+    <div class="cat warn"><h3>Ops <span class="badge b-partial">Beta-grade</span></h3><p>Supabase backups + beta login gate work; no error monitoring (Sentry), no status page, OTP needs a production SMS provider for scale.</p></div>
+    <div class="cat bad"><h3>Payments <span class="badge b-none">None</span></h3><p>No gateway. Manual UPI/bank recording only. Cannot collect subscriptions or auto-reconcile receipts.</p></div>
+    <div class="cat bad"><h3>Storefront / GTM <span class="badge b-none">Invisible</span></h3><p>Root URL is a login wall. No public homepage, pricing, or demo funnel. Nobody can find or evaluate the product.</p></div>
+  </div>
+
+  <div class="sec-h">Top 3 Blockers Before Charging Money</div>
+  <div class="blockers">
+    <div class="blk"><div class="no">1</div><h3>No payment gateway</h3><p>Razorpay/PayU absent — no subscription collection, no reconciliation. Manual UPI works only for the first handful of customers.</p><div class="fix">Fix: wire Razorpay + plan gating · ~2 weeks</div></div>
+    <div class="blk"><div class="no">2</div><h3>Login wall = 100% drop-off</h3><p>The stakeholder panel called the public landing page the single highest-ROI fix. GTM scored 2.5/10 purely because the product is invisible.</p><div class="fix">Fix: landing + pricing + "Get a Demo" · ~1 week</div></div>
+    <div class="blk medium"><div class="no">3</div><h3>Legal placeholders</h3><p>Terms/Privacy still read “[your registered place of business]” and “[Grievance Officer name]”. No entity on paper = no clean invoice to a customer.</p><div class="fix">Fix: entity details + lawyer sign-off · ~1 week, parallel</div></div>
+  </div>
+
+  <div class="sec-h">Surprisingly Strong</div>
+  <div class="strong">
+    <div class="chip"><b>Recovery-Rate Radar</b> — yield per block; no ERP in the category tracks this</div>
+    <div class="chip"><b>GST engine</b> — production-grade multi-rate invoicing</div>
+    <div class="chip"><b>Mobile-first UX</b> — built for a godown operator on a budget phone</div>
+    <div class="chip"><b>Not vaporware</b> — 16 migrations, 14 tables, tests green, live on Vercel</div>
+  </div>
+
+  <div class="sec-h">Customer Handover Journey</div>
+  <div class="journey">
+    <div class="stage"><div class="snum">0</div><div class="sbody">
+      <h3>One-time prep <em>before the FIRST paying customer</em></h3>
+      <ul><li>Fill legal placeholders + lawyer sign-off</li><li><b>Decide the price — one number</b></li><li>WhatsApp Business number as support channel</li><li>Add customer phones to the beta login gate (until production SMS)</li><li>Collect via UPI/bank against a proper GST invoice from <b>your</b> entity</li></ul>
+    </div></div>
+    <div class="stage"><div class="snum">1</div><div class="sbody">
+      <h3>Demo <em>30 min</em></h3>
+      <ul><li>Show the wedge, not features: <b>Recovery Radar → Udhaar Radar → Slab Passport</b></li><li class="key">Close: "Send me your Excel files — you're live by Friday."</li></ul>
+    </div></div>
+    <div class="stage"><div class="snum">2</div><div class="sbody">
+      <h3>Handover day <em>~2 hours</em></h3>
+      <ul><li class="key">Get their data files BEFORE the meeting — the #1 delay</li><li>Setup wizard → their own isolated tenant (company, GSTIN, city)</li><li>Excel bulk import: customers, suppliers, products, blocks, slabs</li><li>Add team with roles: owner / finance / operations / fabrication supervisor</li><li><b>Acceptance test together:</b> one real quote → order → tax invoice with THEIR GSTIN, checked against their accountant. This builds more trust than any feature tour.</li></ul>
+    </div></div>
+    <div class="stage"><div class="snum">3</div><div class="sbody">
+      <h3>Training <em>90 min, by role</em></h3>
+      <ul><li><b>Owner:</b> analytics, Udhaar Radar, stock value</li><li><b>Finance:</b> invoices, payment recording, receivables</li><li><b>Operations:</b> stock, quotes, catalog share</li><li><b>Supervisor:</b> mobile fabrication board on their own phone</li></ul>
+    </div></div>
+    <div class="stage"><div class="snum">4</div><div class="sbody">
+      <h3>Go-live + first 30 days</h3>
+      <ul><li>First real invoice checked by their accountant · first WhatsApp udhaar reminder sent</li><li>Weekly 5-min WhatsApp check-in · fix friction within 48h</li><li><b>Usage = retention:</b> watch weekly invoice creation</li><li class="key">Day 30: ask for a testimonial + 2 referrals — referrals ARE the channel in stone trade</li></ul>
+    </div></div>
+  </div>
+
+  <div class="honesty">
+    <h3>The honesty box — say this to customers up front</h3>
+    <p>No e-invoicing (IRN/QR) yet — fine below the ₹5Cr turnover threshold. No credit/debit notes, procurement (PO/GRN) or Tally export yet. Payments are recorded manually (no gateway reconciliation). Saying this unprompted builds more trust than hiding it.</p>
+  </div>
+
+  <div class="sec-h">Path to Revenue — in this order</div>
+  <div class="path">
+    <div class="step"><div class="wk">Week 1</div><h3>Public storefront</h3><p>Landing page + pricing + "Get a Demo" funnel. Highest ROI fix — you cannot be found right now.</p></div>
+    <div class="step"><div class="wk">Week 1 · parallel</div><h3>Legal entity</h3><p>Fill the placeholders, lawyer sign-off, GST invoice template from your side.</p></div>
+    <div class="step"><div class="wk">Weeks 2–3</div><h3>Razorpay</h3><p>Gateway + subscription gating. Last, not first — manual UPI carries the first 5–10 customers.</p></div>
+  </div>
+
+  <div class="foot">GraniteOS · Board generated 12 Jun 2026 from repo audit (src, migrations, docs boards, live site)<br>Companion docs: customer-handover-playbook.md · delivery-readiness-board.html · stakeholder-panel-review.html</div>
+</div>
+</body>
+</html>

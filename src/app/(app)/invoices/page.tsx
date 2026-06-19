@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { requireSession } from "@/lib/auth";
+import { requireModuleAccess } from "@/lib/access-control-guard";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR } from "@/lib/money";
 
@@ -11,7 +11,7 @@ const STATUS_STYLE: Record<string, string> = {
 };
 
 export default async function InvoicesPage() {
-  await requireSession();
+  await requireModuleAccess("money");
   const supabase = await createClient();
   const [{ data: invData }, { data: payData }] = await Promise.all([
     supabase
@@ -33,7 +33,7 @@ export default async function InvoicesPage() {
     pays.filter((p) => p.invoice_id === id).reduce((n, p) => n + Number(p.amount_paise), 0);
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <h1 className="text-2xl font-bold text-white">Invoices</h1>
       <p className="text-sm text-slate-400">Bills &amp; payments</p>
 

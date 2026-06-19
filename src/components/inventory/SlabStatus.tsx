@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { setSlabStatus } from "@/actions/inventory";
 
 const OPTIONS: { value: "in_stock" | "reserved" | "sold"; label: string }[] = [
@@ -27,29 +27,38 @@ export default function SlabStatus({
 }) {
   const router = useRouter();
   const [pending, start] = useTransition();
+  const [err, setErr] = useState("");
 
   return (
-    <div className="flex gap-1">
-      {OPTIONS.map((o) => {
-        const active = o.value === status;
-        return (
-          <button
-            key={o.value}
-            disabled={pending}
-            onClick={() =>
-              start(async () => {
-                await setSlabStatus(slabId, o.value, blockId);
-                router.refresh();
-              })
-            }
-            className={`text-[11px] font-semibold rounded-lg border px-2 py-1 transition-colors ${
-              active ? STYLE[o.value] : "border-graphite-600 text-slate-500 hover:text-slate-300"
-            }`}
-          >
-            {o.label}
-          </button>
-        );
-      })}
+    <div>
+      <div className="flex gap-1">
+        {OPTIONS.map((o) => {
+          const active = o.value === status;
+          return (
+            <button
+              key={o.value}
+              disabled={pending}
+              onClick={() => {
+                setErr("");
+                start(async () => {
+                  const r = await setSlabStatus(slabId, o.value, blockId);
+                  if (r && "error" in r) {
+                    setErr(r.error ?? "Couldn't update the slab status.");
+                    return;
+                  }
+                  router.refresh();
+                });
+              }}
+              className={`text-[11px] font-semibold rounded-lg border px-2 py-1 transition-colors ${
+                active ? STYLE[o.value] : "border-graphite-600 text-slate-500 hover:text-slate-300"
+              }`}
+            >
+              {o.label}
+            </button>
+          );
+        })}
+      </div>
+      {err && <p className="mt-1 text-[11px] text-red-400">{err}</p>}
     </div>
   );
 }

@@ -33,7 +33,7 @@ export default function AiStudio({
   const blocked = !billingReady && !!current?.paid;
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-10">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-10">
       <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-gold">
         <ArrowLeft className="w-4 h-4" /> Dashboard
       </Link>
@@ -63,7 +63,7 @@ export default function AiStudio({
               }`}
             >
               {t.paid && !billingReady && (
-                <span className="absolute top-1.5 right-1.5 text-[9px] font-extrabold tracking-wide rounded px-1 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                <span className="absolute top-1.5 right-1.5 text-[10px] font-extrabold tracking-wide rounded px-1 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/30">
                   PAID
                 </span>
               )}

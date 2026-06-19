@@ -8,7 +8,7 @@ export default function TermsPage() {
       <p>
         These Terms of Service (&quot;Terms&quot;) govern your access to and use of GraniteOS (the
         &quot;Service&quot;), a software platform for managing granite and marble businesses, operated
-        by Vyaparwerk (&quot;we&quot;, &quot;us&quot;). By creating an account or using the Service, you
+        by the Company (&quot;we&quot;, &quot;us&quot;). By creating an account or using the Service, you
         agree to these Terms.
       </p>
 
@@ -89,11 +89,15 @@ export default function TermsPage() {
       </p>
 
       <h2>11. Governing law</h2>
+      {/* TODO(legal): Replace both sentinels below with the actual registered place of business
+          and registered entity details — confirm with your lawyer before relying on these Terms. */}
       <p>
         These Terms are governed by the laws of India, and disputes are subject to the exclusive jurisdiction of
-        the courts at <b>[your registered place of business]</b>. The operating entity for &quot;Vyaparwerk&quot;
-        and its registered address are available on request. (Confirm the entity and jurisdiction with your lawyer
-        before relying on these Terms.)
+        the courts at{" "}
+        <b>TODO(legal): &lt;registered place of business, e.g. Mumbai, Maharashtra&gt;</b>.
+        Operating entity: <b>TODO(legal): &lt;Registered Entity Name Pvt Ltd&gt;</b> — registered
+        address available on the company&apos;s MCA filing. (Confirm the entity and jurisdiction with
+        your lawyer before relying on these Terms.)
       </p>
 
       <h2>12. Contact</h2>

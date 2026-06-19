@@ -3,7 +3,7 @@
 import {
   Home, Boxes, Users, Receipt, FileText, Wallet, Factory,
   Megaphone, Target, Sparkles, BarChart3, Package, Settings, History, Ruler, BookOpen, Banknote,
-  HardHat, StickyNote,
+  HardHat, StickyNote, ShoppingCart, Truck,
 } from "lucide-react";
 import { can } from "@/lib/permissions";
 import { accessFor, type AccessConfig, type AccessModule } from "@/lib/access-control";
@@ -36,6 +36,13 @@ export const NAV_GROUPS: { group: string; items: NavItem[] }[] = [
       { href: "/daybook",       label: "Daybook",           icon: BookOpen, need: "owner" },
       { href: "/notes",         label: "Voice Notes",       icon: StickyNote },
       { href: "/logs",          label: "Logs",              icon: History },
+    ],
+  },
+  {
+    group: "Procurement",
+    items: [
+      { href: "/purchase-orders", label: "Purchase Orders", icon: ShoppingCart },
+      { href: "/vendor-payment",  label: "Vendor Payments", icon: Truck },
     ],
   },
   {

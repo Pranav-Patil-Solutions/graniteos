@@ -83,7 +83,7 @@ export default function AppShell({
       )}
       <VoiceCommandBar />
       <InstallBanner />
-      <main className={`flex-1 pb-24 overflow-y-auto ${forceMobile ? "" : "lg:pb-10"}`}>{children}</main>
+      <main id="main-content" className={`flex-1 pb-24 overflow-y-auto ${forceMobile ? "" : "lg:pb-10"}`}>{children}</main>
       <nav
         className={`fixed bottom-0 inset-x-0 bg-graphite-900/90 backdrop-blur border-t border-graphite-600 z-50 ${forceMobile ? "" : "lg:hidden"}`}
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}

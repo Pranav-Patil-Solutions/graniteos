@@ -63,7 +63,7 @@ export async function getBriefing(
     supabase.from("blocks").select("cost_paise"),
     supabase.from("slabs").select("status"),
     supabase.from("production_jobs").select("stage"),
-    supabase.from("quotes").select("status, valid_until, total_paise, updated_at"),
+    supabase.from("quotes").select("status, valid_until, total_paise, created_at"),
   ]);
 
   const P = parties ?? [];
@@ -113,11 +113,15 @@ export async function getBriefing(
   const quotesExpiringSoon = openQ.filter(
     (q) => q.valid_until && new Date(q.valid_until).getTime() <= soon,
   ).length;
+  // quotes has no updated_at; created_at is a reasonable proxy for "fresh wins"
+  // (an accepted quote raised in the last week). Keeps the highlight working
+  // without querying a column that doesn't exist (was silently 400-ing the whole
+  // quotes fetch and zeroing every quote KPI on the morning card).
   const acceptedQuotes7 = Q.filter(
     (q) =>
       q.status === "accepted" &&
-      q.updated_at &&
-      new Date(q.updated_at).getTime() >= now - 7 * DAY,
+      q.created_at &&
+      new Date(q.created_at).getTime() >= now - 7 * DAY,
   ).length;
 
   // --- Floor ---

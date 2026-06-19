@@ -5,7 +5,7 @@
 
 import { formatINR } from "@/lib/money";
 
-export type LogKind = "party" | "invoice" | "payment" | "order" | "quote" | "slab";
+export type LogKind = "party" | "invoice" | "payment" | "order" | "quote" | "slab" | "security";
 
 export type LogRow = {
   at: string;
@@ -20,6 +20,7 @@ type PaymentRow = { customer_id: string | null; amount_paise: number; mode: stri
 type OrderRow = { order_no: string | null; status: string; created_at: string };
 type QuoteRow = { quote_no: string | null; customer_id: string | null; total_paise: number; created_at: string };
 type SlabRow = { sqft: number; created_at: string };
+type SecurityRow = { event_type: string; created_at: string };
 
 export type ActivitySources = {
   parties?: PartyRow[];
@@ -28,7 +29,20 @@ export type ActivitySources = {
   orders?: OrderRow[];
   quotes?: QuoteRow[];
   slabs?: SlabRow[];
+  security?: SecurityRow[];
 };
+
+/** Human-readable label for a security_events.event_type code. */
+function securityLabel(eventType: string): string {
+  const map: Record<string, string> = {
+    login_success: "Signed in",
+    login_failed: "Failed sign-in",
+    otp_sent: "Login code sent",
+    otp_verify_failed: "Failed code entry",
+    signout: "Signed out",
+  };
+  return map[eventType] ?? eventType.replace(/_/g, " ");
+}
 
 /** One reverse-chronological feed across every source. `partyName` resolves a
  *  customer/supplier id to a display name (the page passes a lookup map). */
@@ -71,6 +85,12 @@ export function buildActivityLog(
   }
   for (const s of src.slabs ?? []) {
     rows.push({ at: s.created_at, kind: "slab", label: "Slab", desc: `Slab added — ${s.sqft} sq.ft` });
+  }
+  for (const e of src.security ?? []) {
+    rows.push({
+      at: e.created_at, kind: "security", label: "Security",
+      desc: securityLabel(e.event_type),
+    });
   }
 
   return rows.sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0));

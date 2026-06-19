@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
 import { createQuote, updateQuote } from "@/actions/quotes";
 import { Button } from "@/components/ui/Button";
+import MicDictate from "@/components/voice/MicDictate";
 import { formatINR } from "@/lib/money";
 import { GST_RATES, UOM, DEFAULT_UOM } from "@/lib/validation";
 import { DEFAULT_HSN } from "@/lib/gst";
@@ -137,7 +138,7 @@ export default function QuoteBuilder({
   }
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <h1 className="text-2xl font-bold text-white">{editing ? "Edit quote" : "New quote"}</h1>
 
       <label className="block mt-4">
@@ -168,6 +169,10 @@ export default function QuoteBuilder({
                 onChange={(e) => setItem(i, { description: e.target.value })}
                 placeholder="Polished Black Galaxy slab"
                 className="flex-1 text-sm focus:border-gold outline-none"
+              />
+              <MicDictate
+                title="Speak the item"
+                onText={(t) => setItem(i, { description: it.description ? `${it.description} ${t}` : t })}
               />
               <input
                 suppressHydrationWarning
@@ -285,13 +290,16 @@ export default function QuoteBuilder({
 
       <label className="block mt-4">
         <span className="text-xs font-medium text-slate-300">Notes / terms (optional)</span>
-        <input
-          suppressHydrationWarning
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          placeholder="50% advance, balance on delivery"
-          className="mt-1 w-full text-base focus:border-gold outline-none"
-        />
+        <div className="mt-1 flex gap-2">
+          <input
+            suppressHydrationWarning
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="50% advance, balance on delivery"
+            className="flex-1 text-base focus:border-gold outline-none"
+          />
+          <MicDictate title="Speak the terms" onText={(t) => setNotes((n) => (n ? `${n} ${t}` : t))} />
+        </div>
       </label>
       <label className="block mt-3">
         <span className="text-xs font-medium text-slate-300">Valid until (optional)</span>

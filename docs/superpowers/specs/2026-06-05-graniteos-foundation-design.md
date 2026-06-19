@@ -186,5 +186,4 @@ invoices/payments/receivables/costing, marketing/AI. Each is its own spec → pl
 - **Brand color** defaulted to `#0F4C35`; revisit if a granite-specific palette is preferred.
 - **Schema prefix:** none (single new app). Later WerkOS-derived modules adopt GraniteOS-native names,
   not `wos_`.
-- **Hosting:** Vercel + new Supabase project; domain TBD (likely a `graniteos` subdomain under the
-  VyaparWerk umbrella).
+- **Hosting:** Vercel + new Supabase project; domain TBD (likely a `graniteos` subdomain).

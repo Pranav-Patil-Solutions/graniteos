@@ -12,6 +12,15 @@ export default function ShareWhatsApp({
   label?: string;
 }) {
   const digits = (phone ?? "").replace(/\D/g, "");
+  // Without a recipient, wa.me opens an empty chat — show a clear disabled state
+  // instead of a button that goes nowhere.
+  if (!digits) {
+    return (
+      <div className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl border border-graphite-600 bg-white/[0.03] text-slate-500 py-2.5 text-sm font-semibold">
+        <MessageCircle className="w-4 h-4" /> No phone number on file
+      </div>
+    );
+  }
   const href = `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
   return (
     <a

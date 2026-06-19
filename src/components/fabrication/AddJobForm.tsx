@@ -70,6 +70,16 @@ export default function AddJobForm() {
           ))}
         </select>
       </label>
+      <label className="block">
+        <span className="text-xs font-medium text-slate-300">Notes</span>
+        <textarea
+          suppressHydrationWarning
+          name="notes"
+          rows={2}
+          placeholder="Any special instructions for the floor"
+          className="mt-1 w-full text-base focus:border-gold outline-none resize-y"
+        />
+      </label>
       {error && (
         <div className="rounded-lg bg-red-500/10 text-red-300 text-sm px-3 py-2 border border-red-500/20">
           {error}

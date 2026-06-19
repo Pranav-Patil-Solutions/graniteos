@@ -221,9 +221,15 @@ export async function bulkImport(
     // manual invite form). Rows that fail (seat limit, duplicate phone) are
     // collected as failures rather than aborting the whole batch.
     for (const { rowNo, v } of valid) {
-      // Normalise the phone: strip spaces/dashes/parens
+      // Normalise the phone: strip spaces/dashes/parens, and add the +91 country
+      // code for a bare 10-digit Indian mobile (the manual invite form expects an
+      // E.164-style number). Anything already prefixed with + is left untouched.
       const rawPhone = String(v.phone ?? "").replace(/[\s\-()]/g, "");
-      const phone = rawPhone.startsWith("+") ? rawPhone : rawPhone;
+      const phone = rawPhone.startsWith("+")
+        ? rawPhone
+        : /^\d{10}$/.test(rawPhone)
+          ? `+91${rawPhone}`
+          : rawPhone;
       const roleCan = ["sales_manager", "store_manager", "fabrication_supervisor"];
       const roleStr = roleCan.find(
         (r) => r.toLowerCase() === String(v.role ?? "").trim().toLowerCase(),
@@ -239,7 +245,7 @@ export async function bulkImport(
       });
       if (rpcErr) {
         const msg = rpcErr.message.includes("seat_limit_reached")
-          ? "User limit reached — contact Vyaparwerk to add seats."
+          ? "User limit reached — contact support to add seats."
           : rpcErr.message;
         failed.push({ rowNo, reason: msg });
       } else {

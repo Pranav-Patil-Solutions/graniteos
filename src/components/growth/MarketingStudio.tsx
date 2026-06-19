@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Sparkles, Copy, Check, MessageCircle } from "lucide-react";
 import { generateMarketing } from "@/actions/growth";
 import { Button } from "@/components/ui/Button";
+import MicDictate from "@/components/voice/MicDictate";
 
 const TYPES = [
   { id: "whatsapp_offer", label: "WhatsApp offer" },
@@ -41,7 +42,7 @@ export default function MarketingStudio({ materials }: { materials: string[] }) 
   }
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <h1 className="text-2xl font-bold text-white flex items-center gap-2">
         <Sparkles className="text-gold" /> Marketing Studio
       </h1>
@@ -81,7 +82,10 @@ export default function MarketingStudio({ materials }: { materials: string[] }) 
       </label>
 
       <label className="block mt-3">
-        <span className="text-xs font-medium text-slate-300">Details (optional)</span>
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-medium text-slate-300">Details (optional)</span>
+          <MicDictate title="Speak your offer" onText={(t) => setContext((c) => (c ? `${c} ${t}` : t))} />
+        </div>
         <textarea
           suppressHydrationWarning
           value={context}

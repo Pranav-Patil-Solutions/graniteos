@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GraniteOS · The Stone Gallerium (mockup)</title>
+<style>
+  :root{
+    --bg:#0b0e11; --g900:#0d1216; --g800:#11161b; --g700:#161c22; --g600:#1c2228; --g500:#232a31;
+    --ink:#e8e6e1; --muted:#8b93a0; --faint:#5c6470;
+    --gold:#c9a24b; --gold-soft:#e6c878; --green:#1f8a5b; --green-d:#0F4C35;
+    --amber:#e0a93a; --slate:#94a3b8; --line:#1c2228;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:
+      radial-gradient(1400px 600px at 80% -300px, rgba(201,162,75,.10), transparent 55%),
+      radial-gradient(1100px 500px at -10% 10%, rgba(31,138,91,.08), transparent 55%),
+      var(--bg);
+    color:var(--ink);font-family:Inter,system-ui,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+
+  /* ===== top nav ===== */
+  nav{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);
+    background:linear-gradient(180deg,rgba(11,14,17,.86),rgba(11,14,17,.55));border-bottom:1px solid var(--line)}
+  .navin{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,var(--gold),var(--green));
+    display:grid;place-items:center;font-weight:800;color:#0b0e11;font-size:17px}
+  .brand b{font-size:17px;letter-spacing:.3px}
+  .brand b span{color:var(--gold);font-weight:800}
+  .nlinks{display:flex;gap:26px;font-size:14px;color:var(--muted);font-weight:600}
+  .nlinks a:hover{color:var(--ink)}
+  .nright{display:flex;align-items:center;gap:14px}
+  .shortbtn{display:flex;align-items:center;gap:8px;background:var(--g700);border:1px solid var(--g600);
+    color:var(--ink);font-weight:700;font-size:13px;padding:9px 14px;border-radius:11px;cursor:pointer}
+  .shortbtn .dot{background:var(--gold);color:#0b0e11;font-size:11px;font-weight:800;border-radius:999px;
+    min-width:18px;height:18px;display:grid;place-items:center;padding:0 5px}
+  .btn-gold{background:linear-gradient(135deg,var(--gold),#b78c33);color:#0b0e11;border:none;border-radius:11px;
+    font-weight:800;font-size:13px;padding:10px 16px;cursor:pointer}
+
+  /* ===== hero ===== */
+  .hero{padding:54px 0 30px;text-align:center}
+  .kicker{display:inline-flex;align-items:center;gap:8px;color:var(--gold-soft);font-size:12px;font-weight:700;
+    letter-spacing:1.6px;text-transform:uppercase;border:1px solid rgba(201,162,75,.3);
+    background:rgba(201,162,75,.07);padding:7px 14px;border-radius:999px}
+  .hero h1{font-size:48px;line-height:1.05;letter-spacing:-.5px;margin:20px 0 0;font-weight:800}
+  .hero h1 .it{font-style:italic;font-weight:500;color:var(--gold-soft)}
+  .hero p{color:var(--muted);font-size:16px;max-width:620px;margin:16px auto 0;line-height:1.6}
+  .search{max-width:560px;margin:26px auto 0;display:flex;gap:10px;background:var(--g800);border:1px solid var(--g600);
+    border-radius:14px;padding:7px 7px 7px 16px;align-items:center}
+  .search input{flex:1;background:none;border:none;color:var(--ink);font-size:15px;outline:none;font-family:inherit}
+  .search input::placeholder{color:var(--faint)}
+  .search .s-ic{color:var(--faint);font-size:16px}
+  .stats{display:flex;gap:34px;justify-content:center;margin-top:30px;color:var(--muted);font-size:13px}
+  .stats b{color:var(--ink);font-size:20px;display:block;font-weight:800}
+  .stats div{text-align:center}
+
+  /* ===== layout ===== */
+  .lay{display:grid;grid-template-columns:236px 1fr;gap:28px;padding:36px 0 90px;align-items:start}
+
+  /* filter rail */
+  aside{position:sticky;top:90px;background:var(--g800);border:1px solid var(--g600);border-radius:18px;padding:20px 18px}
+  aside h3{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--faint);margin:0 0 12px;font-weight:700}
+  .fgroup{margin-bottom:22px}
+  .fgroup:last-child{margin-bottom:0}
+  .fchip-wrap{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{padding:7px 12px;border-radius:999px;border:1px solid var(--g600);background:var(--g700);
+    color:var(--muted);font-size:12.5px;font-weight:600;cursor:pointer;transition:.12s}
+  .chip:hover{color:var(--ink)}
+  .chip.on{border-color:var(--gold);color:var(--gold-soft);background:rgba(201,162,75,.10)}
+  .swrow{display:flex;align-items:center;gap:10px;padding:7px 0;cursor:pointer;color:var(--muted);font-size:13px}
+  .swrow:hover{color:var(--ink)}
+  .sw{width:18px;height:18px;border-radius:6px;border:1px solid rgba(255,255,255,.14)}
+  .rangelbl{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:8px}
+  input[type=range]{width:100%;accent-color:var(--gold);margin-top:8px}
+
+  /* ===== gallery ===== */
+  .gbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .gbar h2{font-size:18px;font-weight:800}
+  .gbar h2 span{color:var(--muted);font-weight:600;font-size:14px;margin-left:8px}
+  .sortsel{background:var(--g700);border:1px solid var(--g600);color:var(--ink);font-size:13px;font-weight:600;
+    padding:9px 12px;border-radius:11px;cursor:pointer}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{background:var(--g800);border:1px solid var(--g600);border-radius:18px;overflow:hidden;cursor:pointer;
+    transition:transform .14s,border-color .14s,box-shadow .14s;position:relative}
+  .card:hover{transform:translateY(-4px);border-color:var(--g500);box-shadow:0 16px 40px -20px rgba(0,0,0,.8)}
+  .slab{height:178px;position:relative;overflow:hidden}
+  .slab::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(11,14,17,.55))}
+  .badge{position:absolute;top:10px;left:10px;z-index:2;font-size:10.5px;font-weight:800;letter-spacing:.4px;
+    padding:5px 9px;border-radius:999px;backdrop-filter:blur(4px)}
+  .b-stock{background:rgba(31,138,91,.18);color:#5fd39e;border:1px solid rgba(31,138,91,.45)}
+  .b-low{background:rgba(224,169,58,.16);color:var(--amber);border:1px solid rgba(224,169,58,.45)}
+  .b-rare{background:rgba(201,162,75,.16);color:var(--gold-soft);border:1px solid rgba(201,162,75,.5)}
+  .heart{position:absolute;top:9px;right:9px;z-index:3;width:34px;height:34px;border-radius:10px;
+    background:rgba(11,14,17,.6);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.1);
+    display:grid;place-items:center;color:#fff;font-size:15px;opacity:0;transition:.14s}
+  .card:hover .heart{opacity:1}
+  .heart.on{color:#ff6b8a;opacity:1}
+  .finish-tag{position:absolute;bottom:10px;right:10px;z-index:2;background:rgba(11,14,17,.7);
+    color:#fff;font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:8px;border:1px solid rgba(255,255,255,.08)}
+  .cbody{padding:14px 15px 15px}
+  .cname{font-weight:800;font-size:15px;letter-spacing:.2px}
+  .corigin{color:var(--muted);font-size:12px;margin-top:3px;display:flex;align-items:center;gap:5px}
+  .crow{display:flex;align-items:flex-end;justify-content:space-between;margin-top:12px}
+  .rate{font-weight:800;font-size:17px;color:var(--gold-soft)}
+  .rate small{color:var(--muted);font-weight:600;font-size:11px;margin-left:2px}
+  .addq{background:var(--g700);border:1px solid var(--g600);color:var(--ink);font-weight:700;font-size:12px;
+    padding:8px 12px;border-radius:10px;cursor:pointer;transition:.12s}
+  .addq:hover{border-color:var(--gold);color:var(--gold-soft)}
+
+  /* ===== CTA band ===== */
+  .cta{margin:10px 0 0;background:linear-gradient(135deg,rgba(31,138,91,.14),rgba(201,162,75,.06));
+    border:1px solid rgba(201,162,75,.28);border-radius:22px;padding:40px;text-align:center}
+  .cta h2{font-size:28px;font-weight:800;letter-spacing:-.2px}
+  .cta p{color:var(--muted);margin:12px auto 22px;max-width:520px;font-size:15px;line-height:1.6}
+  .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn-line{background:var(--g700);border:1px solid var(--g600);color:var(--ink);font-weight:700;font-size:14px;
+    padding:13px 22px;border-radius:12px;cursor:pointer}
+  .btn-gold.lg{font-size:14px;padding:13px 24px}
+
+  footer{border-top:1px solid var(--line);padding:30px 0;color:var(--faint);font-size:13px;text-align:center;margin-top:60px}
+
+  /* ===== shortlist tray ===== */
+  .tray{position:fixed;left:0;right:0;bottom:0;z-index:50;transform:translateY(110%);transition:transform .26s ease;
+    background:linear-gradient(180deg,rgba(13,18,22,.96),rgba(11,14,17,.98));backdrop-filter:blur(16px);
+    border-top:1px solid var(--g500)}
+  .tray.show{transform:translateY(0)}
+  .trayin{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 28px;max-width:1240px;margin:0 auto}
+  .trayitems{display:flex;gap:10px;align-items:center;overflow-x:auto;scrollbar-width:none}
+  .trayitems::-webkit-scrollbar{display:none}
+  .ti{display:flex;align-items:center;gap:9px;background:var(--g700);border:1px solid var(--g600);
+    border-radius:12px;padding:7px 10px 7px 7px;white-space:nowrap}
+  .ti .tisw{width:30px;height:30px;border-radius:8px}
+  .ti b{font-size:12.5px}
+  .ti .x{color:var(--faint);cursor:pointer;font-size:14px;padding:0 2px}
+  .traymeta{text-align:right;flex-shrink:0}
+  .traymeta .est{color:var(--muted);font-size:12px}
+  .traymeta .estb{font-size:18px;font-weight:800;color:var(--gold-soft)}
+
+  /* detail drawer */
+  .scrim{position:fixed;inset:0;background:rgba(5,7,9,.6);backdrop-filter:blur(3px);z-index:60;opacity:0;pointer-events:none;transition:.2s}
+  .scrim.show{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:min(460px,92vw);z-index:70;background:var(--g900);
+    border-left:1px solid var(--g500);transform:translateX(100%);transition:transform .28s ease;overflow-y:auto}
+  .drawer.show{transform:translateX(0)}
+  .dslab{height:260px;position:relative}
+  .dclose{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:11px;background:rgba(11,14,17,.6);
+    backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;color:#fff;cursor:pointer;font-size:17px}
+  .dpad{padding:22px 24px 30px}
+  .dpad h2{font-size:24px;font-weight:800}
+  .dpad .dorigin{color:var(--muted);font-size:13px;margin-top:5px}
+  .specs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--g600);border:1px solid var(--g600);
+    border-radius:14px;overflow:hidden;margin:20px 0}
+  .spec{background:var(--g800);padding:13px 15px}
+  .spec .sl{color:var(--faint);font-size:11px;text-transform:uppercase;letter-spacing:.6px}
+  .spec .sv{font-weight:700;font-size:14px;margin-top:4px}
+  .drate{display:flex;align-items:baseline;gap:8px;margin:6px 0 18px}
+  .drate b{font-size:30px;font-weight:800;color:var(--gold-soft)}
+  .drate span{color:var(--muted);font-size:13px}
+  .dbtns{display:flex;flex-direction:column;gap:10px}
+  .dnote{color:var(--faint);font-size:12px;margin-top:16px;line-height:1.6;text-align:center}
+
+  @media(max-width:920px){
+    .lay{grid-template-columns:1fr}
+    aside{position:static}
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .nlinks{display:none}
+    .hero h1{font-size:36px}
+  }
+  @media(max-width:560px){ .grid{grid-template-columns:1fr} .stats{gap:20px} }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav><div class="wrap navin">
+  <div class="brand"><div class="logo">G</div><b>Granite<span>OS</span></b></div>
+  <div class="nlinks">
+    <a href="#">The Gallerium</a><a href="#">Collections</a><a href="#">Visit Showroom</a><a href="#">For Trade</a>
+  </div>
+  <div class="nright">
+    <button class="shortbtn" onclick="openTray()">♡ Shortlist <span class="dot" id="navcount">0</span></button>
+    <button class="btn-gold">Get a Quote</button>
+  </div>
+</div></nav>
+
+<!-- HERO -->
+<header class="hero wrap">
+  <span class="kicker">◆ The Stone Gallerium</span>
+  <h1>Walk the slabyard.<br><span class="it">Without leaving the sofa.</span></h1>
+  <p>Browse every granite, marble & quartz slab in our yard — real dimensions, live availability and honest ₹/sq.ft. Shortlist what you love, and we'll keep it lit for your visit.</p>
+  <div class="search">
+    <span class="s-ic">⌕</span>
+    <input placeholder="Search “Black Galaxy”, “Italian white”, “Rajasthan green”…" />
+    <button class="btn-gold">Search</button>
+  </div>
+  <div class="stats">
+    <div><b>340+</b>slabs in yard</div>
+    <div><b>22</b>quarry origins</div>
+    <div><b>4</b>finishes</div>
+    <div><b>₹68–540</b>per sq.ft</div>
+  </div>
+</header>
+
+<!-- LAYOUT -->
+<main class="wrap lay">
+  <!-- FILTER RAIL -->
+  <aside>
+    <div class="fgroup">
+      <h3>Stone type</h3>
+      <div class="fchip-wrap">
+        <span class="chip on">All</span><span class="chip">Granite</span><span class="chip">Marble</span>
+        <span class="chip">Quartz</span><span class="chip">Quartzite</span>
+      </div>
+    </div>
+    <div class="fgroup">
+      <h3>Colour family</h3>
+      <div class="swrow"><span class="sw" style="background:#1a1a1f"></span> Black & charcoal</div>
+      <div class="swrow"><span class="sw" style="background:#efe9dd"></span> White & ivory</div>
+      <div class="swrow"><span class="sw" style="background:#7a6a4f"></span> Brown & beige</div>
+      <div class="swrow"><span class="sw" style="background:#3f6b50"></span> Green</div>
+      <div class="swrow"><span class="sw" style="background:#9a3b3b"></span> Red & maroon</div>
+    </div>
+    <div class="fgroup">
+      <h3>Finish</h3>
+      <div class="fchip-wrap">
+        <span class="chip on">Polished</span><span class="chip">Honed</span><span class="chip">Leather</span><span class="chip">Flamed</span>
+      </div>
+    </div>
+    <div class="fgroup">
+      <h3>Price — ₹/sq.ft</h3>
+      <input type="range" min="68" max="540" value="320" />
+      <div class="rangelbl"><span>₹68</span><span>up to ₹320</span></div>
+    </div>
+    <div class="fgroup">
+      <h3>Availability</h3>
+      <div class="fchip-wrap">
+        <span class="chip on">In yard</span><span class="chip">Reservable</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- GALLERY -->
+  <section>
+    <div class="gbar">
+      <h2>Featured slabs <span>· 18 of 340</span></h2>
+      <select class="sortsel">
+        <option>Sort · Curated</option><option>Price: low to high</option>
+        <option>Price: high to low</option><option>Newest arrivals</option>
+      </select>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+</main>
+
+<!-- CTA -->
+<section class="wrap">
+  <div class="cta">
+    <h2>Found your stone? Come see it under real light.</h2>
+    <p>Pick a slot and we'll have your shortlisted slabs pulled out and lit when you arrive — no walking the whole yard in the dust.</p>
+    <div class="cta-row">
+      <button class="btn-gold lg">Book a showroom visit</button>
+      <button class="btn-line">Talk to us on WhatsApp</button>
+      <button class="btn-line">Contact us</button>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap">GraniteOS · The Stone Gallerium — mockup. Slab textures are CSS-generated placeholders.</div></footer>
+
+<!-- SHORTLIST TRAY -->
+<div class="tray" id="tray"><div class="trayin">
+  <div class="trayitems" id="trayitems"></div>
+  <div class="traymeta">
+    <div class="est">Est. material · 600 sq.ft</div>
+    <div class="estb" id="trayest">₹0</div>
+  </div>
+  <button class="btn-gold lg" onclick="alert('Demo: routes to Get-a-Quote funnel')">Request quote →</button>
+</div></div>
+
+<!-- DETAIL DRAWER -->
+<div class="scrim" id="scrim" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer">
+  <div class="dslab" id="dslab"><div class="dclose" onclick="closeDrawer()">✕</div></div>
+  <div class="dpad">
+    <h2 id="dname">—</h2>
+    <div class="dorigin" id="dorigin">—</div>
+    <div class="specs">
+      <div class="spec"><div class="sl">Slab size</div><div class="sv" id="dsize">—</div></div>
+      <div class="spec"><div class="sl">Thickness</div><div class="sv" id="dthk">—</div></div>
+      <div class="spec"><div class="sl">Finish</div><div class="sv" id="dfin">—</div></div>
+      <div class="spec"><div class="sl">In yard</div><div class="sv" id="davail">—</div></div>
+    </div>
+    <div class="drate"><b id="dprice">—</b><span>per sq.ft · incl. GST</span></div>
+    <div class="dbtns">
+      <button class="btn-gold lg" onclick="alert('Demo: added to quote')">Add to quote</button>
+      <button class="btn-line" onclick="alert('Demo: reserve viewing')">Reserve this slab for my visit</button>
+    </div>
+    <div class="dnote">Reserved slabs are held for 7 days and lit aside for your showroom visit.</div>
+  </div>
+</aside>
+
+<script>
+  // CSS-generated stone textures — varied per material
+  const tex = {
+    blackGalaxy:'radial-gradient(1px 1px at 20% 30%,#d9c98a 50%,transparent),radial-gradient(1px 1px at 70% 60%,#bfae6e 50%,transparent),radial-gradient(1px 1px at 45% 80%,#e6d9a0 50%,transparent),radial-gradient(1px 1px at 85% 20%,#cdbd7e 50%,transparent),linear-gradient(135deg,#15151a,#0c0c10)',
+    whiteCarrara:'linear-gradient(115deg,transparent 46%,rgba(120,128,140,.5) 47%,transparent 49%),linear-gradient(70deg,transparent 60%,rgba(150,160,172,.35) 61%,transparent 64%),linear-gradient(160deg,#f1ede4,#dfd8cb)',
+    rajGreen:'linear-gradient(125deg,transparent 40%,rgba(225,230,210,.35) 42%,transparent 46%),radial-gradient(circle at 30% 40%,rgba(255,255,255,.12),transparent 40%),linear-gradient(140deg,#2f5a44,#23402f)',
+    tanBrown:'radial-gradient(1px 1px at 30% 40%,#1c1c1c 50%,transparent),radial-gradient(1px 1px at 60% 70%,#2a2a2a 50%,transparent),linear-gradient(135deg,#6e5a3f,#4d3f2c)',
+    redMulti:'radial-gradient(circle at 25% 35%,rgba(255,200,160,.3),transparent 30%),linear-gradient(130deg,#8a3030,#5c2020)',
+    goldQuartz:'linear-gradient(120deg,transparent 48%,rgba(255,240,200,.5) 50%,transparent 53%),linear-gradient(160deg,#caa85f,#9c8044)',
+    statuario:'linear-gradient(118deg,transparent 44%,rgba(110,118,130,.55) 46%,transparent 49%),linear-gradient(40deg,transparent 70%,rgba(140,150,162,.4) 72%,transparent 75%),linear-gradient(150deg,#f4f1ea,#e6e0d4)',
+    steelGrey:'radial-gradient(1px 1px at 40% 50%,#e8e8ec 50%,transparent),radial-gradient(1px 1px at 75% 30%,#c8c8d0 50%,transparent),linear-gradient(135deg,#3c4047,#2a2d33)',
+    pearl:'radial-gradient(circle at 60% 40%,rgba(255,255,255,.18),transparent 40%),linear-gradient(140deg,#cfd6dd,#aeb6bf)'
+  };
+  const slabs = [
+    {n:'Black Galaxy',o:'Ongole, Andhra',t:'blackGalaxy',fin:'Polished',p:185,size:'9.2 × 5.6 ft',thk:'18 mm',av:'14 slabs',badge:'stock'},
+    {n:'Carrara White',o:'Imported · Italy',t:'whiteCarrara',fin:'Honed',p:420,size:'9.0 × 5.4 ft',thk:'20 mm',av:'4 slabs',badge:'rare'},
+    {n:'Rajasthan Green',o:'Udaipur, Rajasthan',t:'rajGreen',fin:'Polished',p:128,size:'8.8 × 5.2 ft',thk:'18 mm',av:'9 slabs',badge:'stock'},
+    {n:'Tan Brown',o:'Karimnagar, Telangana',t:'tanBrown',fin:'Leather',p:165,size:'9.4 × 5.6 ft',thk:'18 mm',av:'11 slabs',badge:'stock'},
+    {n:'Lakha Red',o:'Jalore, Rajasthan',t:'redMulti',fin:'Polished',p:142,size:'8.6 × 5.0 ft',thk:'18 mm',av:'3 slabs',badge:'low'},
+    {n:'Imperial Gold',o:'Kishangarh, Rajasthan',t:'goldQuartz',fin:'Polished',p:238,size:'9.1 × 5.5 ft',thk:'20 mm',av:'6 slabs',badge:'stock'},
+    {n:'Statuario',o:'Imported · Italy',t:'statuario',fin:'Honed',p:540,size:'9.0 × 5.3 ft',thk:'20 mm',av:'2 slabs',badge:'rare'},
+    {n:'Steel Grey',o:'Warangal, Telangana',t:'steelGrey',fin:'Flamed',p:118,size:'9.3 × 5.6 ft',thk:'18 mm',av:'16 slabs',badge:'stock'},
+    {n:'River White',o:'Imported · Brazil',t:'pearl',fin:'Polished',p:312,size:'9.2 × 5.4 ft',thk:'20 mm',av:'5 slabs',badge:'low'},
+  ];
+  const badgeMap={stock:['b-stock','In yard'],low:['b-low','Low stock'],rare:['b-rare','Rare']};
+  const inr=n=>'₹'+n.toLocaleString('en-IN');
+
+  const grid=document.getElementById('grid');
+  slabs.forEach((s,i)=>{
+    const [bc,bt]=badgeMap[s.badge];
+    const el=document.createElement('div');
+    el.className='card';
+    el.innerHTML=`
+      <div class="slab" style="background-image:${tex[s.t]};background-size:cover">
+        <span class="badge ${bc}">${bt}</span>
+        <div class="heart" data-i="${i}">♡</div>
+        <span class="finish-tag">${s.fin}</span>
+      </div>
+      <div class="cbody">
+        <div class="cname">${s.n}</div>
+        <div class="corigin">⛰ ${s.o}</div>
+        <div class="crow">
+          <div class="rate">${inr(s.p)}<small>/sq.ft</small></div>
+          <button class="addq" data-i="${i}">+ Shortlist</button>
+        </div>
+      </div>`;
+    el.querySelector('.slab').onclick=()=>openDrawer(s);
+    el.querySelector('.cname').onclick=()=>openDrawer(s);
+    el.querySelector('.addq').onclick=e=>{e.stopPropagation();toggle(i);};
+    el.querySelector('.heart').onclick=e=>{e.stopPropagation();toggle(i);};
+    grid.appendChild(el);
+  });
+
+  // shortlist
+  let picks=new Set();
+  function toggle(i){ picks.has(i)?picks.delete(i):picks.add(i); render(); }
+  function render(){
+    document.getElementById('navcount').textContent=picks.size;
+    document.querySelectorAll('.heart').forEach(h=>h.classList.toggle('on',picks.has(+h.dataset.i)));
+    const wrap=document.getElementById('trayitems'); wrap.innerHTML='';
+    let est=0;
+    picks.forEach(i=>{const s=slabs[i];est+=s.p*600/picks.size||0;
+      const d=document.createElement('div');d.className='ti';
+      d.innerHTML=`<div class="tisw" style="background-image:${tex[s.t]};background-size:cover"></div><b>${s.n}</b><span class="x" data-i="${i}">✕</span>`;
+      d.querySelector('.x').onclick=()=>toggle(i);
+      wrap.appendChild(d);
+    });
+    // simple est: avg rate × 600 sqft
+    let avg=0;picks.forEach(i=>avg+=slabs[i].p);avg=picks.size?Math.round(avg/picks.size*600):0;
+    document.getElementById('trayest').textContent=inr(avg);
+    document.getElementById('tray').classList.toggle('show',picks.size>0);
+  }
+  function openTray(){ if(picks.size) document.getElementById('tray').classList.add('show'); }
+
+  // drawer
+  function openDrawer(s){
+    document.getElementById('dslab').style.backgroundImage=tex[s.t];
+    document.getElementById('dslab').style.backgroundSize='cover';
+    document.getElementById('dname').textContent=s.n;
+    document.getElementById('dorigin').textContent='⛰ '+s.o;
+    document.getElementById('dsize').textContent=s.size;
+    document.getElementById('dthk').textContent=s.thk;
+    document.getElementById('dfin').textContent=s.fin;
+    document.getElementById('davail').textContent=s.av;
+    document.getElementById('dprice').textContent=inr(s.p);
+    document.getElementById('drawer').classList.add('show');
+    document.getElementById('scrim').classList.add('show');
+  }
+  function closeDrawer(){
+    document.getElementById('drawer').classList.remove('show');
+    document.getElementById('scrim').classList.remove('show');
+  }
+</script>
+</body>
+</html>

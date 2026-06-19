@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraniteOS — Security & Legal Audit</title>
+<style>
+  :root{--bg:#0c0a08;--card:rgba(255,255,255,.04);--stroke:rgba(255,255,255,.10);--txt:#f4f1ec;--dim:#a39b8e;--gold:#e0b07a;--good:#34d399;--red:#f87171;--amber:#f5a524;--info:#6c8cff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(1100px 650px at 82% -12%,rgba(108,140,255,.14),transparent 58%),radial-gradient(900px 600px at -5% 110%,rgba(201,139,75,.16),transparent 55%),var(--bg);color:var(--txt);min-height:100vh;padding:46px 24px 80px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto}
+  .eyebrow{letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:var(--gold);font-weight:600}
+  h1{font-size:clamp(32px,5vw,52px);line-height:1.05;margin:8px 0 6px;font-weight:700;letter-spacing:-.02em}
+  .sub{color:var(--dim);font-size:16px;max-width:700px}
+  .stamp{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--dim);border:1px solid var(--stroke);padding:6px 12px;border-radius:999px;background:var(--card)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 12px var(--good)}
+  .checks{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0 6px}
+  .check{display:inline-flex;align-items:center;gap:8px;font-size:13px;border:1px solid rgba(52,211,153,.3);background:rgba(52,211,153,.08);color:#a7f3d0;padding:8px 13px;border-radius:999px;font-weight:500}
+  .sec-h{margin:38px 0 14px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;display:flex;align-items:center;gap:10px}
+  .sec-h::after{content:"";flex:1;height:1px;background:var(--stroke)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+  .card{border:1px solid var(--stroke);background:var(--card);border-radius:16px;padding:16px 18px;position:relative}
+  .sev{position:absolute;top:14px;right:14px;font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px}
+  .s-red{background:rgba(248,113,113,.16);color:var(--red)} .s-amber{background:rgba(245,165,36,.16);color:var(--amber)} .s-yellow{background:rgba(234,179,8,.16);color:#facc15}
+  .card h3{font-size:14.5px;font-weight:650;margin-bottom:6px;padding-right:64px}
+  .card .was{font-size:12.5px;color:var(--red);opacity:.9}
+  .card .now{font-size:12.5px;color:var(--good);margin-top:3px}
+  .card .file{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:10.5px;color:var(--dim);margin-top:8px;opacity:.8}
+  .fixed-tag{position:absolute;bottom:12px;right:14px;font-size:10px;font-weight:800;color:var(--good)}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:780px){.two{grid-template-columns:1fr}}
+  .panel{border:1px solid var(--stroke);background:var(--card);border-radius:16px;padding:18px}
+  .panel h2{font-size:15px;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+  .panel li{font-size:12.8px;color:var(--dim);line-height:1.55;list-style:none;padding-left:20px;position:relative;margin-bottom:3px}
+  .ok li::before{content:"✓";color:var(--good);position:absolute;left:0}
+  .panel li b{color:var(--txt)}
+
+  .note{margin-top:20px;border:1px solid rgba(245,165,36,.3);background:rgba(245,165,36,.07);border-radius:14px;padding:16px;font-size:13px;color:var(--dim);line-height:1.6}
+  .note b{color:var(--amber)}
+  .foot{margin-top:26px;border-top:1px solid var(--stroke);padding-top:14px;font-size:12.5px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stamp"><span class="dot"></span>GraniteOS · security + legal audit · June 2026</div>
+  <p class="eyebrow" style="margin-top:18px">Reviewed &amp; fixed</p>
+  <h1>Security &amp; Legal hardening</h1>
+  <p class="sub">A defensive code audit + an India-DPDP legal review of the Privacy Policy &amp; Terms. Every fixable finding is now fixed, verified, and committed.</p>
+
+  <div class="checks">
+    <span class="check">✓ TypeScript 0 errors</span>
+    <span class="check">✓ build 30/30 pages</span>
+    <span class="check">✓ 0 CSP violations (incl. 3D + charts)</span>
+    <span class="check">✓ no secrets ever committed</span>
+    <span class="check">✓ tenant isolation intact</span>
+  </div>
+
+  <div class="sec-h">🔒 Security — what was already strong</div>
+  <div class="two">
+    <div class="panel ok"><h2>✅ Verified safe (no change needed)</h2><ul>
+      <li><b>No secrets committed</b> — .env.local, signing keys, service-role all gitignored</li>
+      <li><b>Service-role key is server-only</b> — never in a client component</li>
+      <li><b>Tenant isolation solid</b> — RLS scopes every table; writes stamp the server-resolved company; cross-tenant writes rejected</li>
+      <li><b>Input validated</b> — all actions Zod-checked; GST math server-side; no injection (encodeURIComponent + structured params)</li>
+      <li><b>No eval / dangerouslySetInnerHTML</b> anywhere</li>
+    </ul></div>
+    <div class="panel ok"><h2>📋 What we scanned</h2><ul>
+      <li>Secret exposure &amp; the admin (service-role) client paths</li>
+      <li>Tenant isolation / IDOR across all server actions</li>
+      <li>Role authorization on every mutation</li>
+      <li>The Ed25519 licensing gate</li>
+      <li>Security headers + middleware public-route list</li>
+      <li>AI endpoints (Groq / Gemini) &amp; dependency CVEs</li>
+    </ul></div>
+  </div>
+
+  <div class="sec-h">🛠️ Security findings — all fixed</div>
+  <div class="grid">
+    <div class="card"><span class="sev s-red">HIGH</span><h3>💸 Public AI endpoint un-metered</h3><div class="was">was: visualizeStone (paid Gemini) callable by anyone on the public catalogue → denial-of-wallet</div><div class="now">now: per-IP rate limit + 6 MB image cap</div><div class="file">actions/visualize.ts</div><span class="fixed-tag">FIXED</span></div>
+    <div class="card"><span class="sev s-amber">MEDIUM</span><h3>🔑 Missing role checks</h3><div class="was">was: 8 mutations (confirm order, record payment, delete customer, change stock, fabrication) ran for any role → intra-tenant escalation</div><div class="now">now: can() gates added (+ new manageProduction perm)</div><div class="file">actions/quotes·money·parties·inventory·fabrication</div><span class="fixed-tag">FIXED</span></div>
+    <div class="card"><span class="sev s-amber">MEDIUM</span><h3>🧭 Middleware prefix bug</h3><div class="was">was: "/s" prefix marked /settings, /setup, /stock-alert "public" in middleware</div><div class="now">now: exact or real sub-path match only</div><div class="file">lib/supabase/middleware.ts</div><span class="fixed-tag">FIXED</span></div>
+    <div class="card"><span class="sev s-amber">MEDIUM</span><h3>🛡️ No CSP / HSTS</h3><div class="was">was: other headers present, but no Content-Security-Policy or HSTS</div><div class="now">now: CSP + HSTS added (verified 0 violations on 3D &amp; charts)</div><div class="file">next.config.ts</div><span class="fixed-tag">FIXED</span></div>
+  </div>
+
+  <div class="note">
+    <b>⚠ One dependency item (noted, not auto-fixed):</b> <code>xlsx</code> (SheetJS) has a known prototype-pollution/ReDoS advisory with <b>no npm fix</b>. <b>Mitigated:</b> the sheet is parsed in the <i>uploader's own browser</i> and the server re-validates every row, so a malicious sheet can't reach your server logic. The clean fix is to switch to SheetJS's official build — recommend doing that later.
+  </div>
+
+  <div class="sec-h">⚖️ Legal — Privacy Policy &amp; Terms (India DPDP Act 2023)</div>
+  <div class="two">
+    <div class="panel"><h2 style="color:var(--good)">✅ Gaps closed</h2><ul style="list-style:none">
+      <li style="padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--good)">✓</span> <b>Fixed the false WhatsApp clause</b> (it said "we don't message on your behalf" — but Stock Alert/Marketing Helper do)</li>
+      <li style="padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--good)">✓</span> <b>Data Fiduciary vs Processor</b> roles — you're the fiduciary for your customers' data; we process on your instructions</li>
+      <li style="padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--good)">✓</span> <b>Grievance Officer</b> + 72h/30-day SLA</li>
+      <li style="padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--good)">✓</span> <b>Lawful basis, purpose limitation, consent withdrawal</b>, data-principal rights (incl. nomination + Data Protection Board)</li>
+      <li style="padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--good)">✓</span> <b>Full sub-processor list</b> (Supabase, Vercel, Groq, <b>Gemini added</b>, WhatsApp/Meta)</li>
+      <li style="padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--good)">✓</span> <b>Cross-border transfer</b>, <b>breach notification</b>, concrete <b>retention (~8 yr tax)</b></li>
+      <li style="padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--good)">✓</span> Terms: <b>Processor/DPA clause</b>, a <b>licensing clause</b>, jurisdiction placeholder cleaned</li>
+    </ul></div>
+    <div class="panel"><h2 style="color:var(--good)">👍 Already good (kept)</h2><ul class="ok">
+      <li>GST/tax-responsibility disclaimer</li>
+      <li>Limitation of liability (3-month cap)</li>
+      <li>Data ownership assigned to the customer</li>
+      <li>RLS / security described</li>
+      <li>"We don't sell your data"</li>
+      <li>The "get a lawyer" disclaimer banner</li>
+    </ul></div>
+  </div>
+
+  <div class="note">
+    <b>⚠ You must still fill in (and have a lawyer confirm):</b> the <b>operating entity</b> (legal form + registered address), the <b>Grievance Officer's real name</b>, and the <b>jurisdiction city</b> — these are left as bracketed placeholders. The drafted text is a strong, India-specific starting point, <b>not a substitute for a qualified Indian data-protection lawyer</b> signing off before you launch the messaging features broadly.
+  </div>
+
+  <div class="foot">
+    <b style="color:var(--txt)">Result:</b> 0 cross-tenant or secret-exposure issues found; 4 security findings fixed; CSP/HSTS added; Privacy Policy brought in line with the DPDP Act 2023 and made consistent with the app's actual WhatsApp behaviour. Committed in 2 commits — security + legal.
+  </div>
+</div>
+</body>
+</html>

@@ -22,7 +22,7 @@ export default async function OrdersPage() {
   const viewOnly = level === "view";
 
   const supabase = await createClient();
-  const [{ data }, { data: invData }] = await Promise.all([
+  const [{ data, error: loadError }, { data: invData }] = await Promise.all([
     supabase
       .from("orders")
       .select("id, order_no, status, total_paise, created_at, parties(name), quotes(quote_no)")
@@ -45,7 +45,7 @@ export default async function OrdersPage() {
   );
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Orders</h1>
@@ -64,8 +64,14 @@ export default async function OrdersPage() {
         </p>
       )}
 
+      {loadError && (
+        <div className="mt-5 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
+          Couldn&apos;t load orders right now. Please refresh — if it keeps happening, contact support.
+        </div>
+      )}
+
       <div className="mt-5 space-y-2">
-        {orders.length === 0 && (
+        {!loadError && orders.length === 0 && (
           <EmptyState
             heading="No orders yet"
             subtext="Orders are created when a customer confirms a quote. Start by creating a quote — then convert it to an order when they agree."

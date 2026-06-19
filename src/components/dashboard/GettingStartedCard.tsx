@@ -68,39 +68,38 @@ export default function GettingStartedCard({ counts }: Props) {
 
   return (
     <div className="mt-5 rounded-2xl border border-gold/20 bg-gradient-to-br from-[#14110a] to-graphite-800 overflow-hidden">
-      {/* Header row */}
-      <button
-        onClick={toggle}
-        className="w-full flex items-center justify-between px-4 py-3 text-left"
-        aria-label={state.collapsed ? "Expand getting started checklist" : "Collapse checklist"}
-      >
-        <div className="flex items-center gap-2.5">
-          <span className="text-xs font-bold text-gold uppercase tracking-wide">Getting started</span>
-          <span className="text-xs text-slate-400">
-            {doneCount}/{items.length}
+      {/* Header row — toggle and dismiss are SIBLING buttons (a <button> can't
+          nest inside another <button> without a hydration error). */}
+      <div className="w-full flex items-center justify-between px-4 py-3">
+        <button
+          onClick={toggle}
+          className="flex flex-1 min-w-0 items-center justify-between gap-2 text-left"
+          aria-label={state.collapsed ? "Expand getting started checklist" : "Collapse checklist"}
+        >
+          <span className="flex items-center gap-2.5">
+            <span className="text-xs font-bold text-gold uppercase tracking-wide">Getting started</span>
+            <span className={`text-xs font-semibold ${allDone ? "text-emerald-300" : "text-slate-300"}`}>
+              {doneCount}/{items.length}
+              {allDone ? " complete ✓" : ""}
+            </span>
           </span>
-        </div>
-        <div className="flex items-center gap-2">
           {state.collapsed ? (
-            <ChevronDown className="w-4 h-4 text-slate-400" />
+            <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
           ) : (
-            <ChevronUp className="w-4 h-4 text-slate-400" />
+            <ChevronUp className="w-4 h-4 text-slate-400 shrink-0" />
           )}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              dismiss();
-            }}
-            aria-label="Dismiss getting started card"
-            className="p-0.5 text-slate-500 hover:text-slate-300 rounded"
-          >
-            <X className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </button>
+        </button>
+        <button
+          onClick={dismiss}
+          aria-label="Dismiss getting started card"
+          className="ml-2 p-0.5 text-slate-500 hover:text-slate-300 rounded shrink-0"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+      </div>
 
       {/* Progress bar */}
-      <div className="h-1 bg-white/[0.06]">
+      <div className="h-1.5 bg-white/[0.08]">
         <div
           className="h-full bg-granite-green2 transition-all duration-500"
           style={{ width: `${(doneCount / items.length) * 100}%` }}
@@ -125,7 +124,7 @@ export default function GettingStartedCard({ counts }: Props) {
               )}
               <div className="flex-1 min-w-0">
                 {item.done ? (
-                  <span className="text-sm text-slate-400 line-through">{item.label}</span>
+                  <span className="text-sm text-slate-300 line-through">{item.label}</span>
                 ) : (
                   <Link
                     href={item.href}
@@ -135,7 +134,7 @@ export default function GettingStartedCard({ counts }: Props) {
                   </Link>
                 )}
                 {!item.done && (
-                  <p className="text-xs text-slate-500 mt-0.5">{item.hint}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">{item.hint}</p>
                 )}
               </div>
             </div>

@@ -17,16 +17,27 @@ try {
   /* no .env.local — gated specs will skip */
 }
 
+// Desktop + phone + tablet matrix. iPhone/iPad use WebKit, Pixel/Desktop use
+// Chromium (Playwright device descriptors pick the engine). Install both with:
+//   npx playwright install chromium webkit
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: false,
+  timeout: 120_000,
   retries: 0,
-  reporter: "list",
+  reporter: [["list"], ["html", { open: "never", outputFolder: "playwright-report" }]],
   use: {
     baseURL: "http://localhost:3000",
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
     trace: "on-first-retry",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    { name: "Desktop", use: { ...devices["Desktop Chrome"] } },
+    { name: "iPhone", use: { ...devices["iPhone 13"] } },
+    { name: "Android", use: { ...devices["Pixel 5"] } },
+    { name: "Tablet", use: { ...devices["iPad Mini"] } },
+  ],
   webServer: {
     command: "npm run dev",
     url: "http://localhost:3000/showcase",

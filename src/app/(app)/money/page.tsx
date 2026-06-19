@@ -1,25 +1,35 @@
 import Link from "next/link";
-import { FileText, MessageCircle } from "lucide-react";
-import { requireSession } from "@/lib/auth";
+import { FileText, MessageCircle, Wallet } from "lucide-react";
+import { requireModuleAccess } from "@/lib/access-control-guard";
 import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/Card";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { formatINR } from "@/lib/money";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 type Party = { id: string; name: string; phone: string | null; opening_balance_paise: number };
 
 export default async function MoneyPage() {
-  const me = await requireSession();
+  const { user: me } = await requireModuleAccess("money");
   const supabase = await createClient();
 
-  const [{ data: company }, { data: parties }, { data: invoices }, { data: payments }, { data: blocks }] =
-    await Promise.all([
-      supabase.from("companies").select("name").eq("id", me.company_id).single(),
-      supabase.from("parties").select("id, kind, name, phone, opening_balance_paise"),
-      supabase.from("invoices").select("customer_id, total_paise, gst_paise"),
-      supabase.from("payments").select("customer_id, amount_paise, paid_on"),
-      supabase.from("blocks").select("cost_paise"),
-    ]);
+  const [
+    { data: company },
+    { data: parties },
+    { data: invoices },
+    { data: payments },
+    { data: blocks },
+    { data: vendorBills },
+    { data: vendorPays },
+  ] = await Promise.all([
+    supabase.from("companies").select("name").eq("id", me.company_id).single(),
+    supabase.from("parties").select("id, kind, name, phone, opening_balance_paise"),
+    supabase.from("invoices").select("customer_id, total_paise, gst_paise"),
+    supabase.from("payments").select("customer_id, amount_paise, paid_on"),
+    supabase.from("blocks").select("cost_paise"),
+    supabase.from("purchase_bills").select("total_paise"),
+    supabase.from("supplier_payments").select("amount_paise"),
+  ]);
 
   const customers = ((parties ?? []) as (Party & { kind: string })[]).filter(
     (p) => p.kind === "customer",
@@ -44,7 +54,18 @@ export default async function MoneyPage() {
     .sort((a, b) => b.outstanding - a.outstanding);
 
   const receivables = udhaar.reduce((n, c) => n + c.outstanding, 0);
-  const payables = suppliers.reduce((n, s) => n + Number(s.opening_balance_paise), 0);
+  // Payable to suppliers = opening balances + outstanding on recorded vendor bills
+  // (bill totals minus supplier payments), so procurement bills are reflected too.
+  const supplierOpening = suppliers.reduce((n, s) => n + Number(s.opening_balance_paise), 0);
+  const billTotal = ((vendorBills ?? []) as { total_paise: number }[]).reduce(
+    (n, b) => n + Number(b.total_paise),
+    0,
+  );
+  const vendorPaid = ((vendorPays ?? []) as { amount_paise: number }[]).reduce(
+    (n, p) => n + Number(p.amount_paise),
+    0,
+  );
+  const payables = supplierOpening + Math.max(0, billTotal - vendorPaid);
   const gstBilled = invs.reduce((n, i) => n + Number(i.gst_paise), 0);
 
   // GST Auto-Pilot: output GST collected (18% on sales) vs input credit on raw
@@ -62,9 +83,21 @@ export default async function MoneyPage() {
     .reduce((n, p) => n + Number(p.amount_paise), 0);
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <h1 className="text-2xl font-bold text-white">Money</h1>
       <p className="text-sm text-slate-400">{company?.name ?? ""}</p>
+
+      {invs.length === 0 && pays.length === 0 && (
+        <div className="mt-5">
+          <EmptyState
+            icon={<Wallet className="w-10 h-10" />}
+            heading="No money activity yet"
+            subtext="Create a quote, confirm it to an order, then raise an invoice — payments, udhaar and GST will appear here automatically."
+            actionLabel="Create a quote"
+            actionHref="/quotes/new"
+          />
+        </div>
+      )}
 
       <div className="mt-5 grid grid-cols-2 gap-3">
         <Stat label="Udhaar (receivable)" paise={receivables} gold />

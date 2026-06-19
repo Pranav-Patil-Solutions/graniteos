@@ -51,6 +51,7 @@ export default function ProductsManager({ products }: { products: ProductRow[] }
   const [form, setForm] = useState<Form>(blank);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [archiveErr, setArchiveErr] = useState("");
 
   function set(patch: Partial<Form>) {
     setForm((f) => ({ ...f, ...patch }));
@@ -98,7 +99,12 @@ export default function ProductsManager({ products }: { products: ProductRow[] }
   }
 
   async function onArchive(id: string) {
-    await archiveProduct(id);
+    setArchiveErr("");
+    const res = await archiveProduct(id);
+    if (res && "error" in res) {
+      setArchiveErr(res.error ?? "Couldn't archive that product.");
+      return;
+    }
     router.refresh();
   }
 
@@ -241,6 +247,12 @@ export default function ProductsManager({ products }: { products: ProductRow[] }
           <Button variant="press" className="w-full" disabled={loading} onClick={onSave}>
             {loading ? "Saving..." : editId ? "Update product" : "Save product"}
           </Button>
+        </div>
+      )}
+
+      {archiveErr && (
+        <div className="mt-4 rounded-lg bg-red-500/10 text-red-300 text-sm px-3 py-2 border border-red-500/20">
+          {archiveErr}
         </div>
       )}
 

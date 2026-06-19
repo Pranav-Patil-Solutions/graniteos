@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraniteOS — Bug Fixes Shipped (June 10, 2026)</title>
+<style>
+  :root{
+    --bg:#0c0a08; --card:rgba(255,255,255,.04); --stroke:rgba(255,255,255,.10);
+    --txt:#f4f1ec; --dim:#a39b8e; --stone:#c98b4b; --stone2:#e0b07a;
+    --good:#34d399; --red:#f87171; --amber:#f5a524; --info:#6c8cff; --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:
+      radial-gradient(1100px 650px at 82% -12%,rgba(52,211,153,.15),transparent 58%),
+      radial-gradient(900px 600px at -5% 110%,rgba(201,139,75,.18),transparent 55%),
+      var(--bg);
+    color:var(--txt); min-height:100vh; padding:46px 24px 80px; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1120px;margin:0 auto}
+  .eyebrow{letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:var(--good);font-weight:600}
+  h1{font-size:clamp(32px,5vw,52px);line-height:1.04;margin:8px 0 6px;font-weight:700;letter-spacing:-.02em}
+  .sub{color:var(--dim);font-size:16px;max-width:680px}
+  .stamp{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--dim);
+    border:1px solid var(--stroke);padding:6px 12px;border-radius:999px;background:var(--card)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 12px var(--good)}
+
+  .checks{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0 6px}
+  .check{display:inline-flex;align-items:center;gap:8px;font-size:13px;border:1px solid rgba(52,211,153,.3);
+    background:rgba(52,211,153,.08);color:#a7f3d0;padding:8px 13px;border-radius:999px;font-weight:500}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;margin-top:26px}
+  .card{border:1px solid var(--stroke);background:var(--card);border-radius:16px;padding:16px 18px;position:relative;
+    transition:transform .15s ease,border-color .15s ease}
+  .card:hover{transform:translateY(-3px);border-color:rgba(201,139,75,.45)}
+  .sev{position:absolute;top:14px;right:14px;font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;letter-spacing:.04em}
+  .s-red{background:rgba(248,113,113,.16);color:var(--red)}
+  .s-amber{background:rgba(245,165,36,.16);color:var(--amber)}
+  .s-yellow{background:rgba(234,179,8,.16);color:#facc15}
+  .s-perf{background:rgba(108,140,255,.16);color:var(--info)}
+  .card h3{font-size:15px;font-weight:650;margin-bottom:6px;padding-right:60px;display:flex;align-items:center;gap:8px}
+  .card .was{font-size:12.5px;color:var(--red);opacity:.85}
+  .card .now{font-size:12.5px;color:var(--good);margin-top:3px}
+  .card .file{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-top:8px;opacity:.8}
+
+  .sec-h{margin:34px 0 4px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--stone2);font-weight:700}
+
+  .defer{margin-top:20px;border:1px solid rgba(245,165,36,.25);background:rgba(245,165,36,.06);border-radius:14px;padding:16px 18px}
+  .defer h4{font-size:13px;color:var(--amber);margin-bottom:8px;letter-spacing:.04em}
+  .defer p{font-size:13px;color:var(--dim);line-height:1.5;margin-bottom:6px}
+
+  .footer{margin-top:30px;border-top:1px solid var(--stroke);padding-top:18px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--dim)}
+  .footer b{color:var(--txt)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .chip{font-size:11.5px;border:1px solid var(--stroke);background:var(--card);padding:5px 11px;border-radius:999px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stamp"><span class="dot"></span>master · clean tree · June 10, 2026</div>
+  <p class="eyebrow" style="margin-top:18px">GraniteOS · last delivery</p>
+  <h1>Bug Fixes Shipped</h1>
+  <p class="sub">A 4-agent audit (DB, financial logic, UI/permissions) found real bugs across database, UI, and GST math. All verified ones are now fixed.</p>
+
+  <div class="checks">
+    <span class="check">✓ TypeScript 0 errors</span>
+    <span class="check">✓ 41 / 41 unit tests</span>
+    <span class="check">✓ 10 e2e passed</span>
+    <span class="check">✓ build 26/26 pages</span>
+    <span class="check">✓ 12 bugs fixed · 3 commits</span>
+  </div>
+
+  <div class="sec-h">GST &amp; money correctness</div>
+  <div class="grid">
+    <div class="card"><span class="sev s-red">CRITICAL</span><h3>🧾 Wrong unit on GST invoice</h3><div class="was">was: a "running-feet" quote line became "SQF" on the tax invoice (wrong UQC)</div><div class="now">now: uom + product_id carry through to the invoice</div><div class="file">actions/money.ts · createInvoiceFromOrder</div></div>
+    <div class="card"><span class="sev s-amber">HIGH</span><h3>➗ CGST/SGST 1-paise drift</h3><div class="was">was: each half rounded separately → intra totalled 1 paise more than inter</div><div class="now">now: round whole line tax, then split; intra = inter (+ symmetry test)</div><div class="file">lib/gst.ts · splitLineTax</div></div>
+    <div class="card"><span class="sev s-amber">MEDIUM</span><h3>🪙 Round-off showed ₹0</h3><div class="was">was: invoice tax rows in whole rupees, so round-off always read ₹0</div><div class="now">now: CGST/SGST/IGST/round-off shown to the paise (₹0.24 reconciles)</div><div class="file">invoices/[id]/page.tsx</div></div>
+    <div class="card"><span class="sev s-yellow">LOW</span><h3>🔢 Amount-in-words overflow</h3><div class="was">was: broke at ≥ ₹1,000 crore ("Ten Hundred…")</div><div class="now">now: recurses correctly for any magnitude</div><div class="file">lib/gst.ts · amountInWords</div></div>
+    <div class="card"><span class="sev s-yellow">LOW</span><h3>🧮 Builder total off by ₹1</h3><div class="was">was: displayed grand total skipped the nearest-rupee round-off</div><div class="now">now: rounds to match the saved/printed total</div><div class="file">QuoteBuilder · InvoiceEditor</div></div>
+  </div>
+
+  <div class="sec-h">Data correctness</div>
+  <div class="grid">
+    <div class="card"><span class="sev s-amber">HIGH</span><h3>🏭 Wrong supplier blocks</h3><div class="was">was: a supplier name with % or _ matched wrong blocks (unescaped LIKE)</div><div class="now">now: wildcards escaped before matching</div><div class="file">parties/[id]/page.tsx</div></div>
+    <div class="card"><span class="sev s-amber">MEDIUM</span><h3>📊 Receivables under-reported</h3><div class="was">was: dashboard ignored opening balances → disagreed with party pages</div><div class="now">now: includes carried-forward openings (₹88K → ₹6.98L)</div><div class="file">analytics/page.tsx</div></div>
+    <div class="card"><span class="sev s-yellow">LOW</span><h3>📉 NaN bar width</h3><div class="was">was: divide-by-zero if top customer had ₹0 revenue</div><div class="now">now: denominator guarded</div><div class="file">analytics/page.tsx</div></div>
+  </div>
+
+  <div class="sec-h">UI &amp; authorization</div>
+  <div class="grid">
+    <div class="card"><span class="sev s-amber">MEDIUM</span><h3>🚫 Dead "Edit" on paid invoice</h3><div class="was">was: order page showed Edit on already-paid invoices</div><div class="now">now: hidden once any payment is recorded</div><div class="file">orders/[id]/page.tsx</div></div>
+    <div class="card"><span class="sev s-yellow">LOW</span><h3>🏷️ "Custom HSN" did nothing</h3><div class="was">was: selecting Custom… left no way to type an HSN</div><div class="now">now: reveals a working text input</div><div class="file">ProductsManager.tsx</div></div>
+    <div class="card"><span class="sev s-yellow">LOW</span><h3>🔐 Missing role checks</h3><div class="was">was: edit quote/invoice actions only checked login, not role</div><div class="now">now: gated by create-quote / confirm-order permissions</div><div class="file">actions/quotes.ts · money.ts</div></div>
+    <div class="card"><span class="sev s-perf">PERF</span><h3>⚡ Missing FK indexes</h3><div class="was">was: party history seq-scanned customer_id; no product/slab idx</div><div class="now">now: migration 0014 indexes the hot foreign keys</div><div class="file">supabase/migrations/0014_perf_indexes.sql</div></div>
+  </div>
+
+  <div class="defer">
+    <h4>⚠️ Deliberately NOT patched — these need a product decision, not a code change</h4>
+    <p><b>Place-of-supply for stateless B2C:</b> defaults to CGST/SGST instead of IGST when a customer has no state — fixing it properly needs a delivery-state field + UI.</p>
+    <p><b>Suppliers linked by name (not a supplier_id FK):</b> the escape fix removes the immediate bug; a real foreign key is a schema migration for later.</p>
+  </div>
+
+  <div class="footer">
+    <div><b>12</b> bugs fixed · <b>3</b> commits · <b>17</b> commits this session (local)</div>
+    <div class="chips">
+      <span class="chip">⚠️ migration 0014 to apply on deploy</span>
+      <span class="chip">not pushed yet</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

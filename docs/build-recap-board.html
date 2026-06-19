@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraniteOS — Build Recap</title>
+<style>
+  :root{--bg:#0c0a08;--card:rgba(255,255,255,.04);--stroke:rgba(255,255,255,.10);--txt:#f4f1ec;--dim:#a39b8e;--gold:#e0b07a;--gold2:#c8a24b;--good:#34d399;--info:#6c8cff;--amber:#f5a524}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(1200px 700px at 80% -12%,rgba(201,139,75,.22),transparent 58%),radial-gradient(900px 600px at -8% 110%,rgba(31,138,112,.13),transparent 55%),var(--bg);color:var(--txt);min-height:100vh;padding:46px 24px 80px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto}
+  .eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:var(--gold);font-weight:600}
+  h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(34px,5.5vw,58px);line-height:1.04;margin:8px 0 6px;font-weight:600;letter-spacing:-.01em}
+  .sub{color:var(--dim);font-size:16px;max-width:720px}
+  .stamp{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--dim);border:1px solid var(--stroke);padding:6px 12px;border-radius:999px;background:var(--card)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 12px var(--good)}
+
+  .stats{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0 6px}
+  .stat{flex:1;min-width:130px;border:1px solid var(--stroke);background:var(--card);border-radius:16px;padding:16px 18px;position:relative;overflow:hidden}
+  .stat .n{font-family:Georgia,serif;font-size:30px;font-weight:600;letter-spacing:-.01em}
+  .stat .l{font-size:12px;color:var(--dim);margin-top:2px}
+  .stat.live .n{color:var(--good)} .stat.gold .n{color:var(--gold)}
+
+  .sec-h{margin:40px 0 14px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;display:flex;align-items:center;gap:10px}
+  .sec-h::after{content:"";flex:1;height:1px;background:var(--stroke)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+  .mod{border:1px solid var(--stroke);background:var(--card);border-radius:16px;padding:16px 18px;transition:transform .15s,border-color .15s}
+  .mod:hover{transform:translateY(-3px);border-color:rgba(201,139,75,.45)}
+  .mod h3{font-size:15px;font-weight:700;margin-bottom:6px;display:flex;gap:8px;align-items:center}
+  .mod p{font-size:12.6px;color:var(--dim);line-height:1.5}
+  .mod .new{font-size:9px;font-weight:800;color:var(--good);background:rgba(52,211,153,.14);border-radius:999px;padding:2px 6px;margin-left:auto}
+
+  .timeline{display:flex;flex-direction:column;gap:8px}
+  .row{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--stroke);background:var(--card);border-radius:12px;padding:12px 14px}
+  .row .ic{font-size:18px;line-height:1.2}
+  .row .b h4{font-size:14px;font-weight:650}
+  .row .b p{font-size:12.5px;color:var(--dim);line-height:1.45;margin-top:2px}
+  code{background:rgba(255,255,255,.06);border:1px solid var(--stroke);border-radius:5px;padding:1px 6px;font-size:.92em;color:var(--gold)}
+
+  .status{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:760px){.status{grid-template-columns:1fr}}
+  .panel{border:1px solid var(--stroke);background:var(--card);border-radius:16px;padding:18px}
+  .panel h2{font-size:15px;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+  .panel li{font-size:13px;color:var(--dim);line-height:1.6;list-style:none;padding-left:20px;position:relative}
+  .panel li::before{position:absolute;left:0}
+  .ok li::before{content:"✓";color:var(--good)}
+  .todo li::before{content:"→";color:var(--amber)}
+  .panel li b{color:var(--txt)}
+  .now{border-color:rgba(108,140,255,.45);background:rgba(108,140,255,.07)}
+  .now h2{color:var(--info)}
+  .foot{margin-top:30px;border-top:1px solid var(--stroke);padding-top:16px;font-size:12.5px;color:var(--dim)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .chip{font-size:11.5px;border:1px solid var(--stroke);background:var(--card);padding:5px 11px;border-radius:999px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stamp"><span class="dot"></span>GraniteOS · build recap · 13 June 2026</div>
+  <p class="eyebrow" style="margin-top:18px">made by HandelOS</p>
+  <h1>What you've built</h1>
+  <p class="sub">A complete, GST-correct, mobile business platform for India's granite &amp; marble trade — live in production, now with a per-seat licensing gate, voice control, an AI studio, 3-state access control, and a full customer delivery pack. Currently in manual UAT before the next deploy.</p>
+
+  <div class="stats">
+    <div class="stat gold"><div class="n">47</div><div class="l">app screens</div></div>
+    <div class="stat"><div class="n">106</div><div class="l">git commits</div></div>
+    <div class="stat"><div class="n">23</div><div class="l">DB migrations</div></div>
+    <div class="stat"><div class="n">20</div><div class="l">test files</div></div>
+    <div class="stat live"><div class="n">LIVE</div><div class="l">graniteos.vercel.app</div></div>
+  </div>
+
+  <div class="sec-h">The product — every module</div>
+  <div class="grid">
+    <div class="mod"><h3>🪨 Stock for stone</h3><p>Block → numbered slabs, CBM, sq-ft, finish/grade/thickness, bundles, in-stock/reserved/sold, cost &amp; profit per slab.</p></div>
+    <div class="mod"><h3>🧾 GST billing</h3><p>Rule-46 tax invoice, CGST/SGST/IGST by place-of-supply, HSN/UQC, round-off, amount-in-words, FY numbering, GSTIN validation.</p></div>
+    <div class="mod"><h3>💰 Udhaar / money</h3><p>Receivables ledger, per-invoice pending, payments (cash/UPI/bank/cheque), auto paid·partial·unpaid, UPI pay-links.</p></div>
+    <div class="mod"><h3>👥 Parties + history</h3><p>Customers &amp; suppliers, credit limits, GSTIN; full per-party ledger timeline (quote→order→invoice→payment).</p></div>
+    <div class="mod"><h3>📋 Quotes &amp; orders</h3><p>Builder with industry UOM, HSN, GST; editable quotes; order pipeline confirmed→dispatched→delivered.</p></div>
+    <div class="mod"><h3>🏭 Fabrication + Factory Floor</h3><p>Production jobs through queued→cutting→polishing→edging→QC→ready→dispatched, by machine, with a live floor view. <span class="new">NEW</span></p></div>
+    <div class="mod"><h3>📐 Measurement Sheet</h3><p>Slab-by-slab measured sizes feeding quotes, jobs and invoices. <span class="new">NEW</span></p></div>
+    <div class="mod"><h3>📦 Products + UOM</h3><p>Reusable product master (rate, unit, HSN, GST); 10 stone-trade units.</p></div>
+    <div class="mod"><h3>📊 Owner analytics</h3><p>Revenue, collected, receivables, stock value, 6-month trend, pending invoices, quote funnel, top customers.</p></div>
+    <div class="mod"><h3>🔗 Public catalogue</h3><p>Shareable live-stock link, search/sort/filter, per-slab QR "passport", AR/3D try-on.</p></div>
+    <div class="mod"><h3>📣 Stock Alert</h3><p>WhatsApp new-stock broadcast — one-tap (free) + hands-off Business-API auto-send; per-customer opt-in.</p></div>
+    <div class="mod"><h3>🎯 Marketing Helper</h3><p>Auto-segments customers (hot leads, top, dormant, new, slow payers) → personalized one-tap WhatsApp.</p></div>
+    <div class="mod"><h3>🎙️ Voice control + Hindi</h3><p>Speak to navigate &amp; search; Latin→Hindi transliteration finds Hindi names; voice notes &amp; daybook dictation. <span class="new">NEW</span></p></div>
+    <div class="mod"><h3>🤖 AI Studio</h3><p>One home for AI tools — Slab Identifier, Room Visualizer, Copywriter — behind a billing gate. <span class="new">NEW</span></p></div>
+    <div class="mod"><h3>✅ Daybook to-do</h3><p>Spoken/typed tasks with a confirm step, confetti on done, "carried N days" for unfinished, Morning Briefing. <span class="new">NEW</span></p></div>
+    <div class="mod"><h3>💳 Batch Payment</h3><p>Pay a lump sum across a customer's unpaid invoices — oldest fills first, leftover shown. <span class="new">NEW</span></p></div>
+    <div class="mod"><h3>🕓 Activity Logs</h3><p>Timestamped feed across every record — who did what, when. <span class="new">NEW</span></p></div>
+    <div class="mod"><h3>📸 Block photos</h3><p>Real camera photos on stone blocks, replacing the initials chip in detail &amp; list. <span class="new">NEW</span></p></div>
+    <div class="mod"><h3>🌗 Light/Dark + Mobile</h3><p>Theme toggle (briefing card stays legible) and a phone layout with bottom tabs — choice survives reload. <span class="new">NEW</span></p></div>
+    <div class="mod"><h3>🔑 Product-key + seats</h3><p>Per-seat product-key activation at company setup, with a go-live runbook. <span class="new">NEW</span></p></div>
+    <div class="mod"><h3>🛡️ Access control</h3><p>3-state per-area permissions (No / View / Edit) with a server-side write-guard. <span class="new">NEW</span></p></div>
+    <div class="mod"><h3>⚙️ Team · import · onboarding</h3><p>Roles &amp; invites, Excel import wizard with per-row validation, guided onboarding, PWA + installer. <span class="new">NEW</span></p></div>
+  </div>
+
+  <div class="sec-h">This stretch — the latest additions (post 12 June)</div>
+  <div class="timeline">
+    <div class="row"><span class="ic">🎁</span><div class="b"><h4>Customer delivery pack</h4><p>Per-seat licensing, 3-state permissions, an Excel import wizard that validates each row, guided onboarding, and a PWA installer — everything needed to hand the app to a real customer.</p></div></div>
+    <div class="row"><span class="ic">🔑</span><div class="b"><h4>Product-key activation + seats</h4><p>Company setup now activates against a product key with seat limits, plus a go-live runbook and a self-cleaning smoke test (8 checks).</p></div></div>
+    <div class="row"><span class="ic">🎙️</span><div class="b"><h4>Voice, Factory Floor, Measurement Sheet, Daybook, Batch Payment</h4><p>A wave of owner-facing features — voice control + transliteration, a live factory floor, measured slab sizes, a confirm-then-add daybook, and lump-sum batch payments.</p></div></div>
+    <div class="row"><span class="ic">🤖</span><div class="b"><h4>AI Studio consolidated</h4><p>Slab Identifier, Room Visualizer and Copywriter under one roof, with a billing gate so paid tools are blocked until Google billing is on (Copywriter free).</p></div></div>
+    <div class="row"><span class="ic">🧪</span><div class="b"><h4>Manual UAT kit + button-to-DB audit</h4><p>Five import CSVs (each with one deliberately broken row) + a UAT checklist, plus a driven-browser audit of 12 button-to-database flows that cleans up after itself.</p></div></div>
+    <div class="row"><span class="ic">🗄️</span><div class="b"><h4>Migrations 0017 → 0022 + a direct runner</h4><p>Daybook tasks, block photos, product-key seats, access control and a display-number fix — applied through a new direct DB migration runner.</p></div></div>
+  </div>
+
+  <div class="sec-h">Status &amp; what's next</div>
+  <div class="status">
+    <div class="panel ok"><h2>✅ Done &amp; verified</h2><ul>
+      <li><b>Live in production</b> at graniteos.vercel.app</li>
+      <li><b>47 screens · 106 commits · 23 migrations · 20 test files</b></li>
+      <li>Button-to-DB audit: <b>12 flows</b> pass (self-cleaning)</li>
+      <li>Product-key activation smoke test: <b>8 checks</b> pass</li>
+      <li>Invite pgcrypto bug fixed · block photos live</li>
+      <li>Access control hardened to <b>3-state</b> with server write-guard</li>
+    </ul></div>
+    <div class="panel now"><h2>🧪 Happening now</h2><ul style="list-style:none">
+      <li style="padding-left:20px;position:relative"><span style="position:absolute;left:0">▸</span> <b>Manual UAT</b> — run <code>MANUAL-TEST-CHECKLIST.html</code> against the 5 import CSVs on <code>localhost:3210</code></li>
+      <li style="padding-left:20px;position:relative;margin-top:6px"><span style="position:absolute;left:0">▸</span> <b>Active dev</b> — auth / login refinements in progress (uncommitted)</li>
+    </ul></div>
+  </div>
+  <div class="status" style="margin-top:14px">
+    <div class="panel todo"><h2>→ Pending (your call)</h2><ul>
+      <li><b>Newest work not yet deployed</b> — finish UAT, then <code>vercel --prod</code></li>
+      <li>Set <code>GRANITEOS_LICENSE</code> in Vercel env before shipping the gate, or prod locks out</li>
+      <li>Back up <code>license-keys/private.pem</code> (never commit/leak)</li>
+      <li>Wipe the <code>TEST</code> data after UAT before client handover</li>
+    </ul></div>
+    <div class="panel ok"><h2>🧾 Compliance trail</h2><ul>
+      <li>DPDP-aligned Privacy Policy + Terms in place</li>
+      <li>CSP/HSTS, role gates, AI-endpoint rate limit</li>
+      <li>Official patched SheetJS (0.20.3) for Excel</li>
+      <li>Deploy records stored per India retention rules</li>
+    </ul></div>
+  </div>
+
+  <div class="foot">
+    <b style="color:var(--txt)">In one line:</b> Tally's billing + Vyapar's mobile + a stock system that understands slabs + an udhaar ledger that chases your money — one app, GST-correct, voice-driven, licence-gated, deployed.
+    <div class="chips">
+      <span class="chip">Next.js 15</span><span class="chip">Supabase + RLS</span><span class="chip">Recharts</span><span class="chip">WhatsApp + UPI</span><span class="chip">Groq / Gemini AI</span><span class="chip">Ed25519 licensing</span><span class="chip">PWA</span><span class="chip">Vercel · fra1</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

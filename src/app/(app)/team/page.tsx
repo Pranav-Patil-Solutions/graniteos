@@ -44,7 +44,7 @@ export default async function TeamPage() {
   }
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <h1 className="text-2xl font-bold text-white">Team</h1>

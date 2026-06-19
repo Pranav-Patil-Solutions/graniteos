@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/permissions";
 import { partySchema } from "@/lib/validation";
 import { rupeesToPaise } from "@/lib/money";
@@ -41,9 +40,10 @@ export async function addParty(input: unknown) {
 
 /** Toggle a customer's opt-in for WhatsApp new-stock alerts (DPDP control). */
 export async function setStockNotify(partyId: string, on: boolean) {
-  const me = await requireSession();
-  if (!can(me.role, "createQuote"))
-    return { error: "You don't have permission to manage customer alerts." };
+  // Editing a party's consent flag is a parties write — gate it on the dynamic
+  // parties access config (not a hardcoded capability), like addParty/deleteParty.
+  const guard = await requireEditAccess("parties");
+  if ("error" in guard) return guard;
   const supabase = await createClient();
   const { error } = await supabase
     .from("parties")

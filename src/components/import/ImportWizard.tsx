@@ -151,7 +151,7 @@ export default function ImportWizard({
   }
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       {/* Header */}
       {!mod && (
         <>

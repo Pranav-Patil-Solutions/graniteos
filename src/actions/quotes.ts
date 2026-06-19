@@ -116,7 +116,11 @@ export async function createQuote(input: unknown) {
   const { error: iErr } = await supabase.from("quote_items").insert(
     items.map((i) => ({ ...i, company_id: me.company_id, quote_id: quote.id })),
   );
-  if (iErr) return { error: iErr.message };
+  if (iErr) {
+    // Roll back the orphaned header — never leave a quote with zero line items.
+    await supabase.from("quotes").delete().eq("id", quote.id);
+    return { error: iErr.message };
+  }
 
   revalidatePath("/quotes");
   return { ok: true as const, id: quote.id as string };
@@ -196,6 +200,22 @@ export async function updateQuote(quoteId: string, input: unknown) {
   const gst = cgst + sgst + igst;
   const { roundedTotalPaise, roundOffPaise } = computeRoundOff(subtotal + gst);
 
+  // Replace line items without a corruption window: insert the new rows FIRST,
+  // and only delete the old ones + write the new header totals once the insert
+  // succeeds. A failed insert leaves the existing quote fully intact.
+  const { data: oldItems } = await supabase
+    .from("quote_items")
+    .select("id")
+    .eq("quote_id", quoteId);
+  const oldIds = (oldItems ?? []).map((r) => r.id as string);
+
+  const { error: iErr } = await supabase.from("quote_items").insert(
+    items.map((i) => ({ ...i, company_id: me.company_id, quote_id: quoteId })),
+  );
+  if (iErr) return { error: iErr.message };
+
+  if (oldIds.length) await supabase.from("quote_items").delete().in("id", oldIds);
+
   const { error: uErr } = await supabase
     .from("quotes")
     .update({
@@ -214,13 +234,6 @@ export async function updateQuote(quoteId: string, input: unknown) {
     })
     .eq("id", quoteId);
   if (uErr) return { error: uErr.message };
-
-  // Replace line items wholesale.
-  await supabase.from("quote_items").delete().eq("quote_id", quoteId);
-  const { error: iErr } = await supabase.from("quote_items").insert(
-    items.map((i) => ({ ...i, company_id: me.company_id, quote_id: quoteId })),
-  );
-  if (iErr) return { error: iErr.message };
 
   revalidatePath(`/quotes/${quoteId}`);
   revalidatePath("/quotes");
@@ -268,18 +281,26 @@ export async function confirmOrder(quoteId: string) {
 
   const { data: quote } = await supabase
     .from("quotes")
-    .select("id, customer_id, total_paise")
+    .select("id, customer_id, total_paise, status")
     .eq("id", quoteId)
     .single();
   if (!quote) return { error: "Quote not found." };
 
-  // already confirmed?
+  // already confirmed? (idempotent — checked before the status guard so re-tapping
+  // a quote that's already an order still succeeds)
   const { data: existing } = await supabase
     .from("orders")
     .select("id")
     .eq("quote_id", quoteId)
     .maybeSingle();
   if (existing) return { ok: true as const, id: existing.id as string };
+
+  // Only an open quote can become a NEW order — block rejected/expired (and a
+  // stray 'accepted' with no order). Prevents dead quotes being revived as orders.
+  if (quote.status !== "draft" && quote.status !== "sent")
+    return {
+      error: `Only a draft or sent quote can be confirmed as an order (this one is ${quote.status}).`,
+    };
 
   const orderNo = await displayNumber(supabase, me.company_id, "order");
   const { data: order, error } = await supabase

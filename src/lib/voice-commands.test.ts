@@ -17,8 +17,10 @@ describe("parseCommand", () => {
   });
 
   it("prefers the longer keyword (batch payment over payment)", () => {
-    expect(parseCommand("batch payment").href).toBe("/batch-payment");
-    expect(parseCommand("money").href).toBe("/money");
+    // toMatchObject avoids reading `.href` off the VoiceAction union (it only
+    // exists on the navigate variant) while still asserting the right route.
+    expect(parseCommand("batch payment")).toMatchObject({ kind: "navigate", href: "/batch-payment" });
+    expect(parseCommand("money")).toMatchObject({ kind: "navigate", href: "/money" });
   });
 
   it("extracts a search query after a verb", () => {

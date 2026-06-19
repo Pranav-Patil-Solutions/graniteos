@@ -12,6 +12,7 @@ const KIND_STYLE: Record<LogKind, string> = {
   order: "bg-amber-500/15 text-amber-300",
   quote: "bg-blue-500/15 text-blue-300",
   slab: "bg-stone-400/15 text-stone-300",
+  security: "bg-red-500/15 text-red-300",
 };
 
 function fmtStamp(iso: string): string {
@@ -28,15 +29,26 @@ export default async function LogsPage() {
   const supabase = await createClient();
 
   // RLS scopes every query to the signed-in company.
-  const [{ data: parties }, { data: invoices }, { data: payments }, { data: orders }, { data: quotes }, { data: slabs }] =
-    await Promise.all([
-      supabase.from("parties").select("id, kind, name, created_at"),
-      supabase.from("invoices").select("invoice_no, customer_id, total_paise, created_at"),
-      supabase.from("payments").select("customer_id, amount_paise, mode, created_at"),
-      supabase.from("orders").select("order_no, status, created_at"),
-      supabase.from("quotes").select("quote_no, customer_id, total_paise, created_at"),
-      supabase.from("slabs").select("sqft, created_at"),
-    ]);
+  const results = await Promise.all([
+    supabase.from("parties").select("id, kind, name, created_at"),
+    supabase.from("invoices").select("invoice_no, customer_id, total_paise, created_at"),
+    supabase.from("payments").select("customer_id, amount_paise, mode, created_at"),
+    supabase.from("orders").select("order_no, status, created_at"),
+    supabase.from("quotes").select("quote_no, customer_id, total_paise, created_at"),
+    supabase.from("slabs").select("sqft, created_at"),
+    supabase.from("security_events").select("event_type, created_at"),
+  ]);
+  const [
+    { data: parties },
+    { data: invoices },
+    { data: payments },
+    { data: orders },
+    { data: quotes },
+    { data: slabs },
+    { data: security },
+  ] = results;
+  // Distinguish a real load failure from a genuinely empty feed.
+  const loadError = results.some((r) => r.error);
 
   const nameById = new Map(
     ((parties ?? []) as { id: string; name: string }[]).map((p) => [p.id, p.name] as const),
@@ -51,12 +63,13 @@ export default async function LogsPage() {
       orders: (orders ?? []) as never,
       quotes: (quotes ?? []) as never,
       slabs: (slabs ?? []) as never,
+      security: (security ?? []) as never,
     },
     pname,
   );
 
   return (
-    <div className="px-4 pt-12 pb-8 max-w-3xl mx-auto">
+    <div className="px-4 pt-12 pb-8 max-w-3xl lg:max-w-6xl mx-auto">
       <div className="flex items-end justify-between mb-5">
         <div>
           <h1 className="text-2xl font-bold text-white">Logs</h1>
@@ -66,6 +79,12 @@ export default async function LogsPage() {
           {rows.length} event{rows.length === 1 ? "" : "s"}
         </span>
       </div>
+
+      {loadError && (
+        <div className="mb-4 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
+          Some activity couldn&apos;t be loaded just now — this list may be incomplete. Please refresh.
+        </div>
+      )}
 
       <Card className="p-0 overflow-hidden">
         {rows.length === 0 ? (

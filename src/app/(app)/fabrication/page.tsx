@@ -1,4 +1,4 @@
-import { requireSession } from "@/lib/auth";
+import { requireModuleAccess } from "@/lib/access-control-guard";
 import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/Card";
 import AddJobForm from "@/components/fabrication/AddJobForm";
@@ -16,7 +16,7 @@ type Job = {
 };
 
 export default async function FabricationPage() {
-  await requireSession();
+  const { viewOnly } = await requireModuleAccess("fabrication");
   const supabase = await createClient();
   const { data } = await supabase
     .from("production_jobs")
@@ -29,7 +29,7 @@ export default async function FabricationPage() {
   const ready = jobs.filter((j) => j.stage === "ready").length;
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <h1 className="text-2xl font-bold text-white">Fabrication</h1>
       <p className="text-sm text-slate-400">Cut → polish → edge → QC → ready</p>
 
@@ -48,9 +48,11 @@ export default async function FabricationPage() {
         </Card>
       </div>
 
-      <div className="mt-5">
-        <AddJobForm />
-      </div>
+      {!viewOnly && (
+        <div className="mt-5">
+          <AddJobForm />
+        </div>
+      )}
 
       <div className="mt-4 space-y-3">
         {jobs.length === 0 && (
@@ -85,7 +87,7 @@ export default async function FabricationPage() {
               )}
             </div>
             <div className="mt-2.5">
-              <JobControls jobId={j.id} stage={j.stage} />
+              <JobControls jobId={j.id} stage={j.stage} viewOnly={viewOnly} />
             </div>
           </div>
         ))}

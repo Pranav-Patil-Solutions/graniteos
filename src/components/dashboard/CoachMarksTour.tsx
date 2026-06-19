@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X, ChevronRight } from "lucide-react";
 
 const LS_KEY = "gos_onboarding_v1";
@@ -60,6 +60,7 @@ export default function CoachMarksTour() {
   const [step, setStep] = useState(0);
   const [visible, setVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -69,6 +70,20 @@ export default function CoachMarksTour() {
       return () => clearTimeout(timer);
     }
   }, []);
+
+  // Move focus into the dialog when it opens (WCAG 2.1.2 / 4.1.2)
+  useEffect(() => {
+    if (visible) dialogRef.current?.focus();
+  }, [visible]);
+
+  // Close on Escape key (WCAG 2.1.2)
+  useEffect(() => {
+    if (!visible) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
 
   if (!mounted || !visible) return null;
 
@@ -98,7 +113,9 @@ export default function CoachMarksTour() {
 
       {/* Tour card — centred at bottom on mobile */}
       <div
-        className="fixed z-50 bottom-0 left-0 right-0 mx-auto max-w-sm p-4"
+        ref={dialogRef}
+        tabIndex={-1}
+        className="fixed z-50 bottom-0 left-0 right-0 mx-auto max-w-sm p-4 outline-none"
         role="dialog"
         aria-modal="true"
         aria-label={`Tour step ${step + 1} of ${STEPS.length}: ${current.title}`}

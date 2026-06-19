@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraniteOS — Habit & SWOT Report</title>
+<style>
+  :root{--bg:#0c0a08;--card:rgba(255,255,255,.04);--stroke:rgba(255,255,255,.10);--txt:#f4f1ec;--dim:#a39b8e;--gold:#e0b07a;--good:#34d399;--red:#f87171;--amber:#f5a524;--info:#6c8cff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(1100px 650px at 82% -12%,rgba(108,140,255,.14),transparent 58%),radial-gradient(900px 600px at -5% 110%,rgba(201,139,75,.18),transparent 55%),var(--bg);color:var(--txt);min-height:100vh;padding:46px 24px 80px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto}
+  .eyebrow{letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:var(--gold);font-weight:600}
+  h1{font-size:clamp(32px,5vw,52px);line-height:1.05;margin:8px 0 6px;font-weight:700;letter-spacing:-.02em}
+  .sub{color:var(--dim);font-size:16px;max-width:720px}
+  .stamp{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--dim);border:1px solid var(--stroke);padding:6px 12px;border-radius:999px;background:var(--card)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 12px var(--good)}
+  .sec-h{margin:38px 0 12px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;display:flex;align-items:center;gap:10px}
+  .sec-h::after{content:"";flex:1;height:1px;background:var(--stroke)}
+
+  /* hook loop */
+  .loop{display:flex;gap:10px;flex-wrap:wrap}
+  .loop .step{flex:1;min-width:200px;border:1px solid var(--stroke);background:var(--card);border-radius:16px;padding:16px}
+  .loop .k{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);font-weight:700}
+  .loop h3{font-size:15px;margin:6px 0 4px}
+  .loop p{font-size:12.5px;color:var(--dim);line-height:1.5}
+
+  table{width:100%;border-collapse:collapse;margin-top:6px;font-size:12.5px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--stroke)}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:600}
+  td.v{font-weight:700;white-space:nowrap}
+  .pill{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px}
+  .p-good{background:rgba(52,211,153,.15);color:var(--good)}
+  .p-amber{background:rgba(245,165,36,.15);color:var(--amber)}
+  .p-red{background:rgba(248,113,113,.15);color:var(--red)}
+
+  .swot{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:780px){.swot{grid-template-columns:1fr}}
+  .quad{border:1px solid var(--stroke);background:var(--card);border-radius:18px;padding:18px;border-top-width:3px}
+  .quad.s{border-top-color:var(--good)} .quad.w{border-top-color:var(--red)} .quad.o{border-top-color:var(--amber)} .quad.t{border-top-color:var(--info)}
+  .quad h2{font-size:16px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .quad ol{list-style:none;counter-reset:i}
+  .quad li{counter-increment:i;font-size:12.8px;color:var(--dim);line-height:1.5;padding:5px 0 5px 24px;position:relative}
+  .quad li::before{content:counter(i);position:absolute;left:0;top:5px;width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.07);color:var(--txt);font-size:9px;font-weight:700;display:grid;place-items:center}
+  .quad li b{color:var(--txt)}
+  .take{margin-top:24px;border:1px solid rgba(224,176,122,.3);background:rgba(224,176,122,.06);border-radius:16px;padding:18px}
+  .take h2{font-size:15px;color:var(--gold);margin-bottom:8px}
+  .take li{font-size:13px;color:var(--dim);line-height:1.6;margin-left:18px}
+  .foot{margin-top:30px;border-top:1px solid var(--stroke);padding-top:16px;font-size:12px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stamp"><span class="dot"></span>GraniteOS · strategy report · June 2026</div>
+  <p class="eyebrow" style="margin-top:18px">Habit-formation study + SWOT</p>
+  <h1>Will they keep opening it?</h1>
+  <p class="sub">10 owners/staff across manufacturer · showroom · retailer, traced over 1→3→6→12 months against the Hook Model the app actually ships.</p>
+
+  <div class="sec-h">The hook loop (built into the app)</div>
+  <div class="loop">
+    <div class="step"><div class="k">Trigger</div><h3>Daily Morning Briefing</h3><p>"₹2.4L udhaar pending from 6 customers" + a push. The reason to open every day.</p></div>
+    <div class="step"><div class="k">Action</div><h3>One "Do now" tap</h3><p>Chase money / follow a quote / dispatch a job — role-prioritised, one tap.</p></div>
+    <div class="step"><div class="k">Variable reward</div><h3>Confetti when money lands</h3><p>"₹X collected since you were here" + a rotating daily highlight. Wins feel like wins.</p></div>
+    <div class="step"><div class="k">Investment</div><h3>🔥 Day-streak + your data</h3><p>Streak loss-aversion + accumulating stock/ledger that makes leaving costly.</p></div>
+  </div>
+
+  <div class="sec-h">10 users · habit verdict</div>
+  <table>
+    <thead><tr><th>Persona</th><th>Type</th><th>Tech</th><th>12-month verdict</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Rajesh — gangsaw unit</td><td>Mfr</td><td>Low</td><td><span class="pill p-good">Sticky</span></td><td>Udhaar + dispatch hooks</td></tr>
+      <tr><td>Imran &amp; son — marble proc.</td><td>Mfr</td><td>Mixed</td><td><span class="pill p-good">Very sticky</span></td><td>Son = in-house champion</td></tr>
+      <tr><td>Anita — quartz maker</td><td>Mfr</td><td>High</td><td><span class="pill p-amber">At risk</span></td><td>Hits a feature ceiling (BOM/batch)</td></tr>
+      <tr><td>Karthik — premium showroom</td><td>Showroom</td><td>Med</td><td><span class="pill p-good">Sticky</span></td><td>AR catalogue = lead engine</td></tr>
+      <tr><td>Meena — showroom sales mgr</td><td>Showroom</td><td>Med</td><td><span class="pill p-good">Very sticky</span></td><td>Role briefing + streak fit</td></tr>
+      <tr><td>Joseph — showroom + projects</td><td>Showroom</td><td>Med</td><td><span class="pill p-amber">Lukewarm</span></td><td>Needs project/BOQ stages</td></tr>
+      <tr><td>Suresh — udhaar-heavy dealer</td><td>Retailer</td><td>Low</td><td><span class="pill p-good">Stickiest</span></td><td>Udhaar ledger = the "aha"</td></tr>
+      <tr><td>Priya — boutique retailer</td><td>Retailer</td><td>High</td><td><span class="pill p-good">Sticky</span></td><td>IG→catalogue + celebration</td></tr>
+      <tr><td>Gopal — rural dealer</td><td>Retailer</td><td>V. low</td><td><span class="pill p-red">Weak</span></td><td>Literacy / connectivity wall</td></tr>
+      <tr><td>Faisal — 3-store chain</td><td>Retailer</td><td>Med</td><td><span class="pill p-amber">Conditional</span></td><td>Needs multi-outlet</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:12px;font-size:13px;color:var(--dim)"><b style="color:var(--txt)">Net:</b> ~6 strongly habit-forming · 2 conditional · 2 at-risk. Hooks <b style="color:var(--good)">best</b> where there's daily money pain (udhaar) + few alternatives; <b style="color:var(--red)">worst</b> where users are too advanced or too low-tech/disconnected.</p>
+
+  <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div class="quad s"><h2>✅ Where the hook fires</h2><ol>
+      <li><b>Udhaar is the killer trigger</b> — every owner obsesses over who owes money; surfaced first.</li>
+      <li><b>Streak + confetti</b> make a back-office tool genuinely rewarding to open.</li>
+      <li><b>Role-aware briefing</b> forms the habit across the whole team, not just the owner.</li>
+      <li><b>Catalogue + WhatsApp</b> create an external pull ("did they see it?").</li>
+    </ol></div>
+    <div class="quad w"><h2>⚠️ Where it leaks (churn)</h2><ol>
+      <li><b>Month-1 onboarding cliff</b> — heavy data entry before the first reward. #1 churn point.</li>
+      <li><b>Cold start</b> — streak/celebration only feel good once data + real payments exist.</li>
+      <li><b>Streak is localStorage-only</b> — resets on new device; the investment leaks (flagged "v1").</li>
+      <li><b>Push not yet real</b> — trigger depends on the user remembering to open.</li>
+    </ol></div>
+  </div>
+
+  <div class="sec-h">Complete SWOT</div>
+  <div class="swot">
+    <div class="quad s"><h2>🟢 Strengths</h2><ol>
+      <li><b>Vertical depth rivals lack</b> — block→slab, sq-ft/running-ft, recovery wedge, 3D+AR catalogue.</li>
+      <li><b>GST done right</b> — Rule-46 invoice, CGST/SGST/IGST, HSN/UQC, FY numbering, paise-accurate.</li>
+      <li><b>Designed-in habit loop</b> — briefing → do-now → celebration → streak. Rare in SMB ERP.</li>
+      <li><b>Mobile + WhatsApp + UPI native</b> — matches how Indian traders actually work.</li>
+      <li><b>Udhaar as the spine</b> — the one number checked daily, surfaced first.</li>
+      <li><b>Multi-tenant, RLS, role-aware</b> + premium brand (made by HandelOS).</li>
+    </ol></div>
+    <div class="quad w"><h2>🔴 Weaknesses</h2><ol>
+      <li><b>Onboarding friction</b> — steep first-week data hill; no guided setup / photo capture.</li>
+      <li><b>Streak &amp; "last seen" localStorage-only</b> — don't survive devices.</li>
+      <li><b>Push notifications not yet real</b> — half the hook unproven.</li>
+      <li><b>Single-company / single-location</b> — no multi-outlet, no inter-branch transfer.</li>
+      <li><b>Manufacturer depth gaps</b> — no BOM, batch wastage, project/BOQ.</li>
+      <li><b>Supplier side thin</b>; place-of-supply intra default; no data-export story yet.</li>
+    </ol></div>
+    <div class="quad o"><h2>🟡 Opportunities</h2><ol>
+      <li><b>Receivables → financing</b> — reminders, then invoice financing on proven udhaar.</li>
+      <li><b>Vernacular + voice + offline</b> — unlock the rural/low-tech long tail.</li>
+      <li><b>WhatsApp as the trigger channel</b> — deliver the briefing where they live.</li>
+      <li><b>Stone Finder AI + AR catalogue</b> — novel lead-gen; the showroom hook.</li>
+      <li><b>Slab Bazaar</b> — cross-tenant idle-slab exchange = network effects.</li>
+      <li><b>CA/GSTR export + benchmarks</b> — turn the accountant into an advocate.</li>
+    </ol></div>
+    <div class="quad t"><h2>⚠️ Threats</h2><ol>
+      <li><b>Tally/Vyapar incumbency + accountant lock-in</b> — "my CA uses Tally."</li>
+      <li><b>Habit loop can feel gimmicky</b> to no-nonsense older owners.</li>
+      <li><b>Connectivity/literacy</b> caps the addressable base without offline+vernacular.</li>
+      <li><b>Data-trust &amp; DPDP</b> — a breach or "they have my customer list" fear kills trust.</li>
+      <li><b>Fast-follower</b> — Vyapar could add a "stone pack"; defend with habit + brand.</li>
+      <li><b>Platform dependence</b> — WhatsApp/UPI policy; single-Supabase fragility.</li>
+    </ol></div>
+  </div>
+
+  <div class="take"><h2>The three sharpest moves</h2><ol>
+    <li><b>Win the first week or lose the user</b> — guided setup, sample data, snap-a-slab / WhatsApp-assisted import. Highest-ROI fix.</li>
+    <li><b>Make the trigger real &amp; durable</b> — deliver the briefing via WhatsApp; move streak/last-seen to the server.</li>
+    <li><b>The udhaar loop is the moat — deepen it</b> — reminders → financing → benchmarks. The one ritual every persona shares.</li>
+  </ol></div>
+
+  <div class="foot">Grounded in the shipping app: <code>briefing.ts</code> (role-aware daily briefing), <code>StreakChip</code>, <code>CelebrationLayer</code>, party ledger, GST invoicing, AR/3D catalogue.</div>
+</div>
+</body>
+</html>

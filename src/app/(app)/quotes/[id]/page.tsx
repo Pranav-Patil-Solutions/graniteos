@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft, Pencil } from "lucide-react";
-import { requireSession } from "@/lib/auth";
+import { ChevronLeft, Pencil, Plus, ArrowUpRight } from "lucide-react";
+import { requireModuleAccess } from "@/lib/access-control-guard";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR, formatINRPrecise } from "@/lib/money";
 import QuoteActions from "@/components/quotes/QuoteActions";
@@ -18,7 +18,7 @@ type Item = {
 
 export default async function QuotePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const me = await requireSession();
+  const { user: me, viewOnly } = await requireModuleAccess("quotes");
   const supabase = await createClient();
   const { data: company } = await supabase
     .from("companies")
@@ -35,13 +35,14 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
     .single();
   if (!quote) notFound();
 
-  const [{ data: itemsData }, { data: order }] = await Promise.all([
+  const [{ data: itemsData }, { data: order }, { data: linkedPO }] = await Promise.all([
     supabase
       .from("quote_items")
       .select("id, description, sqft, rate_paise, gst_rate, line_total_paise")
       .eq("quote_id", id)
       .order("created_at", { ascending: true }),
     supabase.from("orders").select("id, order_no").eq("quote_id", id).maybeSingle(),
+    supabase.from("purchase_orders").select("id, po_no, status").eq("quote_id", id).maybeSingle(),
   ]);
   const items = (itemsData ?? []) as Item[];
   const customer = (
@@ -49,7 +50,7 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
   ).parties;
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <Link
         href="/quotes"
         className="inline-flex items-center gap-1 text-sm text-slate-400 hover:text-slate-200"
@@ -66,7 +67,7 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {!order && quote.status !== "accepted" && (
+          {!order && quote.status !== "accepted" && !viewOnly && (
             <Link
               href={`/quotes/${id}/edit`}
               className="inline-flex items-center gap-1 rounded-md border border-graphite-500 px-2.5 py-1 text-xs font-semibold text-slate-200 hover:border-gold hover:text-gold"
@@ -117,6 +118,39 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
 
       {quote.notes && <p className="mt-3 text-xs text-slate-400">Terms: {quote.notes}</p>}
 
+      {/* Linked purchase order (procurement) */}
+      <div className="mt-4 rounded-2xl border border-graphite-600 bg-white/[0.04] p-4">
+        {linkedPO ? (
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-gold">Linked purchase order</p>
+              <p className="mt-1 text-sm text-white">
+                {linkedPO.po_no} <span className="text-slate-400 capitalize">· {linkedPO.status}</span>
+              </p>
+            </div>
+            <Link
+              href={`/purchase-orders/${linkedPO.id}`}
+              className="inline-flex items-center gap-1 rounded-lg border border-gold/40 bg-gold/15 text-gold px-3 py-1.5 text-sm font-semibold"
+            >
+              View PO <ArrowUpRight className="w-4 h-4" />
+            </Link>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Procurement</p>
+              <p className="mt-1 text-sm text-slate-300">No PO raised for this quote yet.</p>
+            </div>
+            <Link
+              href={`/purchase-orders/new?quote=${id}`}
+              className="inline-flex items-center gap-1 rounded-lg bg-granite-green2 text-white px-3 py-1.5 text-sm font-bold"
+            >
+              <Plus className="w-4 h-4" /> Raise PO
+            </Link>
+          </div>
+        )}
+      </div>
+
       <div className="mt-4">
         <ShareWhatsApp
           phone={customer?.phone ?? null}
@@ -131,7 +165,7 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
         />
       </div>
 
-      <QuoteActions quoteId={id} status={quote.status} hasOrder={!!order} />
+      <QuoteActions quoteId={id} status={quote.status} hasOrder={!!order} viewOnly={viewOnly} />
     </div>
   );
 }

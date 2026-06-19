@@ -3,13 +3,7 @@
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import {
-  sendOtp,
-  verifyOtp,
-  signInPassword,
-  signUpPassword,
-  type Channel,
-} from "@/actions/auth";
+import { signInPassword, signUpPassword } from "@/actions/auth";
 import { Button } from "@/components/ui/Button";
 
 function LoginInner() {
@@ -17,64 +11,35 @@ function LoginInner() {
   const params = useSearchParams();
   const redirectTo = params.get("redirectTo");
 
-  const [channel, setChannel] = useState<Channel>("phone");
-  const [step, setStep] = useState<"identify" | "otp">("identify");
-  const [value, setValue] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pwMode, setPwMode] = useState<"signin" | "signup">("signin");
-  const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  function goNext(next: string) {
-    router.replace(redirectTo || next);
+  function finish(res: { next?: string; mfaRequired?: boolean }) {
+    if (res.mfaRequired) {
+      const q = redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : "";
+      router.replace(`/mfa${q}`);
+    } else {
+      router.replace(redirectTo || res.next || "/dashboard");
+    }
     router.refresh();
   }
 
-  async function onSendOtp(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    const res = await sendOtp(channel, value);
-    setLoading(false);
-    if ("error" in res) return setError(res.error ?? '');
-    setStep("otp");
-  }
-
-  async function onVerifyOtp(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    const res = await verifyOtp(channel, value, otp);
-    if ("error" in res) {
-      setLoading(false);
-      return setError(res.error ?? '');
-    }
-    goNext(res.next!);
-  }
-
-  async function onPassword(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
     const res =
       pwMode === "signin"
-        ? await signInPassword(value, password)
-        : await signUpPassword(value, password);
+        ? await signInPassword(email, password)
+        : await signUpPassword(email, password);
     if ("error" in res) {
       setLoading(false);
-      return setError(res.error ?? '');
+      return setError(res.error ?? "");
     }
-    goNext(res.next!);
-  }
-
-  function pickChannel(c: Channel) {
-    setChannel(c);
-    setStep("identify");
-    setValue("");
-    setPassword("");
-    setOtp("");
-    setError("");
+    finish(res);
   }
 
   return (
@@ -91,145 +56,72 @@ function LoginInner() {
         </div>
         <h1 className="mt-4 font-display text-3xl font-semibold text-white tracking-tight">GraniteOS</h1>
         <p className="text-[10px] uppercase tracking-[0.32em] text-gold/70 mt-1.5">made by HandelOS</p>
-        {/* classical flourish divider */}
         <div className="mt-4 flex items-center gap-2 w-32" aria-hidden>
           <span className="h-px flex-1 bg-gradient-to-r from-transparent to-gold/40" />
           <span className="w-1.5 h-1.5 rotate-45 bg-gold/70" />
           <span className="h-px flex-1 bg-gradient-to-l from-transparent to-gold/40" />
         </div>
         <p className="mt-3.5 text-sm text-slate-300">
-          {step === "otp"
-            ? `Enter the code sent to ${value}`
-            : "The operating system for the stone trade"}
+          {pwMode === "signin"
+            ? "Sign in to your account"
+            : "Create your GraniteOS account"}
         </p>
       </div>
 
-      {/* Phone / Email / Password toggle */}
-      {step === "identify" && (
-        <div className="grid grid-cols-3 gap-1 p-1 mb-4 rounded-xl bg-white/[0.04] border border-graphite-600">
-          {(["phone", "email", "password"] as Channel[]).map((c) => (
-            <button
-              key={c}
-              type="button"
-              onClick={() => pickChannel(c)}
-              className={`rounded-lg py-2 text-sm font-semibold capitalize transition-colors ${
-                channel === c ? "bg-gold/15 text-gold" : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-      )}
+      <form onSubmit={onSubmit} className="space-y-4">
+        <label className="block">
+          <span className="text-sm font-medium text-slate-300">Username (email)</span>
+          <input
+            suppressHydrationWarning
+            type="email"
+            inputMode="email"
+            autoComplete="username"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@email.com"
+            aria-invalid={!!error || undefined}
+            aria-describedby={error ? "login-error" : undefined}
+            className="mt-1.5 w-full text-base focus:border-gold outline-none"
+          />
+        </label>
+        <label className="block">
+          <span className="text-sm font-medium text-slate-300">Password</span>
+          <input
+            suppressHydrationWarning
+            type="password"
+            autoComplete={pwMode === "signin" ? "current-password" : "new-password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="At least 6 characters"
+            aria-invalid={!!error || undefined}
+            aria-describedby={error ? "login-error" : undefined}
+            className="mt-1.5 w-full text-base focus:border-gold outline-none"
+          />
+        </label>
 
-      {/* PASSWORD mode */}
-      {channel === "password" ? (
-        <form onSubmit={onPassword} className="space-y-4">
-          <label className="block">
-            <span className="text-sm font-medium text-slate-300">Email address</span>
-            <input
-              suppressHydrationWarning
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder="you@email.com"
-              className="mt-1.5 w-full text-base focus:border-gold outline-none"
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm font-medium text-slate-300">Password</span>
-            <input
-              suppressHydrationWarning
-              type="password"
-              autoComplete={pwMode === "signin" ? "current-password" : "new-password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="At least 6 characters"
-              className="mt-1.5 w-full text-base focus:border-gold outline-none"
-            />
-          </label>
-          {error && <ErrorPill>{error}</ErrorPill>}
-          <Button type="submit" variant="press" className="w-full" disabled={loading}>
-            {loading
-              ? "Please wait..."
-              : pwMode === "signin"
-                ? "Sign in"
-                : "Create account"}
-          </Button>
-          <button
-            type="button"
-            onClick={() => {
-              setPwMode(pwMode === "signin" ? "signup" : "signin");
-              setError("");
-            }}
-            className="w-full text-sm text-slate-500 hover:text-slate-300"
-          >
-            {pwMode === "signin"
-              ? "First time here? Create an account"
-              : "Already have an account? Sign in"}
-          </button>
-        </form>
-      ) : step === "identify" ? (
-        /* PHONE / EMAIL — step 1: identifier */
-        <form onSubmit={onSendOtp} className="space-y-4">
-          <label className="block">
-            <span className="text-sm font-medium text-slate-300">
-              {channel === "phone" ? "Phone number" : "Email address"}
-            </span>
-            <input
-              suppressHydrationWarning
-              key={channel}
-              type={channel === "phone" ? "tel" : "email"}
-              inputMode={channel === "phone" ? "tel" : "email"}
-              autoComplete={channel === "phone" ? "tel" : "email"}
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder={channel === "phone" ? "+91 99999 99999" : "you@email.com"}
-              className="mt-1.5 w-full text-base focus:border-gold outline-none"
-            />
-          </label>
-          {error && <ErrorPill>{error}</ErrorPill>}
-          <Button type="submit" variant="press" className="w-full" disabled={loading}>
-            {loading ? "Sending..." : "Send code"}
-          </Button>
-        </form>
-      ) : (
-        /* PHONE / EMAIL — step 2: OTP */
-        <form onSubmit={onVerifyOtp} className="space-y-4">
-          <label className="block">
-            <span className="text-sm font-medium text-slate-300">Verification code</span>
-            <input
-              suppressHydrationWarning
-              type="text"
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              maxLength={6}
-              value={otp}
-              onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-              placeholder="••••••"
-              style={{ height: 64 }}
-              className="mt-1.5 w-full text-center text-2xl tracking-[0.5em] focus:border-gold outline-none"
-            />
-          </label>
-          {error && <ErrorPill>{error}</ErrorPill>}
-          <Button type="submit" variant="press" className="w-full" disabled={loading}>
-            {loading ? "Verifying..." : "Verify & continue"}
-          </Button>
-          <button
-            type="button"
-            onClick={() => {
-              setStep("identify");
-              setOtp("");
-              setError("");
-            }}
-            className="w-full text-sm text-slate-500 hover:text-slate-300"
-          >
-            Use a different {channel === "phone" ? "phone number" : "email"}
-          </button>
-        </form>
-      )}
+        {error && <ErrorPill id="login-error">{error}</ErrorPill>}
+
+        <Button type="submit" variant="press" className="w-full" disabled={loading}>
+          {loading
+            ? "Please wait..."
+            : pwMode === "signin"
+              ? "Login"
+              : "Create account"}
+        </Button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setPwMode(pwMode === "signin" ? "signup" : "signin");
+            setError("");
+          }}
+          className="w-full text-sm text-slate-500 hover:text-slate-300"
+        >
+          {pwMode === "signin"
+            ? "First time here? Create an account"
+            : "Already have an account? Sign in"}
+        </button>
+      </form>
 
       <p className="mt-6 text-center text-[11px] text-slate-500">
         By continuing you agree to our{" "}
@@ -254,9 +146,10 @@ export default function LoginPage() {
   );
 }
 
-function ErrorPill({ children }: { children: React.ReactNode }) {
+function ErrorPill({ children, id }: { children: React.ReactNode; id?: string }) {
   return (
-    <div className="rounded-lg bg-red-500/10 text-red-300 text-sm px-3 py-2 border border-red-500/20">
+    /* role=alert + aria-live=assertive → AT announces the error immediately (WCAG 3.3.1 / 4.1.3) */
+    <div id={id} role="alert" aria-live="assertive" className="rounded-lg bg-red-500/10 text-red-300 text-sm px-3 py-2 border border-red-500/20">
       {children}
     </div>
   );

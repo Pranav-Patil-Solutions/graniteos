@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import CatalogView, { type CatalogSlab } from "@/components/catalog/CatalogView";
+import { resolvePhotoUrls } from "@/lib/photos";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +31,9 @@ export default async function CatalogPage({ params }: { params: Promise<{ id: st
     .limit(200);
 
   const rows = (slabData ?? []) as unknown as Row[];
-  const slabs: CatalogSlab[] = rows.map((r) => ({
+  // Resolve photo_paths to signed URLs before handing to the client component.
+  // Dual-mode: legacy full URLs pass through; object paths get a 1-hour signed URL.
+  const rawSlabs: CatalogSlab[] = rows.map((r) => ({
     id: r.id,
     sqft: r.sqft,
     finish: r.finish,
@@ -39,6 +42,8 @@ export default async function CatalogPage({ params }: { params: Promise<{ id: st
     material: r.blocks?.material ?? "Stone",
     color: r.blocks?.color ?? null,
   }));
+  const photoUrls = await resolvePhotoUrls(rawSlabs.map((s) => s.photo_path));
+  const slabs: CatalogSlab[] = rawSlabs.map((s, i) => ({ ...s, photo_path: photoUrls[i] }));
 
   return (
     <CatalogView

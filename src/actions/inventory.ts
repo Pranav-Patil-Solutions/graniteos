@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
-import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/permissions";
 import { requireEditAccess } from "@/lib/access-control-guard";
 import { blockSchema, slabSchema } from "@/lib/validation";
@@ -16,7 +15,11 @@ const PHOTO_TYPES: Record<string, string> = { "image/jpeg": "jpg", "image/png": 
  *  the service role server-side; ownership is checked via an RLS-scoped read
  *  first, so users can only attach photos to their own company's blocks. */
 export async function uploadBlockPhoto(input: { blockId: string; imageBase64: string; mimeType: string }) {
-  const me = await requireSession();
+  // A photo write is an inventory edit — gate it like addBlock/addSlab/setSlabStatus
+  // (was only requireSession, so a view-only user could overwrite block photos).
+  const guard = await requireEditAccess("inventory");
+  if ("error" in guard) return guard;
+  const me = guard.user;
 
   const blockId = String(input?.blockId || "");
   const ext = PHOTO_TYPES[String(input?.mimeType)];
@@ -44,16 +47,17 @@ export async function uploadBlockPhoto(input: { blockId: string; imageBase64: st
     });
   if (upErr) return { error: upErr.message.includes("Bucket not found") ? "Photo storage isn't set up yet — apply migration 0019 first." : upErr.message };
 
-  const { data: pub } = service.storage.from("stone-photos").getPublicUrl(path);
+  // Store the object path (not a public URL) so signed URLs can be generated
+  // server-side after the bucket goes private (migration 0027).
   const { error: updErr } = await supabase
     .from("blocks")
-    .update({ photo_path: pub.publicUrl })
+    .update({ photo_path: path })
     .eq("id", blockId);
   if (updErr) return { error: updErr.message };
 
   revalidatePath("/inventory");
   revalidatePath(`/inventory/${blockId}`);
-  return { ok: true as const, url: pub.publicUrl };
+  return { ok: true as const, url: path };
 }
 
 export async function addBlock(input: unknown) {

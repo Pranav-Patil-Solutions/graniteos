@@ -4,9 +4,14 @@ export const metadata = { title: "Privacy Policy · GraniteOS" };
 
 export default function PrivacyPage() {
   return (
-    <LegalDoc title="Privacy Policy" updated="10 June 2026">
+    <LegalDoc title="Privacy Policy" updated="14 June 2026">
+      {/* TODO(legal): replace with registered legal entity name + CIN before going live.
+          Example: "GraniteOS Technologies Private Limited (CIN: U72900MH2026PTC000000)"
+          Do NOT remove this comment until a lawyer has reviewed and approved the text. */}
       <p>
-        This Privacy Policy explains how <b>GraniteOS</b> (operated by <b>Vyaparwerk</b>, &quot;we&quot;, &quot;us&quot;)
+        This Privacy Policy explains how{" "}
+        <b>TODO(legal): &lt;Registered Entity Name Pvt Ltd&gt;</b> (operating as{" "}
+        <b>GraniteOS</b>; the &ldquo;Company&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;)
         collects, uses, shares and protects personal data when you use the Service. We aim to comply with
         India&apos;s <b>Digital Personal Data Protection Act, 2023 (DPDP Act)</b> and the Information
         Technology Act, 2000 and its SPDI Rules, 2011.
@@ -104,20 +109,36 @@ export default function PrivacyPage() {
       </ul>
 
       <h2>10. Grievance Officer</h2>
+      {/* TODO(legal): DPDP S.13 requires a NAMED Grievance Officer — replace the sentinel
+          below with the individual's full name before launch. Keep the email. */}
       <p>
         For any privacy question, data request or complaint, contact our Grievance Officer:
         <br />
-        <b>[Grievance Officer name]</b>, Vyaparwerk —{" "}
+        <b>TODO(legal): &lt;Grievance Officer Full Name&gt;</b> —{" "}
         <a href="mailto:privacy@graniteos.in">privacy@graniteos.in</a>. We aim to acknowledge within 72 hours
-        and resolve within 30 days.
+        and resolve within 30 days as required under the DPDP Act.
       </p>
 
       <h2>11. Data retention</h2>
       <p>
         We keep your data while your account is active. After closure we delete or anonymise personal data
-        within a reasonable period, except records we must retain for <b>legal, tax and GST purposes</b>
-        (generally up to <b>8 years</b>), after which they are deleted.
+        within a reasonable period, subject to the following statutory minimum retention requirements:
       </p>
+      <ul>
+        <li>
+          <b>Financial, GST and invoice records</b> — retained for a minimum of <b>8 years</b> from the
+          end of the relevant financial year, as required by the Companies Act, 2013 and GST Rules, 2017.
+        </li>
+        <li>
+          <b>System and access logs (security events)</b> — retained for a minimum of <b>180 days</b> in
+          accordance with the CERT-In Directions on Information Security Practices, 2022. Logs include
+          authentication events, access-control changes and security incidents.
+        </li>
+        <li>
+          All other personal data is deleted or anonymised promptly after account closure and after the
+          above minimum periods have elapsed.
+        </li>
+      </ul>
 
       <h2>12. Children</h2>
       <p>The Service is for businesses and not directed to anyone under 18. We do not knowingly process the data
@@ -127,10 +148,18 @@ export default function PrivacyPage() {
       <p>We may update this policy and will revise the &quot;last updated&quot; date; significant changes are
         communicated within the app.</p>
 
-      <h2>14. Contact</h2>
+      <h2>14. Contact &amp; Legal Entity</h2>
+      {/* TODO(legal): DPDP S.8 requires the legal entity name and registered address to be
+          published — replace both sentinels below with the actual registered details (name,
+          CIN, registered address) before going live. "Available on request" is NOT compliant. */}
       <p>
-        Vyaparwerk — <a href="mailto:hello@graniteos.in">hello@graniteos.in</a>. Operating-entity details and
-        registered address are available on request.
+        <a href="mailto:hello@graniteos.in">hello@graniteos.in</a>
+        <br />
+        Operating entity: <b>TODO(legal): &lt;Registered Entity Name Pvt Ltd&gt;</b>
+        <br />
+        CIN: <b>TODO(legal): &lt;CIN&gt;</b>
+        <br />
+        Registered address: <b>TODO(legal): &lt;Full Registered Address&gt;</b>
       </p>
     </LegalDoc>
   );

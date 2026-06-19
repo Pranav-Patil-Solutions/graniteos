@@ -80,7 +80,7 @@ export default async function MarketingPage() {
 
   return (
     <>
-      <div className="max-w-lg mx-auto px-4 pt-6">
+      <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-6">
         <Link href="/dashboard" className="inline-flex items-center gap-1 text-sm text-slate-400 hover:text-slate-200">
           <ChevronLeft className="w-4 h-4" /> Dashboard
         </Link>

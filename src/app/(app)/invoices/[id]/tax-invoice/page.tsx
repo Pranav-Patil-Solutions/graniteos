@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
-import { requireSession } from "@/lib/auth";
+import { requireModuleAccess } from "@/lib/access-control-guard";
 import { createClient } from "@/lib/supabase/server";
 import { parseStateFromGstin, supplyType as resolveSupplyType, DEFAULT_HSN } from "@/lib/gst";
 import TaxInvoiceDoc, { type InvoiceLine } from "@/components/money/TaxInvoiceDoc";
@@ -20,7 +20,7 @@ export default async function TaxInvoicePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const me = await requireSession();
+  const { user: me } = await requireModuleAccess("money");
   const supabase = await createClient();
 
   const { data: company } = await supabase

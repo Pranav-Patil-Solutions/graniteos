@@ -28,7 +28,7 @@ export default function LegalDoc({
           on it commercially.
         </div>
 
-        <div className="mt-6 space-y-5 text-[14px] leading-relaxed [&_h2]:text-white [&_h2]:font-bold [&_h2]:text-base [&_h2]:mt-6 [&_h2]:mb-1.5 [&_a]:text-gold [&_a]:underline [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_li]:marker:text-slate-500">
+        <div className="mt-6 space-y-5 text-sm leading-relaxed [&_h2]:text-white [&_h2]:font-bold [&_h2]:text-base [&_h2]:mt-6 [&_h2]:mb-1.5 [&_a]:text-gold [&_a]:underline [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_li]:marker:text-slate-500">
           {children}
         </div>
 

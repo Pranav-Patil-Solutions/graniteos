@@ -8,12 +8,15 @@ const COMPANY_ID = process.env.E2E_COMPANY_ID ?? "3767c423-177e-4b0c-855c-a0d53d
 const DB_READY = !!process.env.NEXT_PUBLIC_SUPABASE_URL;
 
 async function loginAsOwner(page: Page) {
-  await page.goto("/login");
-  await page.waitForLoadState("networkidle");
-  await page.locator('button:has-text("password")').first().click().catch(() => {});
-  await page.locator("input[type=email]").fill(EMAIL);
-  await page.locator("input[type=password]").fill(PASSWORD);
-  await page.locator('button:has-text("Sign in")').first().click();
+  // Redesigned login: plain email/password form, no tabs; submit is "Login".
+  await page.goto("/login", { waitUntil: "domcontentloaded" });
+  const email = page.locator("input[type=email]").first();
+  await email.waitFor({ state: "visible", timeout: 15_000 });
+  await email.fill(EMAIL);
+  await page.locator("input[type=password]").first().fill(PASSWORD);
+  const submit = page.locator("form button[type=submit]").first();
+  if (await submit.count()) await submit.click();
+  else await page.getByRole("button", { name: /login|sign in/i }).first().click();
   await page.waitForURL(/\/dashboard/, { timeout: 20_000 });
 }
 
@@ -69,8 +72,10 @@ test.describe("New features (owner)", () => {
 
   test("settings exposes Products and Import", async ({ page }) => {
     await page.goto("/settings");
-    await expect(page.getByRole("link", { name: /Products/i })).toBeVisible({ timeout: 15_000 });
-    await expect(page.getByRole("link", { name: /Import from Excel/i })).toBeVisible();
+    // The redesign surfaces Products in both the sidebar nav and a settings card,
+    // so scope to the first match (strict mode would otherwise see multiple links).
+    await expect(page.getByRole("link", { name: /Products/i }).first()).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole("link", { name: /Import from Excel/i }).first()).toBeVisible();
   });
 
   test("owner analytics dashboard loads with KPIs", async ({ page }) => {

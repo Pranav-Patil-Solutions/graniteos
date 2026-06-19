@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
-import { requireSession } from "@/lib/auth";
+import { requireModuleAccess } from "@/lib/access-control-guard";
 import { createClient } from "@/lib/supabase/server";
+import { resolvePhotoUrls } from "@/lib/photos";
 import { formatINR, formatINRPrecise } from "@/lib/money";
 import { BlockPhoto } from "@/components/inventory/BlockPhoto";
 import BlockPhotoButton from "@/components/inventory/BlockPhotoButton";
@@ -29,7 +30,7 @@ type Slab = {
 
 export default async function BlockPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  await requireSession();
+  const { viewOnly } = await requireModuleAccess("inventory");
   const supabase = await createClient();
 
   const { data: block } = await supabase
@@ -48,6 +49,15 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
     .eq("block_id", id)
     .order("created_at", { ascending: false });
   const slabs = (slabsData ?? []) as Slab[];
+
+  // Resolve block + slab photo_paths to renderable URLs (signed or legacy).
+  // First element = block, rest = slabs in the same order.
+  const [blockPhotoUrl, ...slabPhotoUrlsRaw] = await resolvePhotoUrls([
+    block.photo_path,
+    ...slabs.map((s) => s.photo_path),
+  ]);
+  // For each slab, fall back to the block's resolved URL if the slab has none.
+  const slabPhotoUrls = slabPhotoUrlsRaw.map((url) => url ?? blockPhotoUrl);
 
   const cbm =
     block.length_cm && block.width_cm && block.height_cm
@@ -70,7 +80,7 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
   const marginPct = potentialRevenue > 0 ? (potentialProfit / potentialRevenue) * 100 : 0;
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <Link
         href="/inventory"
         className="inline-flex items-center gap-1 text-sm text-slate-400 hover:text-slate-200"
@@ -81,17 +91,19 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
       {/* block hero — the REAL photo when uploaded, else an honest neutral
           chip. (3D stays on the public Slab Passport link, where it sells.) */}
       <div className="mt-3 relative h-44 rounded-3xl overflow-hidden border border-graphite-600 shadow-inner">
-        <BlockPhoto photoPath={block.photo_path} material={block.material} className="absolute inset-0 w-full h-full" />
-        {block.photo_path && (
+        <BlockPhoto photoPath={blockPhotoUrl} material={block.material} className="absolute inset-0 w-full h-full" />
+        {blockPhotoUrl && (
           <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
         )}
         <div className="absolute left-4 bottom-3">
           <p className={`text-sm font-bold ${block.photo_path ? "text-slab" : "text-slate-300"}`}>{block.material}</p>
           {block.color && <p className={`text-xs ${block.photo_path ? "text-slab-muted" : "text-slate-500"}`}>{block.color}</p>}
         </div>
-        <div className="absolute right-3 bottom-3">
-          <BlockPhotoButton blockId={block.id} hasPhoto={!!block.photo_path} />
-        </div>
+        {!viewOnly && (
+          <div className="absolute right-3 bottom-3">
+            <BlockPhotoButton blockId={block.id} hasPhoto={!!block.photo_path} />
+          </div>
+        )}
       </div>
 
       <div className="mt-3">
@@ -143,18 +155,20 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
         </div>
       )}
 
-      <div className="mt-5">
-        <AddSlabForm blockId={id} />
-      </div>
+      {!viewOnly && (
+        <div className="mt-5">
+          <AddSlabForm blockId={id} />
+        </div>
+      )}
 
       <div className="mt-4 space-y-2">
         {slabs.length === 0 && (
           <p className="text-center text-sm text-slate-500 py-4">No slabs cut from this block yet.</p>
         )}
-        {slabs.map((s) => (
+        {slabs.map((s, idx) => (
           <div key={s.id} className="rounded-2xl border border-graphite-600 bg-white/[0.04] p-3">
             <BlockPhoto
-              photoPath={s.photo_path ?? block.photo_path}
+              photoPath={slabPhotoUrls[idx]}
               material={block.material}
               className="w-full h-32 rounded-xl border border-white/10"
             />
@@ -187,12 +201,14 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
               </div>
               <div className="text-center shrink-0">
                 <SlabQR slabId={s.id} />
-                <p className="text-[9px] text-slate-500 mt-0.5">scan</p>
+                <p className="text-[10px] text-slate-500 mt-0.5">scan</p>
               </div>
             </div>
-            <div className="mt-2">
-              <SlabStatus slabId={s.id} blockId={id} status={s.status} />
-            </div>
+            {!viewOnly && (
+              <div className="mt-2">
+                <SlabStatus slabId={s.id} blockId={id} status={s.status} />
+              </div>
+            )}
           </div>
         ))}
       </div>

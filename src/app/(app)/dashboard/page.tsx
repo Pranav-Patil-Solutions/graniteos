@@ -52,7 +52,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 lg:px-8 pt-12 pb-8">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-slate-400">{greeting()},</p>
@@ -61,7 +61,7 @@ export default async function DashboardPage() {
         </div>
         <div className="flex items-center gap-3">
           {isOwner && (
-            <Link href="/settings" className="text-slate-400 hover:text-gold">
+            <Link href="/settings" aria-label="Settings" className="text-slate-400 hover:text-gold">
               <Settings className="w-5 h-5" />
             </Link>
           )}
@@ -89,7 +89,7 @@ export default async function DashboardPage() {
       {/* Getting Started checklist (owners only — client component, localStorage-backed) */}
       {isOwner && <GettingStartedCard counts={checklistCounts} />}
 
-      <p className="mt-6 text-center text-xs text-slate-500">
+      <p className="mt-6 text-center text-xs text-slate-500 lg:hidden">
         Tap <span className="text-gold font-semibold">☰</span> at the top-left for all sections.
       </p>
 

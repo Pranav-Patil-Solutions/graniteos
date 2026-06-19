@@ -46,6 +46,21 @@ export default function SlabViewer({
   // surface so the slab still "reads" on any device.
   const [failed, setFailed] = useState(false);
 
+  // WCAG 2.2.2 / 2.3.3 — auto-rotate pause control
+  // pauseRef drives the Three.js loop (reads current value each frame);
+  // uiPaused is for re-rendering the button label only.
+  const pauseRef = useRef(false);
+  const [uiPaused, setUiPaused] = useState(false);
+
+  // Initialise pauseRef from prefers-reduced-motion once on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+      pauseRef.current = reduced;
+      if (reduced) setUiPaused(true);
+    }
+  }, []);
+
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
@@ -221,7 +236,8 @@ export default function SlabViewer({
       } else if (gyro) {
         ry += (gTargetY - ry) * 0.08;
         rx += (gTargetX - rx) * 0.08;
-      } else if (auto) {
+      } else if (auto && !pauseRef.current) {
+        // WCAG 2.2.2: skip auto-rotate when user has paused or prefers-reduced-motion
         ry += 0.005;
       }
       slab.rotation.y = ry;
@@ -254,10 +270,30 @@ export default function SlabViewer({
   const positioned = /(?:^|\s)(?:absolute|fixed|relative)(?:\s|$)/.test(className);
 
   return (
-    <div className={`${positioned ? "" : "relative"} ${className}`}>
+    /* role=img + aria-label describe the 3D canvas for AT (WCAG 1.1.1) */
+    <div
+      className={`${positioned ? "" : "relative"} ${className}`}
+      role="img"
+      aria-label={`3D stone slab viewer — ${material ?? "stone"}${color ? `, ${color}` : ""}. Drag to rotate.`}
+    >
       <div ref={mountRef} className="absolute inset-0" />
       {failed && (
         <StoneSwatch material={material ?? "Stone"} color={color} className="absolute inset-0" />
+      )}
+      {/* WCAG 2.2.2 — visible pause/play toggle for auto-rotation */}
+      {!failed && (
+        <button
+          type="button"
+          onClick={() => {
+            const next = !pauseRef.current;
+            pauseRef.current = next;
+            setUiPaused(next);
+          }}
+          aria-label={uiPaused ? "Resume 3D rotation" : "Pause 3D rotation"}
+          className="absolute bottom-2 right-2 rounded-md bg-black/50 backdrop-blur px-2 py-0.5 text-[11px] text-slate-300 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold !min-h-0"
+        >
+          {uiPaused ? "▶ Play" : "⏸ Pause"}
+        </button>
       )}
     </div>
   );

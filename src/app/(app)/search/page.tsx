@@ -24,16 +24,20 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const query = q.trim();
 
   const hits: Hit[] = [];
+  let loadError = false;
   if (query) {
     const supabase = await createClient();
-    const [{ data: parties }, { data: blocks }, { data: invoices }, { data: quotes }, { data: orders }] =
-      await Promise.all([
-        supabase.from("parties").select("id, name, kind, phone, city, gstin"),
-        supabase.from("blocks").select("id, label, material, color, supplier, origin"),
-        supabase.from("invoices").select("id, invoice_no, customer_id, total_paise"),
-        supabase.from("quotes").select("id, quote_no, customer_id, total_paise"),
-        supabase.from("orders").select("id, order_no, status"),
-      ]);
+    const res = await Promise.all([
+      supabase.from("parties").select("id, name, kind, phone, city, gstin"),
+      supabase.from("blocks").select("id, label, material, color, supplier, origin"),
+      supabase.from("invoices").select("id, invoice_no, customer_id, total_paise"),
+      supabase.from("quotes").select("id, quote_no, customer_id, total_paise"),
+      supabase.from("orders").select("id, order_no, status"),
+    ]);
+    // A failed table is silently dropped from results — flag it so "no matches"
+    // isn't mistaken for "search is broken".
+    loadError = res.some((r) => r.error);
+    const [{ data: parties }, { data: blocks }, { data: invoices }, { data: quotes }, { data: orders }] = res;
 
     const nameById = new Map(((parties ?? []) as { id: string; name: string }[]).map((p) => [p.id, p.name] as const));
     const nm = (id: string | null) => (id ? nameById.get(id) ?? "—" : "—");
@@ -61,7 +65,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   }
 
   return (
-    <div className="px-4 pt-12 pb-8 max-w-2xl mx-auto">
+    <div className="px-4 pt-12 pb-8 max-w-2xl lg:max-w-6xl mx-auto">
       <h1 className="text-2xl font-bold text-white">Search</h1>
       <p className="text-sm text-slate-400 mb-4">One box for everything — names work in Hindi or English.</p>
 
@@ -75,6 +79,12 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           className="w-full rounded-xl bg-white/[0.05] border border-graphite-600 pl-10 pr-3 py-2.5 text-sm text-slate-100 placeholder:text-slate-500"
         />
       </form>
+
+      {loadError && (
+        <div className="mb-4 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
+          Some results couldn&apos;t be loaded just now — this list may be incomplete. Please try again.
+        </div>
+      )}
 
       {!query ? (
         <Card><p className="text-sm text-slate-400">Try a name, a stone, an invoice number, a phone or a city.</p></Card>

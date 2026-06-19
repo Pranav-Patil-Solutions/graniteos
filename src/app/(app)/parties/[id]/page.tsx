@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft, Phone, Mail, MapPin, FileText, ShoppingCart, ReceiptText, Wallet, Box } from "lucide-react";
-import { requireSession } from "@/lib/auth";
+import { requireModuleAccess } from "@/lib/access-control-guard";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR } from "@/lib/money";
 import { stateLabel } from "@/lib/gst";
@@ -35,7 +35,7 @@ const META = {
 
 export default async function PartyPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  await requireSession();
+  await requireModuleAccess("parties");
   const supabase = await createClient();
 
   const { data: party } = await supabase
@@ -136,7 +136,7 @@ export default async function PartyPage({ params }: { params: Promise<{ id: stri
     : [];
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <Link href="/parties" className="inline-flex items-center gap-1 text-sm text-slate-400 hover:text-slate-200">
         <ChevronLeft className="w-4 h-4" /> Parties
       </Link>

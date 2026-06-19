@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraniteOS — What We Actually Sell</title>
+<style>
+  :root{--bg:#0c0a08;--card:rgba(255,255,255,.04);--stroke:rgba(255,255,255,.10);--txt:#f4f1ec;--dim:#a39b8e;--gold:#e0b07a;--gold2:#c8a24b;--good:#34d399;--red:#f87171;--info:#6c8cff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(1200px 700px at 80% -12%,rgba(201,139,75,.22),transparent 58%),radial-gradient(900px 600px at -8% 110%,rgba(31,138,112,.13),transparent 55%),var(--bg);color:var(--txt);min-height:100vh;padding:46px 24px 80px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto}
+  .eyebrow{letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:var(--gold);font-weight:600}
+  h1{font-size:clamp(30px,5vw,50px);line-height:1.06;margin:8px 0 8px;font-weight:800;letter-spacing:-.02em}
+  .sub{color:var(--dim);font-size:16px;max-width:720px}
+  .stamp{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--dim);border:1px solid var(--stroke);padding:6px 12px;border-radius:999px;background:var(--card)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 12px var(--good)}
+
+  .excl{margin-top:18px;display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12.5px;color:var(--dim)}
+  .excl b{color:#fca5a5}
+  .excl span{border:1px dashed rgba(248,113,113,.35);border-radius:999px;padding:4px 10px;color:#fca5a5;text-decoration:line-through;opacity:.8}
+
+  .promise{margin-top:22px;border:1px solid rgba(201,139,75,.35);background:linear-gradient(180deg,rgba(201,139,75,.10),rgba(255,255,255,.02));border-radius:18px;padding:22px 24px}
+  .promise .k{font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--gold);font-weight:700}
+  .promise p{font-size:clamp(18px,2.4vw,24px);font-weight:700;margin-top:8px;line-height:1.35;letter-spacing:-.01em}
+  .promise .g{color:var(--gold)}
+
+  .sec-h{margin:34px 0 14px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;display:flex;align-items:center;gap:10px}
+  .sec-h::after{content:"";flex:1;height:1px;background:var(--stroke)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+  .mod{border:1px solid var(--stroke);background:var(--card);border-radius:16px;padding:18px;position:relative;transition:transform .15s,border-color .15s}
+  .mod:hover{transform:translateY(-3px);border-color:rgba(201,139,75,.45)}
+  .mod .ic{font-size:24px}
+  .mod h3{font-size:15.5px;font-weight:700;margin:8px 0 2px}
+  .mod .tag{font-size:11px;color:var(--gold);font-weight:600}
+  .mod ul{list-style:none;margin-top:10px;display:flex;flex-direction:column;gap:5px}
+  .mod li{font-size:12.6px;color:var(--dim);line-height:1.45;padding-left:16px;position:relative}
+  .mod li::before{content:"›";position:absolute;left:0;color:var(--gold2);font-weight:700}
+  .badge{position:absolute;top:16px;right:16px;font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;background:rgba(52,211,153,.14);color:var(--good)}
+
+  .oneline{margin-top:30px;border-left:3px solid var(--gold2);background:linear-gradient(90deg,rgba(201,139,75,.08),transparent);padding:18px 20px;border-radius:0 14px 14px 0}
+  .oneline .k{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);font-weight:700}
+  .oneline p{font-size:17px;line-height:1.5;margin-top:6px}
+  .oneline b{color:var(--gold)}
+  .foot{margin-top:26px;border-top:1px solid var(--stroke);padding-top:14px;font-size:12.5px;color:var(--dim);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stamp"><span class="dot"></span>GraniteOS · the substance · June 2026</div>
+  <p class="eyebrow" style="margin-top:18px">What we actually sell — buzzwords removed</p>
+  <h1>The product without the hype</h1>
+  <p class="sub">Strip out everything flashy and this is still a complete, GST-correct business system for a stone trader.</p>
+  <div class="excl"><b>Excluded here:</b> <span>AI catalogue</span> <span>AR try-on</span> <span>Stone Finder AI</span> <span>3D slab</span> <span>AI marketing copy</span></div>
+
+  <div class="promise">
+    <div class="k">The core promise</div>
+    <p>Run your <span class="g">entire granite/marble business from your phone</span> — stock, billing, udhaar &amp; the floor — with <span class="g">GST done right.</span></p>
+  </div>
+
+  <div class="sec-h">The 11 things they pay for</div>
+  <div class="grid">
+    <div class="mod"><span class="badge">CORE</span><div class="ic">🪨</div><h3>Stock built for stone</h3><div class="tag">No generic ERP does this</div>
+      <ul><li>Block → many numbered slabs</li><li>CBM, sq-ft, finish, grade, thickness, bundle, godown</li><li>In-stock / reserved / sold + rate</li><li>True cost &amp; profit per slab</li></ul></div>
+
+    <div class="mod"><span class="badge">TRUST</span><div class="ic">🧾</div><h3>GST billing, done right</h3><div class="tag">Rule-46 tax invoice</div>
+      <ul><li>CGST/SGST/IGST by place-of-supply</li><li>HSN/UQC per line, round-off, amount in words</li><li>FY numbering (INV/2026-27/0001)</li><li>GSTIN format + check-digit validation</li></ul></div>
+
+    <div class="mod"><span class="badge">DAILY</span><div class="ic">💰</div><h3>Udhaar / receivables</h3><div class="tag">The reason to open it</div>
+      <ul><li>Who owes how much, per-invoice pending vs paid</li><li>Record cash / UPI / bank / cheque</li><li>Auto paid·partial·unpaid status</li><li>Daily "chase ₹X from N customers"</li></ul></div>
+
+    <div class="mod"><div class="ic">👥</div><h3>Customers &amp; suppliers</h3><div class="tag">CRM + ledger</div>
+      <ul><li>Full timeline: quote→order→invoice→payment</li><li>Credit limits, opening balances, GSTIN</li><li>Supplier blocks supplied</li></ul></div>
+
+    <div class="mod"><div class="ic">📋</div><h3>Quotes &amp; orders</h3><div class="tag">Industry units built-in</div>
+      <ul><li>sq-ft, running-ft, slab, piece, bundle, CBM, tonne</li><li>Edit quotes; convert to order</li><li>Status: confirmed → dispatched → delivered</li></ul></div>
+
+    <div class="mod"><div class="ic">🏭</div><h3>Fabrication floor</h3><div class="tag">Production tracking</div>
+      <ul><li>Jobs: queued → cutting → polishing → edging → QC → ready → dispatched</li><li>By machine</li></ul></div>
+
+    <div class="mod"><div class="ic">📦</div><h3>Products master</h3><div class="tag">Pick &amp; bill</div>
+      <ul><li>Reusable products: default rate, unit, HSN, GST</li><li>No re-typing line items</li></ul></div>
+
+    <div class="mod"><div class="ic">📊</div><h3>Owner analytics</h3><div class="tag">Real visibility</div>
+      <ul><li>Revenue · collected · receivables · stock value</li><li>6-month trend, pending-invoices list</li><li>Quote conversion, top customers</li></ul></div>
+
+    <div class="mod"><div class="ic">🔗</div><h3>Shareable catalogue</h3><div class="tag">Plain version (no AR/AI)</div>
+      <ul><li>Public live-stock link: search / sort / filter</li><li>Per-slab QR + "slab passport" page</li></ul></div>
+
+    <div class="mod"><div class="ic">⚙️</div><h3>Team, roles &amp; setup</h3><div class="tag">Multi-user</div>
+      <ul><li>4 roles: owner / sales / store / fabrication</li><li>Team invites, role-aware screens</li><li>Bulk Excel import (customers, slabs, jobs…)</li></ul></div>
+
+    <div class="mod"><div class="ic">💬</div><h3>WhatsApp + UPI everywhere</h3><div class="tag">How India actually transacts</div>
+      <ul><li>Quotes, bills, receipts, reminders on WhatsApp</li><li>One-tap UPI pay-link on every bill</li></ul></div>
+  </div>
+
+  <div class="oneline">
+    <div class="k">In one line — no buzzwords</div>
+    <p>GraniteOS = <b>Tally's billing</b> + <b>Vyapar's mobile</b> + <b>a stock system that understands slabs</b> + <b>an udhaar ledger that chases your money</b> — one app, GST-correct.</p>
+  </div>
+
+  <div class="foot">
+    <b style="color:var(--txt)">The takeaway:</b> with AI, AR and VR removed entirely, the product is still a full <b style="color:var(--txt)">mobile GST + stock + receivables system purpose-built for the stone trade</b> — the exact gap Tally / Vyapar / BUSY / Zoho leave open. The AI/AR features are accelerants on top, not the foundation.
+  </div>
+</div>
+</body>
+</html>

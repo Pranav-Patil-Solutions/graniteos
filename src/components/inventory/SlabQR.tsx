@@ -14,7 +14,7 @@ export default async function SlabQR({ slabId, size = 56 }: { slabId: string; si
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={dataUrl}
-      alt="slab QR"
+      alt="QR code — scan to view slab"
       width={size}
       height={size}
       className="rounded-md bg-white p-0.5 shrink-0"

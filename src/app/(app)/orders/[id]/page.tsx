@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft, Pencil } from "lucide-react";
-import { requireSession } from "@/lib/auth";
+import { requireModuleAccess } from "@/lib/access-control-guard";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR } from "@/lib/money";
 import OrderStatus from "@/components/orders/OrderStatus";
@@ -9,7 +9,7 @@ import OrderInvoiceButton from "@/components/money/OrderInvoiceButton";
 
 export default async function OrderPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  await requireSession();
+  const { viewOnly } = await requireModuleAccess("orders");
   const supabase = await createClient();
 
   const { data: order } = await supabase
@@ -43,7 +43,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <Link
         href="/orders"
         className="inline-flex items-center gap-1 text-sm text-slate-400 hover:text-slate-200"
@@ -58,7 +58,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
       </p>
 
       <div className="mt-4">
-        <OrderStatus orderId={id} status={order.status} />
+        <OrderStatus orderId={id} status={order.status} viewOnly={viewOnly} />
       </div>
 
       <div className="mt-5 space-y-2">
@@ -86,7 +86,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
           >
             View invoice {invoice.invoice_no}
           </Link>
-          {invoicePaid === 0 && (
+          {invoicePaid === 0 && !viewOnly && (
             <Link
               href={`/invoices/${invoice.id}/edit`}
               className="flex items-center justify-center gap-1.5 rounded-xl border border-graphite-500 px-4 py-2.5 text-sm font-semibold text-slate-200 hover:border-gold hover:text-gold"
@@ -98,7 +98,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
       ) : (
         <div className="mt-4 flex items-center justify-between rounded-xl border border-graphite-600 bg-white/[0.04] px-4 py-3">
           <span className="text-sm text-slate-300">No invoice yet</span>
-          <OrderInvoiceButton orderId={id} invoiceId={null} />
+          {!viewOnly && <OrderInvoiceButton orderId={id} invoiceId={null} />}
         </div>
       )}
     </div>

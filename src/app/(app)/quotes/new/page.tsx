@@ -1,9 +1,9 @@
-import { requireSession } from "@/lib/auth";
+import { requireModuleAccess } from "@/lib/access-control-guard";
 import { createClient } from "@/lib/supabase/server";
 import QuoteBuilder from "@/components/quotes/QuoteBuilder";
 
 export default async function NewQuotePage() {
-  await requireSession();
+  await requireModuleAccess("quotes", { needEdit: true });
   const supabase = await createClient();
 
   const [{ data: customers }, { data: slabs }, { data: products }] = await Promise.all([

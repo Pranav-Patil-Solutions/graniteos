@@ -20,7 +20,7 @@ export async function inviteTeamMember(input: unknown) {
   });
   if (error) {
     if (error.message.includes("seat_limit_reached"))
-      return { error: "User limit reached — contact Vyaparwerk to add seats." };
+      return { error: "User limit reached — contact support to add seats." };
     return { error: error.message };
   }
 
@@ -40,7 +40,10 @@ export async function acceptInvite(token: string) {
   if (error) {
     if (error.message.includes("invite_invalid_or_expired"))
       return { error: "This invite is invalid or has expired." };
-    return { error: error.message };
+    if (error.message.includes("already_member"))
+      return { error: "You're already part of a company — this invite can't be used." };
+    // Never surface raw DB exception text to the UI.
+    return { error: "We couldn't accept this invite. Please ask for a fresh one." };
   }
   return { ok: true as const };
 }

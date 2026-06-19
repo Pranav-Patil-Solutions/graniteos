@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Check, X } from "lucide-react";
 import { advanceStage, setQC } from "@/actions/fabrication";
@@ -16,10 +16,31 @@ const SHORT: Record<string, string> = {
   dispatched: "Sent",
 };
 
-export default function JobControls({ jobId, stage }: { jobId: string; stage: string }) {
+export default function JobControls({
+  jobId,
+  stage,
+  viewOnly = false,
+}: {
+  jobId: string;
+  stage: string;
+  viewOnly?: boolean;
+}) {
   const router = useRouter();
   const [pending, start] = useTransition();
+  const [err, setErr] = useState("");
   const idx = FAB_STAGES.indexOf(stage as (typeof FAB_STAGES)[number]);
+
+  function run(fn: () => Promise<{ error?: string } | { ok: true }>) {
+    setErr("");
+    start(async () => {
+      const r = await fn();
+      if (r && "error" in r) {
+        setErr(r.error ?? "Couldn't update the job.");
+        return;
+      }
+      router.refresh();
+    });
+  }
 
   return (
     <div>
@@ -38,43 +59,46 @@ export default function JobControls({ jobId, stage }: { jobId: string; stage: st
             >
               {SHORT[s]}
             </span>
-            {i < FAB_STAGES.length - 1 && <span className="text-slate-600 text-[9px] px-0.5">›</span>}
+            {i < FAB_STAGES.length - 1 && <span className="text-slate-600 text-[10px] px-0.5">›</span>}
           </div>
         ))}
       </div>
 
       {/* actions */}
-      <div className="mt-2 flex gap-2">
-        {stage === "qc" ? (
-          <>
+      {!viewOnly && (
+        <div className="mt-2 flex gap-2">
+          {stage === "qc" ? (
+            <>
+              <button
+                disabled={pending}
+                onClick={() => run(() => setQC(jobId, "passed"))}
+                className="flex-1 inline-flex items-center justify-center gap-1 rounded-lg bg-granite-green2/20 text-granite-green2 border border-granite-green2/40 py-1.5 text-xs font-bold disabled:opacity-50"
+              >
+                <Check className="w-3.5 h-3.5" /> QC Pass
+              </button>
+              <button
+                disabled={pending}
+                onClick={() => run(() => setQC(jobId, "failed"))}
+                className="flex-1 inline-flex items-center justify-center gap-1 rounded-lg bg-red-500/15 text-red-300 border border-red-500/30 py-1.5 text-xs font-bold disabled:opacity-50"
+              >
+                <X className="w-3.5 h-3.5" /> QC Fail
+              </button>
+            </>
+          ) : stage === "dispatched" ? (
+            <span className="text-xs text-granite-green2 font-semibold">✅ Dispatched</span>
+          ) : (
             <button
               disabled={pending}
-              onClick={() => start(async () => { await setQC(jobId, "passed"); router.refresh(); })}
-              className="flex-1 inline-flex items-center justify-center gap-1 rounded-lg bg-granite-green2/20 text-granite-green2 border border-granite-green2/40 py-1.5 text-xs font-bold"
+              onClick={() => run(() => advanceStage(jobId, stage))}
+              className="inline-flex items-center gap-1 rounded-lg bg-gold/15 text-gold border border-gold/40 px-3 py-1.5 text-xs font-bold disabled:opacity-50"
             >
-              <Check className="w-3.5 h-3.5" /> QC Pass
+              Advance to {SHORT[FAB_STAGES[Math.min(idx + 1, FAB_STAGES.length - 1)]]}{" "}
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
-            <button
-              disabled={pending}
-              onClick={() => start(async () => { await setQC(jobId, "failed"); router.refresh(); })}
-              className="flex-1 inline-flex items-center justify-center gap-1 rounded-lg bg-red-500/15 text-red-300 border border-red-500/30 py-1.5 text-xs font-bold"
-            >
-              <X className="w-3.5 h-3.5" /> QC Fail
-            </button>
-          </>
-        ) : stage === "dispatched" ? (
-          <span className="text-xs text-granite-green2 font-semibold">✅ Dispatched</span>
-        ) : (
-          <button
-            disabled={pending}
-            onClick={() => start(async () => { await advanceStage(jobId, stage); router.refresh(); })}
-            className="inline-flex items-center gap-1 rounded-lg bg-gold/15 text-gold border border-gold/40 px-3 py-1.5 text-xs font-bold"
-          >
-            Advance to {SHORT[FAB_STAGES[Math.min(idx + 1, FAB_STAGES.length - 1)]]}{" "}
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        )}
-      </div>
+          )}
+        </div>
+      )}
+      {err && <p className="mt-1.5 text-xs text-red-400">{err}</p>}
     </div>
   );
 }

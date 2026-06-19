@@ -3,6 +3,7 @@
 // /dev/ui — living preview of the Premium Stone component library (spec §3 / §6).
 // Not linked in the app; a design QA surface.
 import { useState } from "react";
+import { notFound } from "next/navigation";
 import { Boxes, Users, Receipt, Wallet, Factory, FileText } from "lucide-react";
 import { AppBar } from "@/components/ui/AppBar";
 import { StatTile } from "@/components/ui/StatTile";
@@ -21,6 +22,9 @@ import { StoneSwatch } from "@/components/inventory/StoneSwatch";
 const L = (n: number) => n * 100; // rupees → paise
 
 export default function DevUiPage() {
+  // Design-QA surface only — never expose in production builds.
+  if (process.env.NODE_ENV === "production") notFound();
+
   const [rate, setRate] = useState("235");
   const [qty, setQty] = useState("48");
   const [color, setColor] = useState("");

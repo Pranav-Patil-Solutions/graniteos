@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { requireSession } from "@/lib/auth";
+import { requireModuleAccess } from "@/lib/access-control-guard";
 import { createClient } from "@/lib/supabase/server";
 import QuoteBuilder, { type QuoteInitial } from "@/components/quotes/QuoteBuilder";
 
@@ -9,7 +9,7 @@ export default async function EditQuotePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  await requireSession();
+  await requireModuleAccess("quotes", { needEdit: true });
   const supabase = await createClient();
 
   const { data: quote } = await supabase

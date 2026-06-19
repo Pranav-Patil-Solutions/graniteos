@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft, FileText, Pencil } from "lucide-react";
-import { requireSession } from "@/lib/auth";
+import { requireModuleAccess } from "@/lib/access-control-guard";
 import { createClient } from "@/lib/supabase/server";
 import { formatINR, formatINRPrecise } from "@/lib/money";
 import RecordPaymentForm from "@/components/money/RecordPaymentForm";
@@ -9,7 +9,7 @@ import ShareWhatsApp from "@/components/money/ShareWhatsApp";
 
 export default async function InvoicePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const me = await requireSession();
+  const { user: me } = await requireModuleAccess("money");
   const supabase = await createClient();
 
   const { data: company } = await supabase
@@ -58,7 +58,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
     `\n\nThank you!`;
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <Link
         href="/invoices"
         className="inline-flex items-center gap-1 text-sm text-slate-400 hover:text-slate-200"

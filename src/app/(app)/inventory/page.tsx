@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ChevronRight, Boxes, Ruler, Wallet } from "lucide-react";
-import { requireSession } from "@/lib/auth";
+import { requireModuleAccess } from "@/lib/access-control-guard";
 import { createClient } from "@/lib/supabase/server";
+import { resolvePhotoUrls } from "@/lib/photos";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { BlockPhoto } from "@/components/inventory/BlockPhoto";
 import { formatINR } from "@/lib/money";
@@ -31,7 +32,7 @@ function cbmOf(b: Block): number {
 }
 
 export default async function InventoryPage() {
-  const me = await requireSession();
+  const { user: me, viewOnly } = await requireModuleAccess("inventory");
   const supabase = await createClient();
 
   const [{ data: blocksData }, { data: slabsData }] = await Promise.all([
@@ -64,15 +65,20 @@ export default async function InventoryPage() {
     .filter((s) => s.status === "in_stock")
     .reduce((n, s) => n + Number(s.rate_paise) * Number(s.sqft), 0);
 
+  // Resolve storage object paths → signed URLs (dual-mode: legacy full URLs
+  // pass through as-is; new object-path values get a 1-hour signed URL).
+  const photoUrls = await resolvePhotoUrls(enriched.map((b) => b.photo_path ?? null));
+  const enrichedResolved = enriched.map((b, i) => ({ ...b, photo_path: photoUrls[i] }));
+
   // Recovery Radar compares CBM yield (the industry standard).
-  const byCBM = enriched.filter((b) => b.count > 0 && b.perCBM > 0);
-  const best = byCBM.reduce<(typeof enriched)[number] | null>(
+  const byCBM = enrichedResolved.filter((b) => b.count > 0 && b.perCBM > 0);
+  const best = byCBM.reduce<(typeof enrichedResolved)[number] | null>(
     (a, b) => (!a || b.perCBM > a.perCBM ? b : a),
     null,
   );
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <div className="flex items-center justify-between gap-2">
         <h1 className="font-display text-3xl font-semibold text-white tracking-tight">Stock</h1>
         <ShareCatalog companyId={me.company_id} />
@@ -99,12 +105,14 @@ export default async function InventoryPage() {
         </Link>
       )}
 
-      <div className="mt-5">
-        <AddBlockForm />
-      </div>
+      {!viewOnly && (
+        <div className="mt-5">
+          <AddBlockForm />
+        </div>
+      )}
 
       <div className="mt-4 space-y-2.5">
-        {enriched.length === 0 && (
+        {enrichedResolved.length === 0 && (
           <EmptyState
             heading="No stock yet"
             subtext="Blocks are raw stone units. Add one above, or import your opening stock from an Excel file."
@@ -112,7 +120,7 @@ export default async function InventoryPage() {
             actionHref="/import"
           />
         )}
-        {enriched.map((b) => (
+        {enrichedResolved.map((b) => (
           <Link
             key={b.id}
             href={`/inventory/${b.id}`}

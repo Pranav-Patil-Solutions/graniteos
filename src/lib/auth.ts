@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { needsMfaRedirect } from "@/lib/mfa/server";
 import type { Role } from "@/lib/roles";
 
 export type AppUser = {
@@ -29,16 +30,22 @@ export async function getCurrentUser(): Promise<AppUser | null> {
 /**
  * Use at the top of every protected page/action.
  * - Not signed in at all → /login
+ * - 2FA enabled but not yet verified this session → /mfa
  * - Signed in but hasn't created a company yet → /setup
  */
 export async function requireSession(): Promise<AppUser> {
-  const user = await getCurrentUser();
-  if (user) return user;
-
-  // Distinguish "no session" from "authenticated but no company row yet".
   const supabase = await createClient();
   const {
     data: { user: authUser },
   } = await supabase.auth.getUser();
-  redirect(authUser ? "/setup" : "/login");
+  if (!authUser) redirect("/login");
+
+  // Enforce the second factor before any protected page — closes the gap where a
+  // stolen password (AAL1 session) could otherwise reach the app by direct navigation.
+  if (await needsMfaRedirect(supabase)) redirect("/mfa");
+
+  const { data } = await supabase.rpc("my_user");
+  const row = Array.isArray(data) ? data[0] : data;
+  if (!row) redirect("/setup");
+  return row as AppUser;
 }

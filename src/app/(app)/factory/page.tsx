@@ -1,4 +1,4 @@
-import { requireSession } from "@/lib/auth";
+import { requireModuleAccess } from "@/lib/access-control-guard";
 import { createClient } from "@/lib/supabase/server";
 import JobControls from "@/components/fabrication/JobControls";
 import { FAB_STAGES } from "@/lib/validation";
@@ -37,7 +37,7 @@ const STAGE_ACCENT: Record<string, string> = {
 };
 
 export default async function FactoryFloorPage() {
-  await requireSession();
+  const { viewOnly } = await requireModuleAccess("fabrication");
   const supabase = await createClient();
   const { data } = await supabase
     .from("production_jobs")
@@ -50,7 +50,7 @@ export default async function FactoryFloorPage() {
   const counts = FAB_STAGES.map((s) => ({ stage: s, n: jobs.filter((j) => j.stage === s).length }));
 
   return (
-    <div className="max-w-3xl mx-auto px-4 pt-12 pb-10">
+    <div className="max-w-3xl lg:max-w-6xl mx-auto px-4 pt-12 pb-10">
       <div className="flex items-end justify-between">
         <div>
           <h1 className="text-3xl font-extrabold text-white tracking-tight">Factory Floor</h1>
@@ -97,7 +97,7 @@ export default async function FactoryFloorPage() {
               </span>
             </div>
             <div className="mt-4">
-              <JobControls jobId={j.id} stage={j.stage} />
+              <JobControls jobId={j.id} stage={j.stage} viewOnly={viewOnly} />
             </div>
           </div>
         ))}

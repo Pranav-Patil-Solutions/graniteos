@@ -2,7 +2,7 @@
 
 // Global ☰ menu — opens a drawer listing every section (role-aware). Lives in
 // AppShell so it's on every app screen.
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Monitor } from "lucide-react";
@@ -26,6 +26,14 @@ export default function NavDrawer({
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
+  // Close on Escape key (WCAG 2.1.2 / 4.1.2)
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [open]);
+
   return (
     <>
       {/* hamburger trigger — mobile/tablet only; desktop uses the sidebar */}
@@ -44,7 +52,11 @@ export default function NavDrawer({
       />
 
       {/* drawer */}
+      {/* role=dialog + aria-modal inform AT that this is a modal drawer (WCAG 2.1.2 / 4.1.2) */}
       <aside
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
         className={`fixed inset-y-0 left-0 z-[70] w-72 max-w-[82vw] bg-graphite-900 border-r border-line-dark shadow-2xl transition-transform duration-200 ${open ? "translate-x-0" : "-translate-x-full"}`}
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
@@ -66,7 +78,7 @@ export default function NavDrawer({
             if (items.length === 0) return null;
             return (
               <div key={g.group} className="mb-4">
-                <p className="px-2 mb-1 text-[10px] uppercase tracking-[0.16em] text-gold/60 font-semibold">{g.group}</p>
+                <p className="px-2 mb-1 text-[10px] uppercase tracking-[0.16em] text-gold/80 font-semibold">{g.group}</p>
                 {items.map((it) => {
                   const active = isActive(pathname, it.href);
                   const Icon = it.icon;

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraniteOS — Stakeholder Panel & Investor Review</title>
+<style>
+  :root{
+    --bg:#0b0d0f; --bg2:#121518; --card:#15191d; --line:#252b31;
+    --ink:#e8ebee; --mut:#9aa4ad; --dim:#6b757d;
+    --gold:#c8a24a; --green:#4a9d6b; --amber:#d99a2b; --red:#c75c5c;
+    --blue:#5b8fb0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0b0d0f,#0e1113);color:var(--ink);
+    font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:48px 28px 96px}
+  h1{font-size:34px;letter-spacing:-.5px;margin:0 0 6px;background:linear-gradient(90deg,#fff,var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  h2{font-size:24px;margin:56px 0 8px;letter-spacing:-.3px;border-top:1px solid var(--line);padding-top:34px}
+  h3{font-size:18px;margin:30px 0 6px;color:#fff}
+  h4{font-size:15px;margin:18px 0 4px;color:var(--gold);text-transform:uppercase;letter-spacing:.5px}
+  p{color:var(--ink)}
+  .lede{color:var(--mut);font-size:16px;max-width:760px}
+  .meta{color:var(--dim);font-size:13px;margin-top:10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:18px 0}
+  .callout{border-left:3px solid var(--gold);background:#15161a;padding:16px 20px;border-radius:8px;margin:18px 0;color:var(--mut)}
+  .warn{border-left:3px solid var(--red);background:#1a1414}
+  .ok{border-left:3px solid var(--green);background:#121a15}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--gold);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+  td:first-child{color:var(--ink)}
+  .full{color:var(--green);font-weight:600}
+  .part{color:var(--amber);font-weight:600}
+  .none{color:var(--red);font-weight:600}
+  .pill{display:inline-block;font-size:11px;padding:2px 9px;border-radius:20px;border:1px solid var(--line);color:var(--mut);margin:2px 4px 2px 0}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .score{display:inline-flex;align-items:baseline;gap:6px;margin:0 18px 0 0}
+  .score b{font-size:30px;color:var(--gold)}
+  .score span{color:var(--dim);font-size:13px}
+  ul{margin:6px 0 6px 0;padding-left:20px}
+  li{margin:3px 0;color:var(--ink)}
+  .mut li{color:var(--mut)}
+  code{background:#0c0e10;border:1px solid var(--line);padding:1px 6px;border-radius:5px;font-size:12.5px;color:#cdd5db}
+  .toc a{color:var(--blue);text-decoration:none;display:block;padding:3px 0}
+  .toc a:hover{color:var(--gold)}
+  .sh{font-size:13px;color:var(--dim);margin:2px 0 10px}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>GraniteOS — Industry Stakeholder Panel & Investor Review</h1>
+<p class="lede">A 15-seat board of manufacturing operators, channel partners, ERP evaluators, and a PE investor stress-test GraniteOS against the standard set in the brief: <em>a unified operating system for the manufacturing ecosystem.</em></p>
+<p class="meta">Target: graniteos.vercel.app · Evaluated 2026-06-10 · Method: grounded in the live deployment <strong>and</strong> the actual source at <code>D:\vyaparwerk\graniteos</code></p>
+
+<div class="callout warn">
+<strong>Read this first — two framing facts that decide everything below.</strong>
+<ol style="margin:8px 0 0">
+<li><strong>The public URL is a login wall.</strong> A first-time visitor (and any web crawler, including an AI evaluator) reaches a marble sign-in screen and goes no further. There is no public landing page, value proposition, feature list, pricing, customer logos, or self-serve demo. By the brief's own rule — <em>"do not assume features exist unless clearly demonstrated on the website"</em> — almost everything would score <span class="none">Not Addressed</span> and the Customer Journey Audit would collapse to "100% drop-off at login." That is itself the single most important finding.</li>
+<li><strong>It is a vertical stone-trade SaaS, not a horizontal manufacturing ERP.</strong> The brief describes "ERP + CRM + procurement + inventory + sales + supplier + showroom + analytics + BPM." GraniteOS genuinely covers a slice of that — for the granite/marble/quartz trade in India specifically. Judged as "a unified manufacturing OS" it is incomplete; judged as "the operating system for an Indian stone fabricator/dealer" it is a focused, surprisingly mature MVP. I evaluate it as both, and say which lens I'm using.</li>
+</ol>
+To give you a <em>real</em> answer instead of 200 rows of "can't tell," I evaluated the working product behind the login by reading the source. So scores reflect <strong>what is actually built</strong>, with a separate, harsh public-facing audit in Part 8.
+</div>
+
+<div class="card">
+<h4>What is actually built (ground truth)</h4>
+<div class="grid">
+<div>
+<p style="margin:0 0 4px"><span class="full">Working today:</span></p>
+<ul class="mut" style="font-size:13.5px">
+<li>Multi-tenant SaaS, Postgres RLS company-scoping, 4 roles, team invites</li>
+<li>Inventory: blocks → slabs, recovery-rate (sqft/CBM) radar, 3D slab viewer, public slab "passport" + catalog share links</li>
+<li>CRM: customers + suppliers, GSTIN, credit limit, opening balance, udhaar</li>
+<li>Quote → Order → Invoice → Payment pipeline</li>
+<li>GST Rule-46 tax invoice: CGST/SGST/IGST, per-line HSN, multi-rate, GSTIN check-digit validation, FY numbering, amount-in-words</li>
+<li>Fabrication board: job stages queued→cutting→polishing→edging→QC→ready→dispatched</li>
+<li>Analytics: revenue, collections, receivables, stock value, 6-mo trend, quote funnel, top customers</li>
+<li>"GST Auto-Pilot" (output GST − input ITC), "Udhaar Radar" WhatsApp reminders</li>
+<li>AI marketing copy (Groq) in English/Hinglish/Hindi · Excel bulk import · product master</li>
+</ul>
+</div>
+<div>
+<p style="margin:0 0 4px"><span class="none">Absent (claimed-ERP gaps):</span></p>
+<ul class="mut" style="font-size:13.5px">
+<li>Payment gateway (Razorpay/PayU) — manual entry only</li>
+<li>E-invoicing (GSTN IRP / IRN+QR) and E-way bill</li>
+<li>GSTR-1 / GSTR-3B return exports · Tally/accounting export</li>
+<li>Credit/debit notes &amp; sales returns (a GST legal requirement)</li>
+<li>Procurement: no purchase-order / GRN / inward-receipt UI (prefix reserved, table absent)</li>
+<li>Multi-location / branch / warehouse (single company; godown is free text)</li>
+<li>Production costing — no labour/machine/time/cost capture; stage-only</li>
+<li>Forecasting, budgeting, per-job profitability</li>
+<li>WhatsApp Business API, SMS, email (only manual share links)</li>
+<li>Public API, SSO/SAML, audit log, SOC2/ISO, SLA, uptime page</li>
+<li><strong>Public marketing site, pricing, demo, trust signals</strong></li>
+</ul>
+</div>
+</div>
+<p class="sh">Stack: Next.js 15 / React 19, Supabase (Postgres + Auth, 14 migrations, RLS + SECURITY DEFINER RPCs), Tailwind, Three.js, Groq/Vercel AI SDK. Tests: Playwright e2e (auth) + Vitest units (GST, validation, permissions). Maturity: <strong>solid MVP / Slice-1 foundation</strong> — pilot-ready for 1–10 companies, not market-ready.</p>
+</div>
+
+<div class="card toc">
+<h4>Contents</h4>
+<a href="#p1">Part 1–3 · The 15 stakeholders: profile, questions, platform answers + ratings</a>
+<a href="#p4">Part 4 · Gap analysis (capabilities, workflows, integrations, AI, automation)</a>
+<a href="#p5">Part 5 · Objection analysis — what kills the deal, per stakeholder</a>
+<a href="#p6">Part 6 · Competitive benchmark (SAP, NetSuite, Dynamics, Odoo, Zoho, Infor, Epicor)</a>
+<a href="#p7">Part 7 · Investor review &amp; scores</a>
+<a href="#p8">Part 8 · Customer journey audit</a>
+<a href="#p9">Part 9 · Feature prioritization tables</a>
+<a href="#p10">Part 10 · Executive summary &amp; final verdict</a>
+</div>
+
+<!-- ===================== PART 1-3 ===================== -->
+<h2 id="p1">Parts 1–3 · The Panel</h2>
+<p class="sh">For each seat: profile (responsibilities · KPIs · frustrations), then the key questions they'd ask with the platform's honest answer and a rating. Ratings: <span class="full">Full</span> / <span class="part">Partial</span> / <span class="none">None</span>.</p>
+
+<!-- 1 -->
+<h3>1 · Manufacturing Business Owner (Stone Factory Proprietor)</h3>
+<p class="sh"><b>Owns:</b> the P&amp;L, cash, banking relationships, the whole shop. <b>KPIs:</b> net margin, cash in bank, recovery rate, GST exposure, days-sales-outstanding. <b>Frustrations:</b> money tied up in udhaar, no idea which block/machine wastes stone, juggling Tally + WhatsApp + diary, accountant-dependent for GST.</p>
+<table>
+<tr><th>Question</th><th>Platform answer</th><th>Rating</th></tr>
+<tr><td>Will this replace my diary + Excel + WhatsApp chaos?</td><td>Yes for sales/inventory/collections/GST in one app; no for accounting books (no Tally/ledger).</td><td class="part">Partial</td></tr>
+<tr><td>Can I see exactly who owes me money, right now?</td><td>Yes — Udhaar Radar lists customer outstanding + one-tap WhatsApp reminder.</td><td class="full">Full</td></tr>
+<tr><td>Which block/machine is wasting my stone?</td><td>Recovery Radar ranks sqft-per-CBM yield, flags best/worst, shows ₹ savings delta. This is the wedge.</td><td class="full">Full</td></tr>
+<tr><td>What's my real net profit per job?</td><td>Not built — no production costing (labour/machine/consumables). Revenue yes, true job margin no.</td><td class="none">None</td></tr>
+<tr><td>How much GST do I actually owe this month?</td><td>GST Auto-Pilot nets output GST against input ITC. (Estimate, not a filed return.)</td><td class="part">Partial</td></tr>
+<tr><td>Is my data safe if my phone is stolen?</td><td>Cloud-hosted (Supabase), RLS-isolated, OTP auth. No device-loss/MFA-revoke story documented.</td><td class="part">Partial</td></tr>
+<tr><td>What does it cost and what's my ROI?</td><td>No pricing exists anywhere. ROI is implied (recovered stone + collected udhaar) but never quantified for the buyer.</td><td class="none">None</td></tr>
+<tr><td>Can my staff use it without training? In Hindi?</td><td>Mobile-first, role-scoped, AI copy in Hindi/Hinglish. UI chrome is English-only; no in-app onboarding.</td><td class="part">Partial</td></tr>
+</table>
+
+<!-- 2 -->
+<h3>2 · Factory Operations Manager</h3>
+<p class="sh"><b>Owns:</b> shop-floor throughput. <b>KPIs:</b> jobs/day, WIP age, on-time dispatch, QC reject rate, machine utilisation. <b>Frustrations:</b> no live view of what's on which machine; rework discovered too late; verbal job handoffs.</p>
+<table>
+<tr><th>Question</th><th>Platform answer</th><th>Rating</th></tr>
+<tr><td>Can I see every job and its stage live?</td><td>Yes — fabrication board with 7 stages + QC pass/fail.</td><td class="full">Full</td></tr>
+<tr><td>Does it schedule jobs / show machine capacity?</td><td>No scheduling, no capacity/Gantt, no machine calendar. Manual stage moves only.</td><td class="none">None</td></tr>
+<tr><td>Can I track WIP age and bottlenecks?</td><td>Stage is captured but no aging/cycle-time analytics or alerts.</td><td class="part">Partial</td></tr>
+<tr><td>Does a confirmed order auto-create the job?</td><td>Jobs link to order_id; creation appears manual, not auto-triggered on order confirm.</td><td class="part">Partial</td></tr>
+<tr><td>Can operators update status from the floor?</td><td>Yes — mobile web, role = fabrication_supervisor sees the board.</td><td class="full">Full</td></tr>
+<tr><td>QC failures — captured with reason/photo and looped back?</td><td>QC pass/fail flag only. No defect reason codes, photos, or rework routing.</td><td class="part">Partial</td></tr>
+<tr><td>Material consumed vs slab issued — reconciled?</td><td>No issue-to-job / consumption posting. Slabs and jobs aren't inventory-linked on consumption.</td><td class="none">None</td></tr>
+</table>
+
+<!-- 3 -->
+<h3>3 · Procurement Manager</h3>
+<p class="sh"><b>Owns:</b> buying blocks/consumables. <b>KPIs:</b> landed cost, price variance, supplier OTIF, GRN accuracy. <b>Frustrations:</b> no PO trail, disputes on quantities received, no price history.</p>
+<table>
+<tr><th>Question</th><th>Platform answer</th><th>Rating</th></tr>
+<tr><td>Can I raise a purchase order to a quarry/supplier?</td><td>No PO module. Numbering prefix reserved but no table/UI.</td><td class="none">None</td></tr>
+<tr><td>Goods-receipt (GRN) against PO with quantity match?</td><td>No inward/GRN workflow. Blocks are added directly with cost.</td><td class="none">None</td></tr>
+<tr><td>Supplier master with GSTIN and history?</td><td>Yes — suppliers in parties (GSTIN, city, balance). No purchase history rollup per supplier.</td><td class="part">Partial</td></tr>
+<tr><td>Price-variance / best-price tracking across suppliers?</td><td>Block cost stored per block; no comparative price analytics.</td><td class="none">None</td></tr>
+<tr><td>Input ITC visibility on purchases?</td><td>GST Auto-Pilot estimates input ITC (flat 5% on blocks) — coarse, not invoice-level.</td><td class="part">Partial</td></tr>
+<tr><td>Three-way match (PO/GRN/invoice)?</td><td>Not possible — no PO or GRN exists.</td><td class="none">None</td></tr>
+</table>
+<p class="sh"><strong>Verdict for this seat:</strong> Procurement is the weakest pillar. For a platform claiming "procurement," there is effectively no procure-to-pay.</p>
+
+<!-- 4 -->
+<h3>4 · Supply Chain Manager</h3>
+<p class="sh"><b>Owns:</b> flow from quarry → godown → site. <b>KPIs:</b> fill rate, inventory turns, in-transit visibility, stock-out/overstock. <b>Frustrations:</b> stock value unknown, no multi-godown view, dispatch tracking on paper.</p>
+<table>
+<tr><th>Question</th><th>Platform answer</th><th>Rating</th></tr>
+<tr><td>Real-time stock value &amp; on-hand by item?</td><td>Yes — stock value KPI; slab status in_stock/reserved/sold.</td><td class="full">Full</td></tr>
+<tr><td>Multi-location / multi-godown stock?</td><td>Godown is a free-text field; no branch entity, transfers, or per-location ledger.</td><td class="part">Partial</td></tr>
+<tr><td>Inventory turns / dead-stock aging?</td><td>No turns or aging analytics on slabs.</td><td class="none">None</td></tr>
+<tr><td>Dispatch / logistics / transporter tracking?</td><td>Order status reaches "dispatched/delivered" but no LR/vehicle/transporter or E-way bill.</td><td class="none">None</td></tr>
+<tr><td>Reserve stock against a confirmed order?</td><td>Slab "reserved" status exists; auto-reservation on order not confirmed.</td><td class="part">Partial</td></tr>
+<tr><td>Demand signal / reorder point?</td><td>No reorder logic (blocks are heterogeneous; arguably N/A, but no min-stock either).</td><td class="none">None</td></tr>
+</table>
+
+<!-- 5 -->
+<h3>5 · Distributor</h3>
+<p class="sh"><b>Owns:</b> moving volume from manufacturer to dealers. <b>KPIs:</b> sell-through, margin, claim settlement, catalog freshness. <b>Frustrations:</b> stale stock lists, manual price lists, no shared catalog.</p>
+<table>
+<tr><th>Question</th><th>Platform answer</th><th>Rating</th></tr>
+<tr><td>Can I share a live, branded catalog with dealers?</td><td>Yes — public <code>/catalog/[id]</code> (up to 200 in-stock slabs) + per-slab "passport" share link.</td><td class="full">Full</td></tr>
+<tr><td>Dealer-specific pricing / price tiers?</td><td>No customer price lists or tier logic; rate is per quote/product.</td><td class="none">None</td></tr>
+<tr><td>Dealer ordering portal (B2B self-serve)?</td><td>No dealer login/portal; catalog is view-only with WhatsApp enquiry.</td><td class="part">Partial</td></tr>
+<tr><td>Claims / returns / credit notes to dealers?</td><td>No returns or credit-note workflow.</td><td class="none">None</td></tr>
+<tr><td>Multi-tier inventory visibility (my stock + dealer stock)?</td><td>Single-tenant only; no network/parent-child orgs.</td><td class="none">None</td></tr>
+</table>
+
+<!-- 6 -->
+<h3>6 · Dealer / Showroom Owner</h3>
+<p class="sh"><b>Owns:</b> the showroom + retail conversions. <b>KPIs:</b> walk-in→quote→sale conversion, sample turnaround, AOV. <b>Frustrations:</b> customer can't visualise slab, quoting is slow, follow-ups slip.</p>
+<table>
+<tr><th>Question</th><th>Platform answer</th><th>Rating</th></tr>
+<tr><td>Can I show customers slabs interactively?</td><td>Yes — 3D slab viewer + photo + slab passport. Genuinely differentiated for retail.</td><td class="full">Full</td></tr>
+<tr><td>Fast quote on the spot with GST?</td><td>Yes — quote builder, per-line GST, WhatsApp + UPI pay link.</td><td class="full">Full</td></tr>
+<tr><td>Automated follow-up on open quotes?</td><td>AI generates follow-up copy; no automated sequence/scheduler — still manual send.</td><td class="part">Partial</td></tr>
+<tr><td>"Showroom operations" — appointments, samples, floor stock?</td><td>Not built. Brief lists "showroom operations"; reality is catalog + quote.</td><td class="none">None</td></tr>
+<tr><td>POS / counter billing?</td><td>Invoice exists but no POS/quick-bill counter flow.</td><td class="part">Partial</td></tr>
+</table>
+
+<!-- 7 -->
+<h3>7 · Sales Manager</h3>
+<p class="sh"><b>Owns:</b> the number. <b>KPIs:</b> pipeline value, win rate, cycle time, rep activity, AOV. <b>Frustrations:</b> no pipeline visibility, quotes lost in chat, no rep accountability.</p>
+<table>
+<tr><th>Question</th><th>Platform answer</th><th>Rating</th></tr>
+<tr><td>Pipeline / funnel visibility?</td><td>Yes — quote funnel conversion %, order status breakdown, top customers.</td><td class="full">Full</td></tr>
+<tr><td>Quote lifecycle (draft→sent→accepted/expired)?</td><td>Yes — full status machine with valid-until.</td><td class="full">Full</td></tr>
+<tr><td>Per-rep performance / leaderboard / targets?</td><td>No rep attribution on quotes, no targets/quota, no leaderboard.</td><td class="none">None</td></tr>
+<tr><td>Lead capture / enquiry pipeline before quote?</td><td>No leads/enquiry stage; pipeline starts at quote.</td><td class="none">None</td></tr>
+<tr><td>Activity log / next-action reminders?</td><td>No CRM activity timeline or task reminders.</td><td class="none">None</td></tr>
+<tr><td>Discount approval workflow?</td><td>No approval/guardrails on pricing.</td><td class="none">None</td></tr>
+</table>
+
+<!-- 8 -->
+<h3>8 · Finance Controller / CFO</h3>
+<p class="sh"><b>Owns:</b> books, compliance, controls. <b>KPIs:</b> DSO, gross margin, GST filing accuracy, audit-readiness, cash forecast. <b>Frustrations:</b> reconciling app data to Tally, manual GST returns, no audit trail.</p>
+<table>
+<tr><th>Question</th><th>Platform answer</th><th>Rating</th></tr>
+<tr><td>GST-compliant tax invoices (Rule 46)?</td><td>Yes — strong: per-line HSN, CGST/SGST/IGST, place of supply, reverse charge, amount in words, FY numbering.</td><td class="full">Full</td></tr>
+<tr><td>Credit notes / debit notes / returns?</td><td>Missing — a legal GST gap. Cannot correct an invoice or process a return compliantly.</td><td class="none">None</td></tr>
+<tr><td>E-invoicing (IRN/QR) &amp; E-way bill?</td><td>Not built. Above the e-invoice turnover threshold this is mandatory; blocks mid-size adoption.</td><td class="none">None</td></tr>
+<tr><td>GSTR-1 / GSTR-3B export?</td><td>No return-ready exports. GST Auto-Pilot is an estimate, not a filing.</td><td class="none">None</td></tr>
+<tr><td>Double-entry ledger / trial balance / books?</td><td>No accounting engine; it's operational, not a book of accounts.</td><td class="none">None</td></tr>
+<tr><td>Tally / accounting export for my CA?</td><td>Not built — hard blocker for finance teams used to Tally.</td><td class="none">None</td></tr>
+<tr><td>Audit trail / immutable invoice numbering?</td><td>Sequenced numbering via DB; no user-level audit log of edits.</td><td class="part">Partial</td></tr>
+<tr><td>Cash-flow forecast?</td><td>30-day cash-in + receivables shown; no forward forecast/budget.</td><td class="part">Partial</td></tr>
+</table>
+<p class="sh"><strong>Verdict for this seat:</strong> The invoice <em>format</em> is genuinely strong, but the finance <em>stack</em> (returns, e-invoice, credit notes, accounting export) is the second-biggest gap after procurement.</p>
+
+<!-- 9 -->
+<h3>9 · Warehouse / Godown Manager</h3>
+<p class="sh"><b>Owns:</b> physical stock accuracy. <b>KPIs:</b> stock accuracy %, pick speed, shrinkage. <b>Frustrations:</b> can't find a slab, no bin/rack location, manual counts.</p>
+<table>
+<tr><th>Question</th><th>Platform answer</th><th>Rating</th></tr>
+<tr><td>Where is each slab (rack/bundle)?</td><td>Godown + bundle_no + slab_no fields exist; no rack/bin map.</td><td class="part">Partial</td></tr>
+<tr><td>Barcode / QR scan to pick &amp; verify?</td><td>QR is generated for share links, not for scan-based picking/stock-take.</td><td class="part">Partial</td></tr>
+<tr><td>Stock-take / cycle count workflow?</td><td>None.</td><td class="none">None</td></tr>
+<tr><td>Inter-godown transfer?</td><td>None (single-location model).</td><td class="none">None</td></tr>
+<tr><td>Status per slab (in-stock/reserved/sold)?</td><td>Yes.</td><td class="full">Full</td></tr>
+</table>
+
+<!-- 10 -->
+<h3>10 · Supplier / Vendor (Quarry / Processor)</h3>
+<p class="sh"><b>Owns:</b> supplying blocks/services. <b>KPIs:</b> on-time payment, order predictability, dispute rate. <b>Frustrations:</b> no PO, payment opacity, reconciliation by phone.</p>
+<table>
+<tr><th>Question</th><th>Platform answer</th><th>Rating</th></tr>
+<tr><td>Do I get a formal PO from the buyer?</td><td>No PO issued (no procurement module).</td><td class="none">None</td></tr>
+<tr><td>Vendor portal to see orders/payments?</td><td>No supplier-facing login or portal.</td><td class="none">None</td></tr>
+<tr><td>Is my GSTIN captured for their ITC?</td><td>Yes — supplier GSTIN stored &amp; format-validated.</td><td class="part">Partial</td></tr>
+<tr><td>Payment status visibility?</td><td>Payables shown to the buyer; nothing exposed to the vendor.</td><td class="none">None</td></tr>
+</table>
+
+<!-- 11 -->
+<h3>11 · Customer / Buyer (Builder / Architect / Homeowner)</h3>
+<p class="sh"><b>Owns:</b> the purchase decision. <b>KPIs:</b> price, quality, delivery certainty, trust. <b>Frustrations:</b> can't visualise, unclear pricing, no order status.</p>
+<table>
+<tr><th>Question</th><th>Platform answer</th><th>Rating</th></tr>
+<tr><td>Can I see the actual slab before buying?</td><td>Yes — slab passport with 3D/photo + full specs, shareable on WhatsApp.</td><td class="full">Full</td></tr>
+<tr><td>Clear quote with taxes &amp; pay link?</td><td>Yes — itemised quote, GST, UPI pay link.</td><td class="full">Full</td></tr>
+<tr><td>Track my order status?</td><td>Status exists internally; no customer-facing order-tracking link.</td><td class="part">Partial</td></tr>
+<tr><td>Self-serve browse &amp; enquire?</td><td>Public catalog + WhatsApp enquiry (if given the link). No discoverable storefront.</td><td class="part">Partial</td></tr>
+</table>
+
+<!-- 12 -->
+<h3>12 · Digital Transformation Consultant</h3>
+<p class="sh"><b>Lens:</b> adoption, change management, process fit, data migration. <b>KPIs:</b> time-to-value, user adoption, process coverage.</p>
+<table>
+<tr><th>Question</th><th>Platform answer</th><th>Rating</th></tr>
+<tr><td>How fast to value?</td><td>Fast for the core loop — setup wizard + Excel bulk import (customers/suppliers/blocks/slabs/jobs).</td><td class="full">Full</td></tr>
+<tr><td>Does it map to the real stone-trade workflow?</td><td>Yes for sell-side; weak for buy-side (no procurement) and books.</td><td class="part">Partial</td></tr>
+<tr><td>Change-management assets (onboarding, training, help)?</td><td>None in-app; no help centre, tooltips, or guided setup beyond company form.</td><td class="none">None</td></tr>
+<tr><td>Migration off Tally/Excel?</td><td>Excel import yes; no opening-ledger/historical-invoice migration path.</td><td class="part">Partial</td></tr>
+<tr><td>Offline / poor-connectivity resilience?</td><td>Web app, online-only. Godown connectivity is a real India risk; no offline mode.</td><td class="none">None</td></tr>
+</table>
+
+<!-- 13 -->
+<h3>13 · ERP Implementation Expert</h3>
+<p class="sh"><b>Lens:</b> data model, configurability, integration, extensibility, scale.</p>
+<table>
+<tr><th>Question</th><th>Platform answer</th><th>Rating</th></tr>
+<tr><td>Is the data model sound &amp; normalized?</td><td>Yes — clean Postgres schema, paise integers, FK chains quote→order→invoice, RLS isolation.</td><td class="full">Full</td></tr>
+<tr><td>Configurable (tax rates, number formats, roles)?</td><td>Per-line GST, company defaults, FY numbering. Roles are fixed (4), not custom.</td><td class="part">Partial</td></tr>
+<tr><td>Open API / webhooks for integration?</td><td>No public API, no webhooks, no integration layer.</td><td class="none">None</td></tr>
+<tr><td>Multi-entity / multi-GSTIN / multi-branch?</td><td>One company = one GSTIN; no branch/multi-entity.</td><td class="none">None</td></tr>
+<tr><td>Audit trail &amp; data governance?</td><td>RLS + SECURITY DEFINER RPCs (good); no field-level audit log.</td><td class="part">Partial</td></tr>
+<tr><td>Test coverage / release safety?</td><td>e2e auth + unit tests on GST/validation/permissions. Thin on actions/components.</td><td class="part">Partial</td></tr>
+</table>
+<p class="sh"><strong>Verdict for this seat:</strong> Architecturally credible for an MVP; not yet an integration platform.</p>
+
+<!-- 14 -->
+<h3>14 · SaaS Product Evaluator</h3>
+<p class="sh"><b>Lens:</b> UX, onboarding, value clarity, retention hooks, mobile.</p>
+<table>
+<tr><th>Question</th><th>Platform answer</th><th>Rating</th></tr>
+<tr><td>Is the value prop clear at a glance?</td><td>Inside the app, the radars (Recovery, Udhaar, GST) are sharp hooks. Outside it: invisible (login wall).</td><td class="part">Partial</td></tr>
+<tr><td>Onboarding &amp; activation?</td><td>Setup wizard + import; no checklist/empty-states/aha-moment guidance.</td><td class="part">Partial</td></tr>
+<tr><td>Mobile experience?</td><td>Mobile-first web, animated, 3D — above category norm for India SMB.</td><td class="full">Full</td></tr>
+<tr><td>Retention / habit hooks?</td><td>WhatsApp reminders + daily money/stock views are sticky; no notifications/digests.</td><td class="part">Partial</td></tr>
+<tr><td>Self-serve signup → paid?</td><td>Signup works; no plans, billing, or trial → no monetisation loop.</td><td class="none">None</td></tr>
+</table>
+
+<!-- 15 -->
+<h3>15 · Private Equity / VC Investor</h3>
+<p class="sh"><b>Lens:</b> TAM, wedge, moat, unit economics, founder execution, enterprise readiness. (Full scoring in Part 7.)</p>
+<table>
+<tr><th>Question</th><th>Platform answer</th><th>Rating</th></tr>
+<tr><td>Is there a real, defensible wedge?</td><td>Yes — Recovery-Rate Radar + GST + udhaar is a stone-specific wedge no horizontal ERP serves.</td><td class="full">Full</td></tr>
+<tr><td>Evidence of traction / paying users?</td><td>None presented — pilot-stage code, no metrics, logos, or revenue.</td><td class="none">None</td></tr>
+<tr><td>Is there a monetisation engine?</td><td>No pricing, billing, or plan gating exists.</td><td class="none">None</td></tr>
+<tr><td>How big is the wedge — expandable to a platform?</td><td>Architecturally yes (HandelOS -OS doctrine); today it's one vertical, one slice.</td><td class="part">Partial</td></tr>
+<tr><td>Enterprise readiness (security, SLA, compliance)?</td><td>RLS is solid; no SOC2/ISO, SSO, SLA, status page, or DPA.</td><td class="none">None</td></tr>
+</table>
+
+<!-- ===================== PART 4 ===================== -->
+<h2 id="p4">Part 4 · Gap Analysis</h2>
+<div class="grid">
+<div class="card"><h4>Missing capabilities</h4><ul class="mut"><li>Production costing &amp; per-job profitability</li><li>Accounting / ledger / books of account</li><li>Credit &amp; debit notes, sales returns</li><li>Custom roles &amp; granular permissions</li><li>Audit log / change history</li><li>Offline mode</li></ul></div>
+<div class="card"><h4>Missing workflows</h4><ul class="mut"><li>Procure-to-pay (PO → GRN → bill → pay)</li><li>3-way match</li><li>Lead → enquiry → quote (pre-quote pipeline)</li><li>Discount/credit approval flows</li><li>Inter-godown transfer &amp; stock-take</li><li>Dispatch / logistics / E-way bill</li></ul></div>
+<div class="card"><h4>Missing integrations</h4><ul class="mut"><li>Payment gateway (Razorpay/PayU)</li><li>GSTN e-invoice (IRN/QR) + E-way bill</li><li>Tally / Zoho Books / QuickBooks export</li><li>WhatsApp Business API, SMS, email</li><li>Public API / webhooks</li><li>SSO / SAML</li></ul></div>
+<div class="card"><h4>Missing manufacturing use-cases</h4><ul class="mut"><li>Job scheduling &amp; machine capacity planning</li><li>BOM / consumption posting (slab→job)</li><li>Labour/machine time capture</li><li>QC defect codes + rework routing</li><li>Maintenance / downtime</li></ul></div>
+<div class="card"><h4>Missing supply-chain / distributor</h4><ul class="mut"><li>Multi-location / branch inventory</li><li>Inventory turns &amp; dead-stock aging</li><li>Dealer price tiers &amp; B2B ordering portal</li><li>Multi-tier (manufacturer↔distributor↔dealer) network</li><li>Claims / returns settlement</li></ul></div>
+<div class="card"><h4>Missing CX · reporting · AI · automation</h4><ul class="mut"><li><b>CX:</b> customer order-tracking link, storefront, samples/appointments</li><li><b>Reporting:</b> GSTR-1/3B, P&amp;L, aging report, custom report builder, scheduled exports</li><li><b>AI:</b> only marketing copy — no demand forecast, recovery prediction, credit-risk scoring, slab photo→specs OCR, chat-to-data</li><li><b>Automation:</b> no event triggers, reminders are manual, no workflow engine/alerts</li></ul></div>
+</div>
+
+<!-- ===================== PART 5 ===================== -->
+<h2 id="p5">Part 5 · Objection Analysis</h2>
+<table>
+<tr><th>Stakeholder</th><th>What makes them hesitate / blocks purchase</th><th>Proof they need · missing from site</th></tr>
+<tr><td>Owner</td><td>"What does it cost? What's my payback?" No price, no ROI math.</td><td>Pricing + a 1-page ROI ("recovered ₹X stone + collected ₹Y udhaar"); testimonials.</td></tr>
+<tr><td>Ops Manager</td><td>No scheduling/capacity; can't run the floor from it.</td><td>Live demo of a job from order→dispatch; cycle-time report.</td></tr>
+<tr><td>Procurement</td><td>No PO/GRN at all — "this isn't procurement."</td><td>A procure-to-pay flow; until then, scope it out of the pitch.</td></tr>
+<tr><td>Supply Chain</td><td>Single-location; no dispatch/E-way.</td><td>Multi-godown roadmap + logistics module.</td></tr>
+<tr><td>Distributor / Dealer</td><td>No price tiers, no B2B portal, no returns.</td><td>Dealer portal demo; catalog is a good start.</td></tr>
+<tr><td>Sales Manager</td><td>No rep attribution/targets — can't manage a team.</td><td>Rep leaderboard + quota view.</td></tr>
+<tr><td>CFO</td><td>No e-invoice, no GSTR export, no Tally, no credit notes. Compliance + reconciliation risk.</td><td>E-invoice + GSTR-1/3B + Tally export; security/compliance page.</td></tr>
+<tr><td>Warehouse</td><td>No scan-based picking/stock-take.</td><td>QR-scan stock-take demo.</td></tr>
+<tr><td>Supplier</td><td>No PO, no vendor visibility.</td><td>Vendor portal (later).</td></tr>
+<tr><td>Customer</td><td>Trust — unknown brand, no reviews, no order tracking.</td><td>Trust signals, order-status link, social proof.</td></tr>
+<tr><td>Consultant</td><td>No offline, no help/training, partial process fit.</td><td>Implementation kit + offline story.</td></tr>
+<tr><td>ERP Expert</td><td>No API, no multi-entity, fixed roles.</td><td>API docs + extensibility roadmap.</td></tr>
+<tr><td>Product Evaluator</td><td>No monetisation loop, thin onboarding.</td><td>Pricing + activation flow.</td></tr>
+<tr><td>Investor</td><td>No traction, no revenue engine, single slice.</td><td>Pilot metrics, retention, paid logos.</td></tr>
+</table>
+<p class="callout warn"><strong>The universal objection:</strong> every stakeholder hits the same wall first — <strong>the website tells them nothing.</strong> No price, no proof, no demo, no contact. Even a perfect product loses the deal at a login screen.</p>
+
+<!-- ===================== PART 6 ===================== -->
+<h2 id="p6">Part 6 · Competitive Benchmark</h2>
+<p class="sh">Benchmarked honestly: GraniteOS is a vertical SMB tool; the named systems are horizontal mid/large ERPs. The right comparison isn't feature count — it's <em>fit per rupee for an Indian stone business.</em></p>
+<table>
+<tr><th>System</th><th>Where GraniteOS wins</th><th>Where they win</th></tr>
+<tr><td>SAP S/4HANA</td><td>Setup in a day vs months; stone-native (recovery/slab/godown); 1/100th cost; mobile + Hindi AI.</td><td>Everything enterprise: full ERP, finance, MRP, multi-entity, compliance, ecosystem.</td></tr>
+<tr><td>Oracle NetSuite</td><td>Vertical depth (slab passport, recovery radar), price, India-SMB UX.</td><td>True accounting, multi-subsidiary, mature reporting, integrations marketplace.</td></tr>
+<tr><td>MS Dynamics 365</td><td>Zero-config, stone wedge, WhatsApp/UPI native.</td><td>Manufacturing/SCM modules, Power Platform, partner network.</td></tr>
+<tr><td>Odoo</td><td>Pre-built for stone (Odoo needs heavy customisation); cleaner mobile.</td><td>Modular breadth (accounting, PO, MRP, POS, eCom) out of the box; open API; community.</td></tr>
+<tr><td>Zoho (One/Books/Inventory)</td><td>Stone-specific metrics + 3D + recovery; single focused app vs stitching 5 Zoho apps.</td><td>Books, GST e-invoice/returns, payments, vast integrations, established trust.</td></tr>
+<tr><td>Infor</td><td>Cost, simplicity, SMB fit.</td><td>Deep industry CloudSuites, MES, enterprise SCM.</td></tr>
+<tr><td>Epicor</td><td>Cost, mobile, vertical wedge.</td><td>Discrete-manufacturing depth, MES, scheduling, shop-floor.</td></tr>
+</table>
+<div class="grid">
+<div class="card ok"><h4>Differentiation to own</h4><ul class="mut"><li><b>Recovery-Rate Radar</b> — no ERP measures stone yield per block/machine. This is the moat.</li><li><b>Slab Passport + 3D</b> — sell-the-slab experience none of the above ship.</li><li><b>India-SMB GST + Udhaar + WhatsApp/UPI</b> done right, mobile-first.</li><li><b>Time-to-value</b> measured in hours, not a 6-month implementation.</li></ul></div>
+<div class="card warn"><h4>Features missing entirely vs all of them</h4><ul class="mut"><li>Accounting / books / GST returns / e-invoice</li><li>Procure-to-pay</li><li>Multi-entity / multi-location</li><li>Open API &amp; integrations</li><li>Production scheduling &amp; costing</li></ul></div>
+</div>
+
+<!-- ===================== PART 7 ===================== -->
+<h2 id="p7">Part 7 · Investor Review</h2>
+<div class="card">
+<div style="margin-bottom:14px">
+<span class="score"><b>5</b><span>/10 Investment</span></span>
+<span class="score"><b>6</b><span>/10 Product</span></span>
+<span class="score"><b>2.5</b><span>/10 Go-to-market</span></span>
+</div>
+<table>
+<tr><th>Dimension</th><th>Read</th></tr>
+<tr><td>Market positioning</td><td><span class="part">Sharp wedge, unproven.</span> "OS for Indian stone trade" is a real, underserved niche; positioning exists in code, not in market.</td></tr>
+<tr><td>Product maturity</td><td><span class="part">Strong MVP / Slice-1.</span> Core sell-side loop + GST are real and clean; ops/finance/procurement shallow.</td></tr>
+<tr><td>Scalability</td><td><span class="part">Tech scales; model doesn't yet.</span> Multi-tenant RLS is right; single-location + no billing limits commercial scale.</td></tr>
+<tr><td>Defensibility / moat</td><td><span class="part">Wedge is defensible (recovery + vertical depth + data); not yet a network/data moat.</span></td></tr>
+<tr><td>Revenue potential</td><td><span class="none">Unproven.</span> Plausible ₹1–3k/mo/SMB × thousands of stone units, but zero monetisation built and no traction.</td></tr>
+<tr><td>Enterprise readiness</td><td><span class="none">No.</span> SMB tool; missing compliance, SSO, SLA, API.</td></tr>
+</table>
+<p class="sh"><strong>Investor one-liner:</strong> "Credible founder execution and a genuinely differentiated wedge in a niche nobody serves well — but it's pre-revenue, pre-pricing, and invisible to the market. I'd fund a pilot tranche conditional on 10 paying stone businesses and a recovery-rate ROI case study, not a growth round."</p>
+</div>
+
+<!-- ===================== PART 8 ===================== -->
+<h2 id="p8">Part 8 · Customer Journey Audit (first-time visitor)</h2>
+<table>
+<tr><th>Stage</th><th>Reality</th><th>Verdict</th></tr>
+<tr><td>Homepage clarity</td><td>There is no homepage. Root redirects straight to a login screen.</td><td class="none">Fail</td></tr>
+<tr><td>Value proposition</td><td>Zero public value prop. A visitor cannot learn what GraniteOS does.</td><td class="none">Fail</td></tr>
+<tr><td>Navigation</td><td>No public nav. Only Sign in / OTP.</td><td class="none">Fail</td></tr>
+<tr><td>Product understanding</td><td>A polished <code>/showcase</code> demo page exists — but it's not linked from anywhere a visitor lands.</td><td class="none">Fail</td></tr>
+<tr><td>Trust signals</td><td>None — no logos, testimonials, security, about, team, address.</td><td class="none">Fail</td></tr>
+<tr><td>Pricing clarity</td><td>No pricing page at all.</td><td class="none">Fail</td></tr>
+<tr><td>Demo flow</td><td>No "Book a demo" / "Try it" CTA. (Your newbiz template mandates a Contact + "Get a Demo" funnel — it's missing here.)</td><td class="none">Fail</td></tr>
+<tr><td>Conversion flow</td><td>Only path forward is to already have an account. New visitor = dead end.</td><td class="none">Fail</td></tr>
+</table>
+<p class="callout warn"><strong>Drop-off risk: ~100% of cold traffic.</strong> Friction points: (1) login wall as the front door; (2) no reason-to-believe before asking for a phone number; (3) the best asset — <code>/showcase</code>, 3D, recovery radar — is hidden. <strong>This is the single highest-ROI fix in the entire report and the cheapest:</strong> ship a public landing → features → pricing → demo funnel in front of the login. The product is far better than its (non-existent) shopfront suggests.</p>
+
+<!-- ===================== PART 9 ===================== -->
+<h2 id="p9">Part 9 · Feature Prioritization</h2>
+
+<h4>Top 10 critical improvements</h4>
+<table>
+<tr><th>#</th><th>Feature</th><th>Business impact</th><th>Difficulty</th><th>Timeline</th></tr>
+<tr><td>1</td><td>Public landing + features + pricing + "Get a Demo" funnel</td><td>Unblocks ALL acquisition; ~100%→convertible</td><td>Low</td><td>1 wk</td></tr>
+<tr><td>2</td><td>GST e-invoicing (IRN/QR) + E-way bill</td><td>Legal blocker above turnover threshold</td><td>High</td><td>6–8 wk</td></tr>
+<tr><td>3</td><td>Credit/debit notes + sales returns</td><td>GST-legal correctness; daily need</td><td>Med</td><td>3 wk</td></tr>
+<tr><td>4</td><td>Procure-to-pay: PO → GRN → bill</td><td>Closes the "procurement" claim</td><td>High</td><td>6 wk</td></tr>
+<tr><td>5</td><td>Tally / Zoho Books export</td><td>Removes CFO's #1 objection</td><td>Med</td><td>3 wk</td></tr>
+<tr><td>6</td><td>Payment gateway (Razorpay) + auto-reconcile</td><td>Faster collections, retention hook</td><td>Med</td><td>2 wk</td></tr>
+<tr><td>7</td><td>Production costing (labour/machine/consumable) → job margin</td><td>Owner's "real profit" question</td><td>High</td><td>5 wk</td></tr>
+<tr><td>8</td><td>Multi-location / multi-godown</td><td>Unlocks larger fabricators</td><td>High</td><td>5 wk</td></tr>
+<tr><td>9</td><td>WhatsApp Business API + automated reminders</td><td>Turns manual radars into automation</td><td>Med</td><td>3 wk</td></tr>
+<tr><td>10</td><td>Onboarding/activation + offline-tolerant capture</td><td>Adoption &amp; godown reality</td><td>Med</td><td>3 wk</td></tr>
+</table>
+
+<h4>Top 10 revenue-generating features</h4>
+<ol class="mut">
+<li>Pricing + billing/subscription engine (no revenue without this)</li>
+<li>Free public catalog/storefront → lead-gen into paid</li>
+<li>Payment gateway (transaction take-rate optional)</li>
+<li>Dealer/B2B ordering portal (seat/volume upsell)</li>
+<li>Recovery-Rate Radar Pro (premium analytics tier)</li>
+<li>AI marketing studio as add-on (already built — gate it)</li>
+<li>E-invoice/GST filing as compliance tier</li>
+<li>Multi-location / multi-user seat expansion</li>
+<li>Slab Bazaar marketplace (network revenue, in docs)</li>
+<li>WhatsApp automation pack</li>
+</ol>
+
+<h4>Top 10 enterprise-grade requirements</h4>
+<ol class="mut">
+<li>SOC2/ISO 27001 + public security/trust page</li>
+<li>SSO / SAML / SCIM</li>
+<li>Field-level audit log &amp; data retention/DPA (DPDP Act)</li>
+<li>Public API + webhooks</li>
+<li>Multi-entity / multi-GSTIN / consolidated reporting</li>
+<li>Custom roles &amp; granular permissions</li>
+<li>SLA + status page + backup/DR</li>
+<li>Approval workflows (discount, PO, payment)</li>
+<li>Custom report builder + scheduled exports</li>
+<li>Sandbox + migration tooling</li>
+</ol>
+
+<!-- ===================== PART 10 ===================== -->
+<h2 id="p10">Part 10 · Executive Summary</h2>
+<div class="card ok"><h4>What it does exceptionally well</h4><ul class="mut">
+<li><b>Recovery-Rate Radar</b> — a stone-native metric no horizontal ERP touches. Real moat.</li>
+<li><b>GST Rule-46 invoicing</b> — genuinely production-grade (HSN per line, CGST/SGST/IGST, place of supply, FY numbering, amount in words).</li>
+<li><b>Sell-side loop</b> — quote→order→invoice→payment, clean and complete.</li>
+<li><b>Slab Passport + 3D + public catalog</b> — a buyer experience competitors don't ship.</li>
+<li><b>India-SMB fit</b> — udhaar, WhatsApp/UPI, Hindi AI copy, mobile-first, day-one setup.</li>
+</ul></div>
+<div class="card warn"><h4>Biggest weaknesses</h4><ul class="mut">
+<li><b>No public shopfront</b> — login wall = no acquisition.</li>
+<li><b>Finance stack incomplete</b> — no e-invoice, GST returns, credit notes, or accounting export.</li>
+<li><b>No procurement</b> — PO/GRN/3-way-match absent despite the claim.</li>
+<li><b>Shallow manufacturing</b> — no scheduling, costing, BOM, or consumption.</li>
+<li><b>No monetisation</b> — no pricing/billing; no traction shown.</li>
+</ul></div>
+
+<table>
+<tr><th>Question</th><th>Answer</th></tr>
+<tr><td>Biggest adoption barriers</td><td>(1) Invisible website; (2) CFO compliance gaps (e-invoice/returns/Tally); (3) no procurement for buy-side businesses.</td></tr>
+<tr><td>Fastest wins for conversions</td><td>Public landing + pricing + "Get a Demo" funnel; expose the <code>/showcase</code> demo &amp; recovery-radar story; add trust signals.</td></tr>
+<tr><td>Fastest wins for enterprise adoption</td><td>Security/trust page + DPDP/DPA; audit log; multi-location; Tally export. (Full enterprise is a 12-mo arc.)</td></tr>
+<tr><td>Required to compete with established ERPs</td><td>Accounting/books, e-invoice + GST returns, procure-to-pay, multi-entity, open API. Don't chase all — own the vertical and integrate (Tally/Zoho) for the rest.</td></tr>
+</table>
+
+<div class="card">
+<h4>Final verdict</h4>
+<p><strong>Is this a complete manufacturing operating system?</strong> <span class="none">No</span> — not as a horizontal manufacturing ERP, and not even a complete <em>stone</em> OS yet (procurement, costing, accounting, multi-location missing). It is an excellent <strong>Slice-1 sell-side + GST + inventory MVP</strong> for the Indian stone trade, with a real wedge.</p>
+<p><strong>Who should buy today?</strong> Small-to-mid granite/marble <em>dealers, showrooms, and fabricators</em> in India who live on quotes, slab inventory, udhaar collection, and GST invoices — and who keep books in Tally/with a CA. For them the recovery radar, slab passport, and one-tap GST invoice are immediately worth paying for.</p>
+<p><strong>Who should NOT buy today?</strong> Anyone needing procurement/PO, full accounting, e-invoicing at scale, multi-branch, production costing/scheduling, or enterprise compliance. Pure quarries/suppliers (no sell-side flow) and non-stone manufacturers are out of scope.</p>
+<p><strong>Missing before enterprise-scale deployment:</strong> e-invoicing + GST returns, accounting/Tally integration, procure-to-pay, multi-entity/location, open API, SSO, audit log, SOC2/DPDP compliance, SLA — and a real go-to-market (site, pricing, billing, proof).</p>
+<p class="sh" style="margin-top:14px"><strong>The one-sentence takeaway:</strong> GraniteOS is a genuinely differentiated vertical MVP hiding behind a blank front door — fix the shopfront and close the compliance/procurement gaps, and it's a fundable, sellable stone-trade OS; leave them, and the best wedge in the category stays invisible.</p>
+</div>
+
+<p class="meta" style="margin-top:40px">Generated by a simulated 15-stakeholder panel, grounded in source inspection of <code>D:\vyaparwerk\graniteos</code>. Features were credited only where present in code; nothing was assumed from the marketing surface (there isn't one).</p>
+
+</div>
+</body>
+</html>

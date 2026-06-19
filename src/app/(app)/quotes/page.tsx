@@ -22,10 +22,19 @@ export default async function QuotesPage() {
   const viewOnly = level === "view";
 
   const supabase = await createClient();
-  const { data } = await supabase
+  const { data, error: loadError } = await supabase
     .from("quotes")
     .select("id, quote_no, status, total_paise, created_at, parties(name)")
     .order("created_at", { ascending: false });
+
+  const { data: poData } = await supabase
+    .from("purchase_orders")
+    .select("quote_id, po_no")
+    .not("quote_id", "is", null);
+  const poByQuote = new Map<string, string>();
+  for (const p of (poData ?? []) as { quote_id: string | null; po_no: string | null }[]) {
+    if (p.quote_id && p.po_no) poByQuote.set(p.quote_id, p.po_no);
+  }
 
   const quotes = (data ?? []) as unknown as {
     id: string;
@@ -36,7 +45,7 @@ export default async function QuotesPage() {
   }[];
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Quotes</h1>
         {viewOnly ? (
@@ -59,8 +68,14 @@ export default async function QuotesPage() {
         </p>
       )}
 
+      {loadError && (
+        <div className="mt-5 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
+          Couldn&apos;t load quotes right now. Please refresh — if it keeps happening, contact support.
+        </div>
+      )}
+
       <div className="mt-5 space-y-2">
-        {quotes.length === 0 && (
+        {!loadError && quotes.length === 0 && (
           <EmptyState
             heading="No quotes yet"
             subtext={
@@ -81,11 +96,18 @@ export default async function QuotesPage() {
                   {q.quote_no ?? "Quote"}{" "}
                   <span className="font-normal text-slate-400">· {q.parties?.name ?? "—"}</span>
                 </p>
-                <span
-                  className={`inline-block mt-1 text-[11px] font-semibold rounded-md px-2 py-0.5 capitalize ${STATUS_STYLE[q.status] ?? ""}`}
-                >
-                  {q.status}
-                </span>
+                <div className="mt-1 flex items-center gap-2">
+                  <span
+                    className={`inline-block text-[11px] font-semibold rounded-md px-2 py-0.5 capitalize ${STATUS_STYLE[q.status] ?? ""}`}
+                  >
+                    {q.status}
+                  </span>
+                  {poByQuote.get(q.id) && (
+                    <span className="inline-flex items-center text-[11px] font-semibold rounded-md px-2 py-0.5 bg-gold/10 text-gold border border-gold/20">
+                      {poByQuote.get(q.id)}
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="text-right shrink-0">
                 <div className="font-extrabold text-gold">{formatINR(q.total_paise)}</div>

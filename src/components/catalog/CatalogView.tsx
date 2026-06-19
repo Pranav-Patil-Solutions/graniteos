@@ -134,11 +134,13 @@ export default function CatalogView({
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search stone, colour, finish…"
+                aria-label="Search stone, colour, finish"
                 className="w-full rounded-xl border border-graphite-600 bg-white/[0.04] pl-9 pr-8 py-2 text-sm text-white placeholder:text-slate-500 focus:border-gold outline-none"
               />
               {query && (
                 <button
                   onClick={() => setQuery("")}
+                  aria-label="Clear search"
                   className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"
                 >
                   <X className="w-4 h-4" />
@@ -149,6 +151,7 @@ export default function CatalogView({
               suppressHydrationWarning
               value={sort}
               onChange={(e) => setSort(e.target.value as Sort)}
+              aria-label="Sort slabs"
               className="rounded-xl border border-graphite-600 bg-white/[0.04] px-2 py-2 text-sm text-slate-300 focus:border-gold outline-none"
             >
               <option value="featured">Featured</option>
@@ -217,7 +220,11 @@ export default function CatalogView({
           ))}
           {filtered.length === 0 && (
             <div className="col-span-full text-center py-12">
-              <p className="text-sm text-slate-400">No slabs match your search.</p>
+              <p className="text-sm text-slate-400">
+                {hasFilters
+                  ? "No slabs match your search."
+                  : "No stock is listed in this catalogue yet — please check back soon."}
+              </p>
               {hasFilters && (
                 <button
                   onClick={clearAll}
@@ -240,7 +247,7 @@ export default function CatalogView({
             💬 Enquire
           </a>
         )}
-        <p className="mt-8 text-center text-[11px] text-graphite-500">
+        <p className="mt-8 text-center text-[11px] text-ondark-muted">
           Powered by <span className="text-slate-400">GraniteOS</span> · made by{" "}
           <span className="text-gold/70 font-semibold">HandelOS</span>
         </p>

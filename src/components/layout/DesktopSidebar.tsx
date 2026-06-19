@@ -37,7 +37,7 @@ export default function DesktopSidebar({
           if (items.length === 0) return null;
           return (
             <div key={g.group} className="mb-4">
-              <p className="px-2 mb-1 text-[10px] uppercase tracking-[0.16em] text-gold/60 font-semibold">{g.group}</p>
+              <p className="px-2 mb-1 text-[10px] uppercase tracking-[0.16em] text-gold/80 font-semibold">{g.group}</p>
               {items.map((it) => {
                 const active = isActive(pathname, it.href);
                 const Icon = it.icon;

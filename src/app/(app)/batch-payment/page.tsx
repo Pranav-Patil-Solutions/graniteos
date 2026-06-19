@@ -1,11 +1,11 @@
-import { requireSession } from "@/lib/auth";
+import { requireModuleAccess } from "@/lib/access-control-guard";
 import { createClient } from "@/lib/supabase/server";
 import BatchPaymentForm from "@/components/money/BatchPaymentForm";
 
 export const dynamic = "force-dynamic";
 
 export default async function BatchPaymentPage() {
-  await requireSession();
+  await requireModuleAccess("money");
   const supabase = await createClient();
 
   const [{ data: parties }, { data: invoices }, { data: payments }] = await Promise.all([
@@ -32,7 +32,7 @@ export default async function BatchPaymentPage() {
     .sort((a, b) => b.outstanding_paise - a.outstanding_paise);
 
   return (
-    <div className="px-4 pt-12 pb-8 max-w-md mx-auto">
+    <div className="px-4 pt-12 pb-8 max-w-md lg:max-w-6xl mx-auto">
       <div className="mb-5">
         <h1 className="text-2xl font-bold text-white">Batch Payment</h1>
         <p className="text-sm text-slate-400">

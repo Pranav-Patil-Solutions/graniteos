@@ -30,7 +30,7 @@ export const viewport: Viewport = {
   themeColor: "#0b0e11",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
+  // maximumScale intentionally omitted — pinch-zoom must not be blocked (WCAG 1.4.4)
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -55,6 +55,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body suppressHydrationWarning className="font-sans antialiased">
+        {/* Skip-to-content — first focusable element; revealed on keyboard focus (WCAG 2.4.1) */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:rounded-lg focus:bg-gold focus:px-4 focus:py-2.5 focus:text-sm focus:font-bold focus:text-[#0b0e11] focus:shadow-xl focus:outline-none"
+        >
+          Skip to content
+        </a>
         {gate ?? children}
       </body>
     </html>

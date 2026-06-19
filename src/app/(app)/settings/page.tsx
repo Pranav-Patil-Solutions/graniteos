@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ChevronLeft, Upload, ChevronRight, Package, ShieldCheck } from "lucide-react";
+import { ChevronLeft, Upload, ChevronRight, Package, ShieldCheck, KeyRound } from "lucide-react";
 import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/permissions";
 import { createClient } from "@/lib/supabase/server";
@@ -18,7 +18,7 @@ export default async function SettingsPage() {
     .single();
 
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <Link
         href="/dashboard"
         className="inline-flex items-center gap-1 text-sm text-slate-400 hover:text-slate-200"
@@ -65,6 +65,20 @@ export default async function SettingsPage() {
           <span className="block text-white font-semibold">Access Control</span>
           <span className="block text-xs text-slate-400 mt-0.5">
             Control what each role (Sales, Store, Fabrication) can see and edit.
+          </span>
+        </span>
+        <ChevronRight className="w-4 h-4 text-slate-500" />
+      </Link>
+
+      <Link
+        href="/settings/security"
+        className="mb-5 flex items-center gap-3 rounded-2xl border border-graphite-600 bg-white/[0.04] backdrop-blur p-4 hover:border-gold/60 transition-colors"
+      >
+        <span className="text-gold"><KeyRound className="w-5 h-5" /></span>
+        <span className="flex-1">
+          <span className="block text-white font-semibold">Security &amp; 2FA</span>
+          <span className="block text-xs text-slate-400 mt-0.5">
+            Turn on two-factor sign-in with an authenticator app for extra protection.
           </span>
         </span>
         <ChevronRight className="w-4 h-4 text-slate-500" />

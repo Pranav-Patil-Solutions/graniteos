@@ -233,6 +233,20 @@ export async function updateInvoice(invoiceId: string, input: unknown) {
   const taxTotal = cgst + sgst + igst;
   const { roundedTotalPaise, roundOffPaise } = computeRoundOff(subtotal + taxTotal);
 
+  // Replace line items without a corruption window: insert the new rows FIRST,
+  // and only delete the old ones + write the new header totals once the insert
+  // succeeds. A failed insert leaves the existing invoice (and its money) intact.
+  const { data: oldItems } = await supabase
+    .from("invoice_items")
+    .select("id")
+    .eq("invoice_id", invoiceId);
+  const oldIds = (oldItems ?? []).map((r) => r.id as string);
+
+  const { error: iErr } = await supabase.from("invoice_items").insert(itemRows);
+  if (iErr) return { error: iErr.message };
+
+  if (oldIds.length) await supabase.from("invoice_items").delete().in("id", oldIds);
+
   const { error: uErr } = await supabase
     .from("invoices")
     .update({
@@ -246,10 +260,6 @@ export async function updateInvoice(invoiceId: string, input: unknown) {
     })
     .eq("id", invoiceId);
   if (uErr) return { error: uErr.message };
-
-  await supabase.from("invoice_items").delete().eq("invoice_id", invoiceId);
-  const { error: iErr } = await supabase.from("invoice_items").insert(itemRows);
-  if (iErr) return { error: iErr.message };
 
   revalidatePath(`/invoices/${invoiceId}`);
   revalidatePath(`/invoices/${invoiceId}/tax-invoice`);

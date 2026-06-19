@@ -10,7 +10,8 @@ const PUBLIC_PREFIXES = [
   "/s",
   "/terms",
   "/privacy",
-  "/dev",
+  // NOTE: "/dev" (the design-QA surface at /dev/ui) is deliberately NOT public —
+  // it must require auth, and the page itself 404s in production (see dev/ui/page.tsx).
 ];
 
 function isPublic(path: string) {

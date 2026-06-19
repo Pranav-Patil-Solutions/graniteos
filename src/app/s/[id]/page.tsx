@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { resolvePhotoUrl } from "@/lib/photos";
 import Slab3D from "@/components/catalog/Slab3D";
 import StoneVisualizer from "@/components/catalog/StoneVisualizer";
 
@@ -24,11 +25,10 @@ export default async function SlabPage({ params }: { params: Promise<{ id: strin
   if (!slab) notFound();
 
   const block = (slab as unknown as { blocks?: { material: string; color: string | null; label: string; origin: string | null } }).blocks;
-  const { data: company } = await admin
-    .from("companies")
-    .select("name, phone")
-    .eq("id", slab.company_id)
-    .single();
+  const [{ data: company }, slabPhotoUrl] = await Promise.all([
+    admin.from("companies").select("name, phone").eq("id", slab.company_id).single(),
+    resolvePhotoUrl(slab.photo_path),
+  ]);
 
   const spec = (k: string, v: string | number | null | undefined) =>
     v ? (
@@ -46,9 +46,9 @@ export default async function SlabPage({ params }: { params: Promise<{ id: strin
         </div>
 
         <div className="relative mt-3 h-56 rounded-3xl overflow-hidden border border-graphite-600 bg-gradient-to-b from-graphite-800 to-graphite-900">
-          {slab.photo_path ? (
+          {slabPhotoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={slab.photo_path} alt="slab" className="w-full h-56 object-cover" />
+            <img src={slabPhotoUrl} alt="slab" className="w-full h-56 object-cover" />
           ) : (
             <>
               <Slab3D
@@ -78,7 +78,7 @@ export default async function SlabPage({ params }: { params: Promise<{ id: strin
                 label: block?.material ?? "Stone",
                 material: block?.material ?? "Stone",
                 color: block?.color ?? null,
-                photo_path: slab.photo_path,
+                photo_path: slabPhotoUrl,
               },
             ]}
             triggerLabel={`See ${block?.material ?? "this stone"} in your space`}

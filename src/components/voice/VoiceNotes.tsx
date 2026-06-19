@@ -112,7 +112,10 @@ export default function VoiceNotes() {
       </div>
 
       {notes.length === 0 ? (
-        <p className="text-center text-sm text-slate-500 py-6">No notes yet. Speak your first reminder above.</p>
+        <div className="flex flex-col items-center text-center py-8 text-slate-500">
+          <Mic className="w-9 h-9 mb-2" />
+          <p className="text-sm">No notes yet — tap the mic and speak your first reminder above.</p>
+        </div>
       ) : (
         <ul className="space-y-2">
           {notes.map((n) => (
