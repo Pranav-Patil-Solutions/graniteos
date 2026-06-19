@@ -20,13 +20,14 @@ export default async function MeasurePage() {
   const me = await requireSession();
   const supabase = await createClient();
 
-  const [{ data: slabsData }, { data: blocksData }, { data: company }] = await Promise.all([
+  const [{ data: slabsData }, { data: blocksData }, { data: company }, { data: partiesData }] = await Promise.all([
     supabase
       .from("slabs")
       .select("id, block_id, length_in, width_in, sqft, rate_paise, status, godown, created_at")
       .order("created_at", { ascending: false }),
     supabase.from("blocks").select("id, material, label"),
     supabase.from("companies").select("name").eq("id", me.company_id).single(),
+    supabase.from("parties").select("id, name, phone, city").eq("kind", "customer").order("name", { ascending: true }),
   ]);
 
   const matById = new Map(
@@ -55,5 +56,11 @@ export default async function MeasurePage() {
     year: "numeric",
   });
 
-  return <MeasurementSheetClient rows={rows} companyName={company?.name ?? ""} generatedAt={generatedAt} />;
+  const customers = ((partiesData ?? []) as { id: string; name: string; phone: string | null; city: string | null }[]).map(
+    (p) => ({ id: p.id, name: p.name, phone: p.phone, city: p.city }),
+  );
+
+  return (
+    <MeasurementSheetClient rows={rows} companyName={company?.name ?? ""} generatedAt={generatedAt} customers={customers} />
+  );
 }

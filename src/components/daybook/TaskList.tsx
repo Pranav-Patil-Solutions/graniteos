@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Mic, Square, Plus, Check, Trash2, Undo2, CalendarClock } from "lucide-react";
+import { Mic, Square, Plus, Check, Trash2, Undo2, CalendarClock, ChevronDown } from "lucide-react";
 import { addTask, setTaskDone, deleteTask } from "@/actions/tasks";
 import { useSpeech } from "@/components/voice/useSpeech";
 import { transliterate } from "@/lib/transliterate";
@@ -89,9 +89,40 @@ export default function TaskList({
   const sinceLabel = (t: OpenTask) =>
     new Date(t.created_at).toLocaleDateString("en-GB", { day: "2-digit", month: "short" });
 
+  // Progress for today: how many of today's tasks are already done.
+  const totalToday = doneToday.length + open.length;
+  const pct = totalToday > 0 ? Math.round((doneToday.length / totalToday) * 100) : 0;
+  const todayLabel = new Date().toLocaleDateString("en-GB", { weekday: "long", day: "2-digit", month: "short" });
+
   return (
     <div className="space-y-5">
       <ConfettiBurst fire={fire} label="Task done 🎉" />
+
+      {/* progress header */}
+      <div className="rounded-2xl border border-gold/25 bg-gradient-to-br from-[#14110a] to-[#11161b] p-4">
+        <div className="flex items-end justify-between gap-3">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.16em] text-gold/80 font-semibold">{todayLabel}</p>
+            <p className="mt-0.5 text-sm text-slate-300">
+              {open.length === 0 && totalToday > 0
+                ? "All clear for today 🎉"
+                : `${open.length} to do${doneToday.length ? ` · ${doneToday.length} done` : ""}`}
+            </p>
+          </div>
+          <div className="text-right shrink-0">
+            <span className="text-3xl font-extrabold text-white leading-none">{doneToday.length}</span>
+            <span className="text-sm text-slate-500">/{totalToday}</span>
+          </div>
+        </div>
+        {totalToday > 0 && (
+          <div className="mt-3 h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-granite-green to-granite-green2 transition-all duration-500"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+        )}
+      </div>
 
       {/* add box — type, or speak and confirm */}
       <div className="rounded-2xl border border-graphite-600 bg-white/[0.04] backdrop-blur p-4 space-y-3">
@@ -181,7 +212,11 @@ export default function TaskList({
             {open.map((t) => (
               <li
                 key={t.id}
-                className="flex items-center gap-3 rounded-xl border border-graphite-600 bg-white/[0.04] px-3.5 py-3"
+                className={`flex items-center gap-3 rounded-xl border bg-white/[0.04] px-3.5 py-3 ${
+                  t.carriedDays > 0
+                    ? "border-graphite-600 border-l-2 border-l-amber-400/60"
+                    : "border-graphite-600"
+                }`}
               >
                 <button
                   onClick={() => complete(t.id)}
@@ -244,11 +279,15 @@ export default function TaskList({
         </section>
       )}
 
-      {/* earlier days */}
+      {/* earlier days — collapsed by default to keep the page focused on today */}
       {history.length > 0 && (
-        <section>
-          <h2 className="text-sm font-bold text-slate-300 mb-2">Earlier</h2>
-          <div className="space-y-3">
+        <details className="group">
+          <summary className="flex cursor-pointer list-none items-center gap-2 text-sm font-bold text-slate-300 hover:text-white">
+            <ChevronDown className="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180" />
+            Earlier
+            <span className="text-slate-500 font-normal">· {history.length} day{history.length === 1 ? "" : "s"}</span>
+          </summary>
+          <div className="mt-3 space-y-3">
             {history.map((d) => (
               <div key={d.dayKey}>
                 <p className="text-xs text-slate-500 mb-1.5 px-1">{d.label}</p>
@@ -266,7 +305,7 @@ export default function TaskList({
               </div>
             ))}
           </div>
-        </section>
+        </details>
       )}
     </div>
   );

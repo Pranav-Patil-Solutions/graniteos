@@ -8,6 +8,9 @@ import SignOutButton from "@/components/auth/SignOutButton";
 import MorningCard from "@/components/dashboard/MorningCard";
 import GettingStartedCard from "@/components/dashboard/GettingStartedCard";
 import CoachMarksTour from "@/components/dashboard/CoachMarksTour";
+import DashboardQuickActions from "@/components/dashboard/DashboardQuickActions";
+import DashboardTodo from "@/components/dashboard/DashboardTodo";
+import { groupTasks, type TaskRow } from "@/lib/tasks";
 import type { ChecklistCounts } from "@/lib/import/checklist";
 
 function greeting() {
@@ -31,6 +34,8 @@ export default async function DashboardPage() {
   // Fetch the counts needed by the Getting Started checklist.
   // All fail-safe with defaults — never crash the dashboard.
   let checklistCounts: ChecklistCounts = { products: 0, users: 1, quotes: 0, orders: 0 };
+  let openTasks: { id: string; title: string; carriedDays: number }[] = [];
+  let moreTasks = 0;
   if (isOwner) {
     const [prodRes, usersRes, quotesRes, ordersRes] = await Promise.allSettled([
       supabase.from("products").select("*", { count: "exact", head: true }).eq("active", true),
@@ -49,6 +54,15 @@ export default async function DashboardPage() {
       quotes: safeCount(quotesRes as PromiseSettledResult<{ count: number | null; error: unknown }>),
       orders: safeCount(ordersRes as PromiseSettledResult<{ count: number | null; error: unknown }>),
     };
+
+    // Open Daybook tasks for the dashboard to-do (fail-safe; never crash).
+    const { data: taskData } = await supabase
+      .from("daybook_tasks")
+      .select("id, title, status, created_at, completed_at")
+      .order("created_at", { ascending: true });
+    const { open } = groupTasks((taskData ?? []) as TaskRow[], new Date());
+    openTasks = open.slice(0, 5).map((t) => ({ id: t.id, title: t.title, carriedDays: t.carriedDays }));
+    moreTasks = Math.max(0, open.length - openTasks.length);
   }
 
   return (
@@ -60,6 +74,7 @@ export default async function DashboardPage() {
           <p className="text-sm text-slate-400">{company?.name ?? ""}</p>
         </div>
         <div className="flex items-center gap-3">
+          <DashboardQuickActions isOwner={isOwner} />
           {isOwner && (
             <Link href="/settings" aria-label="Settings" className="text-slate-400 hover:text-gold">
               <Settings className="w-5 h-5" />
@@ -85,6 +100,9 @@ export default async function DashboardPage() {
       </form>
 
       <MorningCard role={user.role} />
+
+      {/* Dashboard to-do — top open Daybook tasks, completable inline (owners) */}
+      {isOwner && <DashboardTodo initial={openTasks} moreCount={moreTasks} />}
 
       {/* Getting Started checklist (owners only — client component, localStorage-backed) */}
       {isOwner && <GettingStartedCard counts={checklistCounts} />}

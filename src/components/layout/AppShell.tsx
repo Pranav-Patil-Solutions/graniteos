@@ -54,9 +54,12 @@ export default function AppShell({
   // Desktop ↔ mobile is switchable: "mobile" forces the phone chrome (tabs +
   // hamburger) even on a wide screen — handy for demos. Persisted per device.
   const [forceMobile, setForceMobile] = useState(false);
+  // Sidebar starts collapsed (icon rail); pinning keeps it open. Persisted.
+  const [sidebarPinned, setSidebarPinned] = useState(false);
   useEffect(() => {
     try {
       setForceMobile(localStorage.getItem("gos-layout") === "mobile");
+      setSidebarPinned(localStorage.getItem("gos-sidebar-pinned") === "1");
     } catch {}
   }, []);
   const setLayout = (mobile: boolean) => {
@@ -65,9 +68,21 @@ export default function AppShell({
       localStorage.setItem("gos-layout", mobile ? "mobile" : "auto");
     } catch {}
   };
+  const toggleSidebarPin = () =>
+    setSidebarPinned((v) => {
+      const next = !v;
+      try {
+        localStorage.setItem("gos-sidebar-pinned", next ? "1" : "0");
+      } catch {}
+      return next;
+    });
 
   return (
-    <div className={`min-h-screen flex flex-col app-bg ${forceMobile ? "" : "lg:pl-60"}`}>
+    <div
+      className={`min-h-screen flex flex-col app-bg ${
+        forceMobile ? "" : sidebarPinned ? "lg:pl-60" : "lg:pl-16"
+      }`}
+    >
       <NavDrawer
         role={role}
         accessConfig={accessConfig}
@@ -78,6 +93,8 @@ export default function AppShell({
         <DesktopSidebar
           role={role}
           accessConfig={accessConfig}
+          pinned={sidebarPinned}
+          onTogglePin={toggleSidebarPin}
           onSwitchToMobile={() => setLayout(true)}
         />
       )}

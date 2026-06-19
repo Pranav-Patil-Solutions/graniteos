@@ -18,7 +18,6 @@ export default async function MoneyPage() {
     { data: parties },
     { data: invoices },
     { data: payments },
-    { data: blocks },
     { data: vendorBills },
     { data: vendorPays },
   ] = await Promise.all([
@@ -26,7 +25,6 @@ export default async function MoneyPage() {
     supabase.from("parties").select("id, kind, name, phone, opening_balance_paise"),
     supabase.from("invoices").select("customer_id, total_paise, gst_paise"),
     supabase.from("payments").select("customer_id, amount_paise, paid_on"),
-    supabase.from("blocks").select("cost_paise"),
     supabase.from("purchase_bills").select("total_paise"),
     supabase.from("supplier_payments").select("amount_paise"),
   ]);
@@ -68,14 +66,6 @@ export default async function MoneyPage() {
   const payables = supplierOpening + Math.max(0, billTotal - vendorPaid);
   const gstBilled = invs.reduce((n, i) => n + Number(i.gst_paise), 0);
 
-  // GST Auto-Pilot: output GST collected (18% on sales) vs input credit on raw
-  // block purchases (5% HSN 2515/2516). Net = what you actually pay the govt.
-  const outputGst = gstBilled;
-  const inputItc = Math.round(
-    ((blocks ?? []) as { cost_paise: number }[]).reduce((n, b) => n + Number(b.cost_paise), 0) * 0.05,
-  );
-  const netGst = outputGst - inputItc;
-
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - 30);
   const cashIn = pays
@@ -104,35 +94,6 @@ export default async function MoneyPage() {
         <Stat label="Cash in (30 days)" paise={cashIn} />
         <Stat label="GST billed" paise={gstBilled} />
         <Stat label="Payable to suppliers" paise={payables} />
-      </div>
-
-      {/* GST Auto-Pilot */}
-      <div className="mt-4 rounded-2xl border border-[#3a3320] bg-gold/[0.06] p-4">
-        <div className="text-gold font-bold flex items-center gap-2">🧾 GST Auto-Pilot ⭐</div>
-        <div className="mt-3 space-y-1.5 text-sm">
-          <div className="flex justify-between">
-            <span className="text-slate-400">GST collected on sales (18%)</span>
-            <span className="text-white">{formatINR(outputGst)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-slate-400">Input credit on blocks (5%)</span>
-            <span className="text-granite-green2">− {formatINR(inputItc)}</span>
-          </div>
-          <div className="flex justify-between pt-1.5 border-t border-[#3a3320]">
-            <span className="font-bold text-white">
-              {netGst >= 0 ? "Net GST you owe" : "GST credit in your favour"}
-            </span>
-            <span className={`font-extrabold ${netGst >= 0 ? "text-white" : "text-granite-green2"}`}>
-              {formatINR(Math.abs(netGst))}
-            </span>
-          </div>
-        </div>
-        {inputItc > 0 && (
-          <p className="mt-2 text-[12px] text-gold/90">
-            💡 Don&apos;t forget: that <b>{formatINR(inputItc)}</b> input credit offsets your GST bill —
-            money most owners leave unclaimed.
-          </p>
-        )}
       </div>
 
       <Link
