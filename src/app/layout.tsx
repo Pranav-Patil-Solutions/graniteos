@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import { Manrope, Fraunces } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { verifyLicense } from "@/lib/license";
 import LicenseGate from "@/components/license/LicenseGate";
@@ -56,6 +57,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body suppressHydrationWarning className="font-sans antialiased">
         {gate ?? children}
+        <Analytics />
       </body>
     </html>
   );
