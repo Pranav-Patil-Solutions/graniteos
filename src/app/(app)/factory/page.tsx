@@ -53,7 +53,7 @@ export default async function FactoryFloorPage() {
     <div className="max-w-3xl lg:max-w-6xl mx-auto px-4 pt-12 pb-10">
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">Factory Floor</h1>
+          <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">Factory Floor</h1>
           <p className="text-sm text-slate-400">Big buttons for the shop — advance each job as it moves.</p>
         </div>
         <span className="text-right">

@@ -65,7 +65,7 @@ export default async function PurchaseOrderDetail({ params }: { params: Promise<
 
       <div className="mt-3 flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-white">{po.po_no ?? "Purchase order"}</h1>
+          <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">{po.po_no ?? "Purchase order"}</h1>
           <p className="text-sm text-slate-400">{supplierName}</p>
           {quoteNo && (
             <p className="mt-1 text-xs text-slate-500">

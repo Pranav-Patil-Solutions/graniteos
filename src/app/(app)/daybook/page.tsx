@@ -24,7 +24,7 @@ export default async function DaybookPage() {
 
   return (
     <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
-      <h1 className="text-2xl font-bold text-white">Daybook</h1>
+      <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">Daybook</h1>
       <p className="text-sm text-slate-400">
         Speak today&apos;s tasks — unfinished ones follow you to tomorrow.
       </p>

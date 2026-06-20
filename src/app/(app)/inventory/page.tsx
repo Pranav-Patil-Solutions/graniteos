@@ -80,7 +80,7 @@ export default async function InventoryPage() {
   return (
     <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <div className="flex items-center justify-between gap-2">
-        <h1 className="font-display text-3xl font-semibold text-white tracking-tight">Stock</h1>
+        <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">Stock</h1>
         <ShareCatalog companyId={me.company_id} />
       </div>
 

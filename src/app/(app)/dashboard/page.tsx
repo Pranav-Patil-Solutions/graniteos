@@ -65,32 +65,38 @@ export default async function DashboardPage() {
     moreTasks = Math.max(0, open.length - openTasks.length);
   }
 
+  const firstName = user.name?.trim().split(/\s+/)[0] ?? user.name;
+
   return (
-    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 lg:px-8 pt-12 pb-8">
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-sm text-slate-400">{greeting()},</p>
-          <h1 className="text-2xl font-bold text-white">{user.name}</h1>
-          <p className="text-sm text-slate-400">{company?.name ?? ""}</p>
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 lg:px-8 pt-10 lg:pt-14 pb-8">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="eyebrow">{company?.name || "GraniteOS"}</p>
+          <h1 className="mt-2 font-display text-[2.1rem] leading-[1.04] lg:text-[2.9rem] font-semibold tracking-tight text-ondark">
+            {greeting()}, <span className="text-gold">{firstName}</span>
+          </h1>
+          <div className="mt-3">
+            <RoleBadge role={user.role} />
+          </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 shrink-0">
           <DashboardQuickActions isOwner={isOwner} />
           {isOwner && (
-            <Link href="/settings" aria-label="Settings" className="text-slate-400 hover:text-gold">
-              <Settings className="w-5 h-5" />
+            <Link
+              href="/settings"
+              aria-label="Settings"
+              className="grid place-items-center w-9 h-9 rounded-xl glass text-ondark-muted hover:text-gold transition-colors"
+            >
+              <Settings className="w-[18px] h-[18px]" />
             </Link>
           )}
           <SignOutButton />
         </div>
       </div>
 
-      <div className="mt-3">
-        <RoleBadge role={user.role} />
-      </div>
-
       {/* search everywhere — customers, stock, invoices, quotes, orders */}
-      <form action="/search" method="get" className="relative mt-5">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+      <form action="/search" method="get" className="relative mt-6">
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-ondark-muted pointer-events-none" />
         <input
           name="q"
           placeholder="Search customers, stock, invoices…"
@@ -107,7 +113,7 @@ export default async function DashboardPage() {
       {/* Getting Started checklist (owners only — client component, localStorage-backed) */}
       {isOwner && <GettingStartedCard counts={checklistCounts} />}
 
-      <p className="mt-6 text-center text-xs text-slate-500 lg:hidden">
+      <p className="mt-6 text-center text-xs text-ondark-muted lg:hidden">
         Tap <span className="text-gold font-semibold">☰</span> at the top-left for all sections.
       </p>
 

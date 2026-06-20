@@ -35,7 +35,7 @@ export default async function PurchaseOrdersPage() {
   return (
     <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Purchase Orders</h1>
+        <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">Purchase Orders</h1>
         <Link
           href="/purchase-orders/new"
           className="inline-flex items-center gap-1.5 rounded-xl bg-granite-green2 text-white px-3.5 py-2 text-sm font-bold"

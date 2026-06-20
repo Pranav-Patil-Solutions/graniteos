@@ -147,7 +147,7 @@ export default async function PartyPage({ params }: { params: Promise<{ id: stri
           {party.name.charAt(0).toUpperCase()}
         </div>
         <div className="min-w-0">
-          <h1 className="text-2xl font-bold text-white leading-tight">{party.name}</h1>
+          <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark leading-tight">{party.name}</h1>
           <p className="text-sm text-slate-400">
             <span className="capitalize">{kind}</span>
             {party.party_type ? ` · ${party.party_type}` : ""}

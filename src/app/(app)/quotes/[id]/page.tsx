@@ -60,7 +60,7 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
 
       <div className="mt-2 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">{quote.quote_no ?? "Quote"}</h1>
+          <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">{quote.quote_no ?? "Quote"}</h1>
           <p className="text-sm text-slate-400">
             {customer?.name ?? "—"}
             {customer?.city ? ` · ${customer.city}` : ""}

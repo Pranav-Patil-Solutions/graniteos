@@ -25,7 +25,7 @@ export default async function SettingsPage() {
       >
         <ChevronLeft className="w-4 h-4" /> Dashboard
       </Link>
-      <h1 className="mt-2 text-2xl font-bold text-white">Company settings</h1>
+      <h1 className="mt-2 font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">Company settings</h1>
       <p className="text-sm text-slate-400 mb-5">Your UPI ID powers the WhatsApp pay-links.</p>
 
       <Link

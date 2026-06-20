@@ -1,14 +1,16 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
-import { Manrope, Fraunces } from "next/font/google";
+import { Manrope, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { verifyLicense } from "@/lib/license";
 import LicenseGate from "@/components/license/LicenseGate";
 
-// Body / UI face
+// Body / UI face — clean grotesque
 const manrope = Manrope({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-manrope" });
-// Display / title face (screen titles, big money numbers, the "G" monogram)
-const fraunces = Fraunces({ subsets: ["latin"], weight: ["500", "600"], variable: "--font-fraunces" });
+// Display / title face — Cormorant Garamond: high-contrast lapidary serif (the
+// "carved-in-stone" letterforms). Kept on the --font-fraunces token name so the
+// tailwind `font-display` utility points at it with no config change.
+const fraunces = Cormorant_Garamond({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-fraunces" });
 
 export const metadata: Metadata = {
   title: "GraniteOS",
@@ -27,7 +29,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b0e11",
+  themeColor: "#07080a",
   width: "device-width",
   initialScale: 1,
   // maximumScale intentionally omitted — pinch-zoom must not be blocked (WCAG 1.4.4)
