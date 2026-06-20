@@ -102,7 +102,7 @@ export default function AppShell({
       <InstallBanner />
       <main id="main-content" className={`flex-1 pb-24 overflow-y-auto ${forceMobile ? "" : "lg:pb-10"}`}>{children}</main>
       <nav
-        className={`fixed bottom-0 inset-x-0 bg-graphite-900/90 backdrop-blur border-t border-graphite-600 z-50 ${forceMobile ? "" : "lg:hidden"}`}
+        className={`fixed bottom-0 inset-x-0 bg-graphite-900/80 backdrop-blur-xl border-t border-white/[0.07] z-50 ${forceMobile ? "" : "lg:hidden"}`}
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="flex justify-around h-16 max-w-lg mx-auto">
