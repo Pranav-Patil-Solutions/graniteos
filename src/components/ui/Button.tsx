@@ -19,7 +19,7 @@ type Props = {
 };
 
 const base =
-  "inline-flex items-center justify-center gap-2 font-bold text-[15px] rounded-2xl px-6 py-3.5 select-none";
+  "inline-flex items-center justify-center gap-2 font-bold text-[15px] rounded-xl px-6 py-3.5 select-none tracking-tight";
 
 export function Button({
   children,
@@ -115,7 +115,7 @@ export function Button({
     );
   }
 
-  // default: 3D press
+  // default: premium press — refined elevation + subtle lift (no toy 3D)
   return (
     <motion.button
       suppressHydrationWarning
@@ -123,10 +123,11 @@ export function Button({
       onClick={onClick}
       disabled={disabled}
       onTapStart={() => haptic("tap")}
-      whileTap={{ y: 5 }}
-      transition={{ type: "spring", stiffness: 800, damping: 20 }}
+      whileHover={{ y: -1 }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 500, damping: 22 }}
       className={`${base} bg-granite-green2 text-white ${className}`}
-      style={{ boxShadow: "0 6px 0 #0c5236, 0 10px 18px rgba(0,0,0,.4)" }}
+      style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,.16), 0 10px 24px -8px rgba(41,163,110,.45)" }}
     >
       {children}
     </motion.button>

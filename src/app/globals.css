@@ -2,36 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Theme variables ─────────────────────────────────────────────────────
+/* ════════════════════════════════════════════════════════════════════════
+   GraniteOS — "Obsidian & Champagne" premium theme
    RGB triplets consumed by tailwind.config.ts via rgb(var(--x) / <alpha>).
    :root = dark (brand default). html.light overrides the same names.
-   Note: --c-white is the "foreground tint" — dark theme: true white;
-   light theme: near-black ink, so text-white and bg-white/[0.04] flip
-   meaning correctly everywhere. */
+   Cool obsidian surfaces + a refined champagne-gold accent + crisp ink-white
+   text. To re-hue the accent, change --c-gold / --gold in ONE place.
+   ════════════════════════════════════════════════════════════════════════ */
 :root {
   color-scheme: dark;
 
   --c-white: 255 255 255;
-  /* slate = muted text scale (Tailwind defaults on dark) */
-  --c-slate-100: 241 245 249;
-  --c-slate-200: 226 232 240;
-  --c-slate-300: 203 213 225;
-  --c-slate-400: 148 163 184;
-  --c-slate-500: 112 128 152; /* bumped for ≥4.5:1 on #0b0e11 (WCAG 1.4.3) */
-  --c-slate-600: 71 85 105;
-  /* graphite = surfaces */
-  --c-graphite-900: 11 14 17;
-  --c-graphite-800: 17 22 27;
-  --c-graphite-700: 22 28 34;
-  --c-graphite-600: 28 34 40;
-  --c-graphite-500: 35 42 49;
-  --c-gold: 200 162 75;
-  --c-gold-soft: 228 201 126;
-  --c-granite-green2: 31 138 91;
-  --c-line: 242 240 235;
-  --c-ondark: 242 240 235;
-  --c-ondark-muted: 154 161 169;
-  /* accent text shades (Tailwind defaults on dark) */
+  /* slate = muted text scale (cool, tuned for ≥4.5:1 on obsidian) */
+  --c-slate-100: 238 241 246;
+  --c-slate-200: 220 225 233;
+  --c-slate-300: 197 204 215;
+  --c-slate-400: 146 156 171;
+  --c-slate-500: 116 125 140; /* ≥4.5:1 on the obsidian base (WCAG 1.4.3) */
+  --c-slate-600: 74 84 99;
+  /* graphite = surfaces (deep cool obsidian, layered) */
+  --c-graphite-900: 12 14 18;
+  --c-graphite-800: 16 19 25;
+  --c-graphite-700: 22 26 33;
+  --c-graphite-600: 32 37 46;
+  --c-graphite-500: 45 52 64;
+  /* champagne gold accent */
+  --c-gold: 220 191 128;
+  --c-gold-soft: 238 219 172;
+  --c-granite-green2: 41 163 110;
+  --c-line: 244 246 250;
+  --c-ondark: 244 246 250;
+  --c-ondark-muted: 152 161 174;
+  /* accent text shades (cool dark base) */
   --c-red-200: 254 202 202; --c-red-300: 252 165 165; --c-red-400: 248 113 113;
   --c-rose-200: 254 205 211; --c-rose-300: 253 164 175; --c-rose-400: 251 113 133;
   --c-amber-200: 253 230 138; --c-amber-300: 252 211 77; --c-amber-400: 251 191 36;
@@ -43,30 +45,30 @@
   --c-orange-300: 253 186 116; --c-orange-400: 251 146 60;
 
   /* page + form surfaces */
-  --bg-base: #0b0e11;
-  --bg-glow: #1c2630;
-  --input-border: #232a31;
-  --input-ink: #e8e6e1;
-  --input-placeholder: #787e8a; /* bumped for ≥4.5:1 on #0b0e11 (WCAG 1.4.3) */
-  --scrollbar: #232a31;
+  --bg-base: #07080b;
+  --bg-glow: #131a25;
+  --input-border: #272d37;
+  --input-ink: #eef0f5;
+  --input-placeholder: #7b818d; /* ≥4.5:1 on obsidian (WCAG 1.4.3) */
+  --scrollbar: #2a313c;
 
-  /* ── Premium Stone design tokens (redesign spec §2, unchanged) ── */
-  --bg-elevated: #15191e;
-  --bg-elevated2: #1c2127;
+  /* ── Premium Stone design tokens ── */
+  --bg-elevated: #14171d;
+  --bg-elevated2: #1b1f27;
   --slab: #f7f6f3;
   --slab-muted: #eceae5;
-  --text-on-dark: #f2f0eb;
-  --text-on-dark-muted: #9aa1a9;
+  --text-on-dark: #f4f6fa;
+  --text-on-dark-muted: #98a1ae;
   --text-on-light: #14181c;
   --text-on-light-muted: #5c636b;
-  --gold: #c8a24b;
-  --gold-soft: #e4c97e;
-  --btn-outline-ink: #c9a24b; /* outline-button rest text — flips darker in light */
+  --gold: #dcbf80;
+  --gold-soft: #ecd8ac;
+  --btn-outline-ink: #dcbf80;
   --green: #7c8c5d;
-  --positive: #1f8a70;
-  --negative: #d96a5b;
-  --info: #2c7a8c;
-  --border-dark: rgba(242, 240, 235, 0.08);
+  --positive: #29a36e;
+  --negative: #e06b5b;
+  --info: #4a9fb5;
+  --border-dark: rgba(244, 246, 250, 0.07);
   --border-light: rgba(20, 24, 28, 0.1);
 }
 
@@ -81,17 +83,16 @@ html.light {
   --c-slate-500: 107 116 128;
   --c-slate-600: 154 161 169;
   --c-graphite-900: 255 255 255;
-  --c-graphite-800: 250 249 246;
-  --c-graphite-700: 244 242 238;
-  --c-graphite-600: 222 218 209;
-  --c-graphite-500: 206 201 190;
-  --c-gold: 154 117 40;
-  --c-gold-soft: 128 96 30;
+  --c-graphite-800: 250 250 248;
+  --c-graphite-700: 244 243 240;
+  --c-graphite-600: 224 220 212;
+  --c-graphite-500: 208 203 193;
+  --c-gold: 150 113 36;
+  --c-gold-soft: 124 92 26;
   --c-granite-green2: 22 109 71;
   --c-line: 20 24 28;
   --c-ondark: 20 24 28;
   --c-ondark-muted: 92 99 107;
-  /* accents darken (≈ the -700/-800 of each scale) for light backgrounds */
   --c-red-200: 153 27 27; --c-red-300: 185 28 28; --c-red-400: 220 38 38;
   --c-rose-200: 159 18 57; --c-rose-300: 190 18 60; --c-rose-400: 225 29 72;
   --c-amber-200: 146 64 14; --c-amber-300: 180 83 9; --c-amber-400: 217 119 6;
@@ -102,13 +103,13 @@ html.light {
   --c-stone-300: 68 64 60; --c-stone-400: 87 83 78;
   --c-orange-300: 194 65 12; --c-orange-400: 234 88 12;
 
-  --bg-base: #f4f3ef;
+  --bg-base: #f5f4f0;
   --bg-glow: #ffffff;
   --input-border: #d8d4ca;
   --input-ink: #14181c;
   --input-placeholder: #8a8f98;
   --scrollbar: #c9c4b8;
-  --btn-outline-ink: #87661c; /* darker gold for 4.5:1 on the light background */
+  --btn-outline-ink: #8a6a1f;
 }
 
 html,
@@ -116,29 +117,31 @@ body {
   height: 100%;
   background: var(--bg-base);
   color: rgb(var(--c-ondark));
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 /* Dark-by-design surfaces (hero cards, toasts on photos): re-pin the dark
    palette inside this scope so light mode never flips their text. */
 .force-dark {
   --c-white: 255 255 255;
-  --c-slate-100: 241 245 249;
-  --c-slate-200: 226 232 240;
-  --c-slate-300: 203 213 225;
-  --c-slate-400: 148 163 184;
-  --c-slate-500: 112 128 152; /* matches :root (WCAG 1.4.3) */
-  --c-slate-600: 71 85 105;
-  --c-graphite-900: 11 14 17;
-  --c-graphite-800: 17 22 27;
-  --c-graphite-700: 22 28 34;
-  --c-graphite-600: 28 34 40;
-  --c-graphite-500: 35 42 49;
-  --c-gold: 200 162 75;
-  --c-gold-soft: 228 201 126;
-  --c-granite-green2: 31 138 91;
-  --c-line: 242 240 235;
-  --c-ondark: 242 240 235;
-  --c-ondark-muted: 154 161 169;
+  --c-slate-100: 238 241 246;
+  --c-slate-200: 220 225 233;
+  --c-slate-300: 197 204 215;
+  --c-slate-400: 146 156 171;
+  --c-slate-500: 116 125 140;
+  --c-slate-600: 74 84 99;
+  --c-graphite-900: 12 14 18;
+  --c-graphite-800: 16 19 25;
+  --c-graphite-700: 22 26 33;
+  --c-graphite-600: 32 37 46;
+  --c-graphite-500: 45 52 64;
+  --c-gold: 220 191 128;
+  --c-gold-soft: 238 219 172;
+  --c-granite-green2: 41 163 110;
+  --c-line: 244 246 250;
+  --c-ondark: 244 246 250;
+  --c-ondark-muted: 152 161 174;
   --c-red-200: 254 202 202; --c-red-300: 252 165 165; --c-red-400: 248 113 113;
   --c-rose-200: 254 205 211; --c-rose-300: 253 164 175; --c-rose-400: 251 113 133;
   --c-amber-200: 253 230 138; --c-amber-300: 252 211 77; --c-amber-400: 251 191 36;
@@ -150,9 +153,11 @@ body {
   --c-orange-300: 253 186 116; --c-orange-400: 251 146 60;
 }
 
-/* App shell page background (was an inline arbitrary-hex gradient) */
+/* App shell page background — refined obsidian with a single soft champagne aura */
 .app-bg {
-  background: radial-gradient(1200px 600px at 70% -10%, var(--bg-glow), var(--bg-base) 60%);
+  background:
+    radial-gradient(1300px 680px at 78% -14%, var(--bg-glow), transparent 58%),
+    var(--bg-base);
 }
 
 /* Tabular numerals for all money / quantity figures */
@@ -160,16 +165,45 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Soft gold glow behind a hero element (one per screen) */
+/* Soft champagne glow behind a hero element (one per screen) */
 .stone-glow::before {
   content: "";
   position: absolute;
   inset: -20% -10% auto auto;
   width: 70%;
   height: 140%;
-  background: radial-gradient(closest-side, rgba(200, 162, 75, 0.18), transparent);
+  background: radial-gradient(closest-side, rgba(220, 191, 128, 0.16), transparent);
   pointer-events: none;
   z-index: 0;
+}
+
+/* ── Premium component utilities ──────────────────────────────────────────
+   Opt-in classes for an elevated, cohesive surface treatment. */
+.glass {
+  background: rgb(var(--c-white) / 0.045);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border: 1px solid var(--border-dark);
+}
+/* Fine top highlight — the "machined" premium edge on a dark card */
+.edge-top::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(var(--c-white) / 0.14), transparent);
+  pointer-events: none;
+}
+.elev-1 { box-shadow: 0 1px 0 rgb(var(--c-white) / 0.04) inset, 0 10px 30px -12px rgba(0, 0, 0, 0.6); }
+.elev-2 { box-shadow: 0 1px 0 rgb(var(--c-white) / 0.05) inset, 0 24px 60px -20px rgba(0, 0, 0, 0.7); }
+
+/* Thin uppercase editorial label — the formal/premium voice */
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: rgb(var(--c-gold) / 0.85);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -182,61 +216,89 @@ body {
   }
 }
 
-/* Inputs on themed surfaces */
+/* Premium selection + focus ring */
+::selection {
+  background: rgb(var(--c-gold) / 0.3);
+  color: #fff;
+}
+:focus-visible {
+  outline: 2px solid rgb(var(--c-gold) / 0.85);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Smooth, scoped micro-transitions (won't fight framer-motion transforms) */
+a,
+button {
+  transition:
+    color 0.16s ease,
+    background-color 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease,
+    opacity 0.16s ease;
+}
+
+/* Inputs on themed surfaces — crisper, with a champagne focus ring */
 input,
 select,
 textarea {
-  min-height: 52px;
-  background: rgb(var(--c-white) / 0.04);
+  min-height: 50px;
+  background: rgb(var(--c-white) / 0.035);
   border: 1px solid var(--input-border);
   color: var(--input-ink);
-  border-radius: 14px;
-  padding: 0 16px;
+  border-radius: 12px;
+  padding: 0 15px;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
 }
-input::placeholder {
+textarea {
+  padding: 12px 15px;
+}
+input::placeholder,
+textarea::placeholder {
   color: var(--input-placeholder);
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  border-color: rgb(var(--c-gold) / 0.7);
+  box-shadow: 0 0 0 3px rgb(var(--c-gold) / 0.14);
 }
 button {
   min-height: 48px; /* mobile touch-target floor (Material 48dp); compact controls opt out with !min-h-0 */
 }
 
-/* Tactile press feedback for raw buttons (the ~130 that don't already animate).
-   Low specificity (0,1,1): framer-motion CTAs override it with their inline
-   whileTap transform, and components with their own active:scale-* (0,2,0) win.
-   Disabled buttons never receive :active, so they're untouched. */
+/* Tactile press feedback for raw buttons. Low specificity (0,1,1): framer-motion
+   CTAs override it with their inline whileTap transform; components with their
+   own active:scale-* (0,2,0) win. Disabled buttons never receive :active. */
 button:active {
   transform: scale(0.97);
 }
 
 /* Premium scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 9px;
+  height: 9px;
 }
 ::-webkit-scrollbar-thumb {
   background: var(--scrollbar);
-  border-radius: 8px;
+  border-radius: 9px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--c-gold) / 0.5);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-/* ── Light-mode button & control contrast fixes ──────────────────────────────
-   Scoped to html.light ONLY — dark mode is untouched. The brand colour vars
-   invert for surfaces (text-white → ink, bg-white/.04 → dark tint), which left
-   some solid + ghost buttons low-contrast. These re-pin buttons/borders so text
-   meets ~4.5:1 and outlines stay visible on the warm off-white background.
-   Specificity (html.light .class = 0,2,0) beats the Tailwind utilities. */
-
-/* Solid PRIMARY (green) buttons — keep WHITE text on green.
-   Without this, text-white inverts to dark ink → dark-on-dark green (~3:1). */
+/* ── Light-mode button & control contrast fixes (scoped to html.light) ──── */
 html.light .bg-granite-green2 { color: #fff; }
-
-/* Solid GOLD buttons — bright gold background + dark ink (on-brand, ~7:1).
-   Light-mode gold is muted, so the inverted white-on-muted-gold fails 4.5:1. */
 html.light .bg-gold,
-html.light .bg-gold\/90 { background-color: #c8a24b; color: #1a1407; }
-
-/* Ghost / outline / dashed controls — make borders clearly visible. */
+html.light .bg-gold\/90 { background-color: #b89248; color: #1a1407; }
 html.light .border-graphite-600 { border-color: #d1c9bc; }
 html.light .border-graphite-500 { border-color: #c2b8a6; }
 html.light .border-gold\/40 { border-color: rgba(150, 113, 38, 0.55); }
-
-/* Gold text / labels — darken slightly to clear 4.5:1 on the light background. */
-html.light .text-gold { color: #87661c; }
+html.light .text-gold { color: #8a6a1f; }

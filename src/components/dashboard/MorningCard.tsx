@@ -71,7 +71,7 @@ export default async function MorningCard({ role }: { role: Role }) {
     <>
       <CelebrationLayer recentPayments={b.recentPayments} />
 
-      <div className="force-dark relative mt-4 rounded-2xl border border-gold/25 bg-gradient-to-br from-[#14110a] to-[#11161b] p-4 overflow-hidden">
+      <div className="force-dark relative mt-4 rounded-2xl border border-gold/25 bg-gradient-to-br from-[#14110a] to-[#11161b] p-4 overflow-hidden edge-top elev-2">
         <div
           className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(220px 140px at 100% 0%, rgba(201,139,75,.18), transparent 70%)" }}
