@@ -8,7 +8,7 @@ import LicenseGate from "@/components/license/LicenseGate";
 // Body / UI face
 const manrope = Manrope({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-manrope" });
 // Display / title face (screen titles, big money numbers, the "G" monogram)
-const fraunces = Fraunces({ subsets: ["latin"], weight: ["500", "600"], variable: "--font-fraunces" });
+const fraunces = Fraunces({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-fraunces" });
 
 export const metadata: Metadata = {
   title: "GraniteOS",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b0e11",
+  themeColor: "#0e1626",
   width: "device-width",
   initialScale: 1,
   // maximumScale intentionally omitted — pinch-zoom must not be blocked (WCAG 1.4.4)
@@ -58,7 +58,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Skip-to-content — first focusable element; revealed on keyboard focus (WCAG 2.4.1) */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:rounded-lg focus:bg-gold focus:px-4 focus:py-2.5 focus:text-sm focus:font-bold focus:text-[#0b0e11] focus:shadow-xl focus:outline-none"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:rounded-lg focus:bg-gold focus:px-4 focus:py-2.5 focus:text-sm focus:font-bold focus:text-[#1b2a4a] focus:shadow-xl focus:outline-none"
         >
           Skip to content
         </a>

@@ -3,41 +3,42 @@
 @tailwind utilities;
 
 /* ════════════════════════════════════════════════════════════════════════
-   GraniteOS — "Obsidian & Champagne" premium theme
+   GraniteOS — "Royal Sapphire" premium theme
    RGB triplets consumed by tailwind.config.ts via rgb(var(--x) / <alpha>).
-   :root = dark (brand default). html.light overrides the same names.
-   Cool obsidian surfaces + a refined champagne-gold accent + crisp ink-white
-   text. To re-hue the accent, change --c-gold / --gold in ONE place.
+   :root = dark (current default; Step 2 adds system-preference + data-theme).
+   html.light overrides the same names for light mode.
+   Deep sapphire navy surfaces + a jewel gold accent + crisp ink text.
+   Navy is the darkest ink — never pure black. Gold is a jewel accent only.
    ════════════════════════════════════════════════════════════════════════ */
 :root {
   color-scheme: dark;
 
   --c-white: 255 255 255;
-  /* slate = muted text scale (cool, tuned for ≥4.5:1 on obsidian) */
-  --c-slate-100: 238 241 246;
-  --c-slate-200: 220 225 233;
-  --c-slate-300: 197 204 215;
-  --c-slate-400: 146 156 171;
-  --c-slate-500: 116 125 140; /* ≥4.5:1 on the obsidian base (WCAG 1.4.3) */
-  --c-slate-600: 74 84 99;
-  /* graphite = surfaces (deep cool obsidian, layered) */
-  --c-graphite-900: 12 14 18;
-  --c-graphite-800: 16 19 25;
-  --c-graphite-700: 22 26 33;
-  --c-graphite-600: 32 37 46;
-  --c-graphite-500: 45 52 64;
-  /* champagne gold accent */
-  --c-gold: 220 191 128;
-  --c-gold-soft: 238 219 172;
-  --c-granite-green2: 41 163 110;
-  --c-line: 244 246 250;
-  --c-ondark: 244 246 250;
-  --c-ondark-muted: 152 161 174;
-  /* accent text shades (cool dark base) */
+  /* slate = muted text scale (navy-cool, tuned for ≥4.5:1 on #0E1626) */
+  --c-slate-100: 234 238 247;
+  --c-slate-200: 200 208 223;
+  --c-slate-300: 166 176 199; /* secondary #A6B0C7 */
+  --c-slate-400: 142 153 176;
+  --c-slate-500: 126 138 166; /* muted, ≥4.5:1 on the sapphire base (WCAG 1.4.3) */
+  --c-slate-600: 81 92 115;
+  /* graphite = surfaces (deep sapphire navy, layered) */
+  --c-graphite-900: 21 32 58;  /* surface  #15203A */
+  --c-graphite-800: 16 26 48;  /* raised   #101A30 */
+  --c-graphite-700: 28 39 64;  /* soft     #1C2740 */
+  --c-graphite-600: 38 49 76;  /* border   #26314C */
+  --c-graphite-500: 58 72 102; /* hairline #3A4866 */
+  /* jewel gold accent */
+  --c-gold: 212 172 84;        /* #D4AC54 */
+  --c-gold-soft: 224 189 110;  /* #E0BD6E */
+  --c-granite-green2: 52 201 154; /* #34C99A */
+  --c-line: 234 238 247;
+  --c-ondark: 234 238 247;     /* ink #EAEEF7 */
+  --c-ondark-muted: 166 176 199; /* secondary #A6B0C7 */
+  /* accent text shades (semantic chips/statuses) */
   --c-red-200: 254 202 202; --c-red-300: 252 165 165; --c-red-400: 248 113 113;
   --c-rose-200: 254 205 211; --c-rose-300: 253 164 175; --c-rose-400: 251 113 133;
-  --c-amber-200: 253 230 138; --c-amber-300: 252 211 77; --c-amber-400: 251 191 36;
-  --c-emerald-200: 167 243 208; --c-emerald-300: 110 231 183; --c-emerald-400: 52 211 153;
+  --c-amber-200: 253 230 138; --c-amber-300: 240 200 120; --c-amber-400: 224 168 74; /* warn #E0A84A */
+  --c-emerald-200: 167 243 208; --c-emerald-300: 110 231 183; --c-emerald-400: 52 201 154; /* green #34C99A */
   --c-sky-300: 125 211 252; --c-sky-400: 56 189 248;
   --c-violet-300: 196 181 253; --c-violet-400: 167 139 250;
   --c-blue-300: 147 197 253; --c-blue-400: 96 165 250;
@@ -45,71 +46,110 @@
   --c-orange-300: 253 186 116; --c-orange-400: 251 146 60;
 
   /* page + form surfaces */
-  --bg-base: #07080b;
-  --bg-glow: #131a25;
-  --input-border: #272d37;
-  --input-ink: #eef0f5;
-  --input-placeholder: #7b818d; /* ≥4.5:1 on obsidian (WCAG 1.4.3) */
-  --scrollbar: #2a313c;
+  --bg-base: #0e1626;
+  --bg-glow: #16223c;
+  --input-border: #26314c;
+  --input-ink: #eaeef7;
+  --input-placeholder: #8b95ac; /* ≥4.5:1 on the navy input (WCAG 1.4.3) */
+  --scrollbar: #26314c;
 
   /* ── Premium Stone design tokens ── */
-  --bg-elevated: #14171d;
-  --bg-elevated2: #1b1f27;
-  --slab: #f7f6f3;
-  --slab-muted: #eceae5;
-  --text-on-dark: #f4f6fa;
-  --text-on-dark-muted: #98a1ae;
-  --text-on-light: #14181c;
-  --text-on-light-muted: #5c636b;
-  --gold: #dcbf80;
-  --gold-soft: #ecd8ac;
-  --btn-outline-ink: #dcbf80;
-  --green: #7c8c5d;
-  --positive: #29a36e;
-  --negative: #e06b5b;
+  --bg-elevated: #15203a;
+  --bg-elevated2: #1c2740;
+  --slab: #f7f9fc;
+  --slab-muted: #e7ecf4;
+  --text-on-dark: #eaeef7;
+  --text-on-dark-muted: #a6b0c7;
+  --text-on-light: #1b2a4a;
+  --text-on-light-muted: #54607a;
+  --gold: #d4ac54;
+  --gold-soft: #e0bd6e;
+  --btn-outline-ink: #d4ac54;
+  --green: #34c99a;
+  --positive: #34c99a;
+  --negative: #e0675b;
   --info: #4a9fb5;
-  --border-dark: rgba(244, 246, 250, 0.07);
-  --border-light: rgba(20, 24, 28, 0.1);
+  --border-dark: rgba(234, 238, 247, 0.08);
+  --border-light: rgba(27, 42, 74, 0.1);
+
+  /* ── Royal Sapphire semantic tokens (navy action color + jewel gold) ── */
+  --navy: #24365e;        /* primary action surface on dark (reads on #0E1626) */
+  --navy-2: #2e4170;      /* gradient end */
+  --on-navy: #ffffff;
+  --gold-tint: #26314c;   /* gold "feature" surface tint */
+  --gold-hairline: #3a4866;
+  --pos: #34c99a; --pos-bg: #13322a;
+  --warn: #e0a84a; --warn-bg: #372c14;
+
+  /* ── Depth & finish: soft layered shadows ── */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 10px 28px -10px rgba(0, 0, 0, 0.55), 0 2px 8px -4px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 28px 64px -18px rgba(0, 0, 0, 0.66), 0 8px 20px -10px rgba(0, 0, 0, 0.5);
+  --radius-sm: 12px;
+  --radius-card: 16px;
+  --radius-lg: 20px;
 }
 
 html.light {
   color-scheme: light;
 
-  --c-white: 20 24 28; /* "white" becomes ink: text flips, tints flip */
-  --c-slate-100: 23 28 34;
-  --c-slate-200: 35 42 52;
-  --c-slate-300: 58 68 82;
-  --c-slate-400: 86 96 112;
-  --c-slate-500: 107 116 128;
-  --c-slate-600: 154 161 169;
-  --c-graphite-900: 255 255 255;
-  --c-graphite-800: 250 250 248;
-  --c-graphite-700: 244 243 240;
-  --c-graphite-600: 224 220 212;
-  --c-graphite-500: 208 203 193;
-  --c-gold: 150 113 36;
-  --c-gold-soft: 124 92 26;
-  --c-granite-green2: 22 109 71;
-  --c-line: 20 24 28;
-  --c-ondark: 20 24 28;
-  --c-ondark-muted: 92 99 107;
+  --c-white: 27 42 74; /* "white" becomes navy ink: text flips, tints flip */
+  --c-slate-100: 27 42 74;
+  --c-slate-200: 40 52 80;
+  --c-slate-300: 84 96 122;  /* secondary #54607A */
+  --c-slate-400: 84 96 122;
+  --c-slate-500: 110 122 145;
+  --c-slate-600: 139 149 172; /* muted #8B95AC */
+  --c-graphite-900: 255 255 255; /* surface  #FFFFFF */
+  --c-graphite-800: 247 249 252; /* raised   #F7F9FC */
+  --c-graphite-700: 237 240 246; /* soft     #EDF0F6 */
+  --c-graphite-600: 222 227 238; /* border   #DEE3EE */
+  --c-graphite-500: 200 208 224; /* stronger border */
+  --c-gold: 184 146 58;   /* #B8923A */
+  --c-gold-soft: 143 111 34; /* #8F6F22 */
+  --c-granite-green2: 29 143 110; /* #1D8F6E */
+  --c-line: 27 42 74;
+  --c-ondark: 27 42 74;   /* ink #1B2A4A */
+  --c-ondark-muted: 84 96 122; /* secondary #54607A */
   --c-red-200: 153 27 27; --c-red-300: 185 28 28; --c-red-400: 220 38 38;
   --c-rose-200: 159 18 57; --c-rose-300: 190 18 60; --c-rose-400: 225 29 72;
-  --c-amber-200: 146 64 14; --c-amber-300: 180 83 9; --c-amber-400: 217 119 6;
-  --c-emerald-200: 6 95 70; --c-emerald-300: 4 120 87; --c-emerald-400: 5 150 105;
+  --c-amber-200: 146 64 14; --c-amber-300: 161 98 7; --c-amber-400: 176 116 21; /* warn #B07415 */
+  --c-emerald-200: 6 95 70; --c-emerald-300: 4 120 87; --c-emerald-400: 29 143 110; /* green #1D8F6E */
   --c-sky-300: 3 105 161; --c-sky-400: 2 132 199;
   --c-violet-300: 109 40 217; --c-violet-400: 124 58 237;
   --c-blue-300: 29 78 216; --c-blue-400: 37 99 235;
   --c-stone-300: 68 64 60; --c-stone-400: 87 83 78;
   --c-orange-300: 194 65 12; --c-orange-400: 234 88 12;
 
-  --bg-base: #f5f4f0;
+  --bg-base: #eef1f6;
   --bg-glow: #ffffff;
-  --input-border: #d8d4ca;
-  --input-ink: #14181c;
-  --input-placeholder: #8a8f98;
-  --scrollbar: #c9c4b8;
-  --btn-outline-ink: #8a6a1f;
+  --input-border: #dee3ee;
+  --input-ink: #1b2a4a;
+  --input-placeholder: #8b95ac;
+  --scrollbar: #c8d0e0;
+
+  --bg-elevated: #ffffff;
+  --bg-elevated2: #f7f9fc;
+  --text-on-light: #1b2a4a;
+  --text-on-light-muted: #54607a;
+  --gold: #b8923a;
+  --gold-soft: #8f6f22;
+  --btn-outline-ink: #8f6f22;
+  --positive: #1d8f6e;
+  --negative: #c2553f;
+  --border-dark: rgba(27, 42, 74, 0.1);
+
+  --navy: #1b2a4a;
+  --navy-2: #2a3a5e;
+  --on-navy: #ffffff;
+  --gold-tint: #f4ecd8;
+  --gold-hairline: #e4d6ae;
+  --pos: #1d8f6e; --pos-bg: #e1f3ec;
+  --warn: #b07415; --warn-bg: #fbefd9;
+
+  --shadow-sm: 0 1px 2px rgba(27, 42, 74, 0.06), 0 1px 1px rgba(27, 42, 74, 0.04);
+  --shadow-md: 0 4px 14px -2px rgba(27, 42, 74, 0.1), 0 2px 6px -2px rgba(27, 42, 74, 0.06);
+  --shadow-lg: 0 18px 44px -14px rgba(27, 42, 74, 0.18), 0 6px 16px -8px rgba(27, 42, 74, 0.1);
 }
 
 html,
@@ -125,35 +165,43 @@ body {
    palette inside this scope so light mode never flips their text. */
 .force-dark {
   --c-white: 255 255 255;
-  --c-slate-100: 238 241 246;
-  --c-slate-200: 220 225 233;
-  --c-slate-300: 197 204 215;
-  --c-slate-400: 146 156 171;
-  --c-slate-500: 116 125 140;
-  --c-slate-600: 74 84 99;
-  --c-graphite-900: 12 14 18;
-  --c-graphite-800: 16 19 25;
-  --c-graphite-700: 22 26 33;
-  --c-graphite-600: 32 37 46;
-  --c-graphite-500: 45 52 64;
-  --c-gold: 220 191 128;
-  --c-gold-soft: 238 219 172;
-  --c-granite-green2: 41 163 110;
-  --c-line: 244 246 250;
-  --c-ondark: 244 246 250;
-  --c-ondark-muted: 152 161 174;
+  --c-slate-100: 234 238 247;
+  --c-slate-200: 200 208 223;
+  --c-slate-300: 166 176 199;
+  --c-slate-400: 142 153 176;
+  --c-slate-500: 126 138 166;
+  --c-slate-600: 81 92 115;
+  --c-graphite-900: 21 32 58;
+  --c-graphite-800: 16 26 48;
+  --c-graphite-700: 28 39 64;
+  --c-graphite-600: 38 49 76;
+  --c-graphite-500: 58 72 102;
+  --c-gold: 212 172 84;
+  --c-gold-soft: 224 189 110;
+  --c-granite-green2: 52 201 154;
+  --c-line: 234 238 247;
+  --c-ondark: 234 238 247;
+  --c-ondark-muted: 166 176 199;
   --c-red-200: 254 202 202; --c-red-300: 252 165 165; --c-red-400: 248 113 113;
   --c-rose-200: 254 205 211; --c-rose-300: 253 164 175; --c-rose-400: 251 113 133;
-  --c-amber-200: 253 230 138; --c-amber-300: 252 211 77; --c-amber-400: 251 191 36;
-  --c-emerald-200: 167 243 208; --c-emerald-300: 110 231 183; --c-emerald-400: 52 211 153;
+  --c-amber-200: 253 230 138; --c-amber-300: 240 200 120; --c-amber-400: 224 168 74;
+  --c-emerald-200: 167 243 208; --c-emerald-300: 110 231 183; --c-emerald-400: 52 201 154;
   --c-sky-300: 125 211 252; --c-sky-400: 56 189 248;
   --c-violet-300: 196 181 253; --c-violet-400: 167 139 250;
   --c-blue-300: 147 197 253; --c-blue-400: 96 165 250;
   --c-stone-300: 214 211 209; --c-stone-400: 168 162 158;
   --c-orange-300: 253 186 116; --c-orange-400: 251 146 60;
+  --bg-elevated: #15203a;
+  --bg-elevated2: #1c2740;
+  --navy: #24365e;
+  --navy-2: #2e4170;
+  --gold-tint: #26314c;
+  --gold-hairline: #3a4866;
+  --pos: #34c99a; --pos-bg: #13322a;
+  --warn: #e0a84a; --warn-bg: #372c14;
 }
 
-/* App shell page background — refined obsidian with a single soft champagne aura */
+/* App shell page background — refined sapphire with a single soft navy aura */
 .app-bg {
   background:
     radial-gradient(1300px 680px at 78% -14%, var(--bg-glow), transparent 58%),
@@ -165,14 +213,21 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Soft champagne glow behind a hero element (one per screen) */
+/* Large premium figures — Fraunces, tabular, slight negative tracking */
+.figure {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.4px;
+}
+
+/* Soft gold glow behind a hero element (one per screen) */
 .stone-glow::before {
   content: "";
   position: absolute;
   inset: -20% -10% auto auto;
   width: 70%;
   height: 140%;
-  background: radial-gradient(closest-side, rgba(220, 191, 128, 0.16), transparent);
+  background: radial-gradient(closest-side, rgba(212, 172, 84, 0.16), transparent);
   pointer-events: none;
   z-index: 0;
 }
@@ -185,6 +240,13 @@ body {
   -webkit-backdrop-filter: saturate(140%) blur(10px);
   border: 1px solid var(--border-dark);
 }
+/* Frosted topbar — blurred translucent chrome over the page (spec §1) */
+.frost {
+  background: rgb(var(--c-graphite-900) / 0.72);
+  backdrop-filter: saturate(160%) blur(14px);
+  -webkit-backdrop-filter: saturate(160%) blur(14px);
+  border-bottom: 1px solid var(--border-dark);
+}
 /* Fine top highlight — the "machined" premium edge on a dark card */
 .edge-top::before {
   content: "";
@@ -194,8 +256,11 @@ body {
   background: linear-gradient(90deg, transparent, rgb(var(--c-white) / 0.14), transparent);
   pointer-events: none;
 }
-.elev-1 { box-shadow: 0 1px 0 rgb(var(--c-white) / 0.04) inset, 0 10px 30px -12px rgba(0, 0, 0, 0.6); }
-.elev-2 { box-shadow: 0 1px 0 rgb(var(--c-white) / 0.05) inset, 0 24px 60px -20px rgba(0, 0, 0, 0.7); }
+.elev-1 { box-shadow: var(--shadow-sm); }
+.elev-2 { box-shadow: var(--shadow-md); }
+.elev-3 { box-shadow: var(--shadow-lg); }
+/* Thin gold hairline border (jewel finish on dark surfaces / buttons) */
+.hairline-gold { border: 1px solid var(--gold-hairline); }
 
 /* Thin uppercase editorial label — the formal/premium voice */
 .eyebrow {
@@ -203,7 +268,7 @@ body {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   font-weight: 700;
-  color: rgb(var(--c-gold) / 0.85);
+  color: rgb(var(--c-gold) / 0.9);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -218,8 +283,7 @@ body {
 
 /* Premium selection + focus ring */
 ::selection {
-  background: rgb(var(--c-gold) / 0.3);
-  color: #fff;
+  background: rgb(var(--c-gold) / 0.28);
 }
 :focus-visible {
   outline: 2px solid rgb(var(--c-gold) / 0.85);
@@ -238,7 +302,22 @@ button {
     opacity 0.16s ease;
 }
 
-/* Inputs on themed surfaces — crisper, with a champagne focus ring */
+/* Smooth ~0.3s theme cross-fade on surfaces/text/borders (spec §2) */
+html,
+body,
+.app-bg,
+header,
+aside,
+nav,
+.glass,
+.frost {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Inputs on themed surfaces — crisper, with a gold focus ring */
 input,
 select,
 textarea {
@@ -297,8 +376,8 @@ button:active {
 /* ── Light-mode button & control contrast fixes (scoped to html.light) ──── */
 html.light .bg-granite-green2 { color: #fff; }
 html.light .bg-gold,
-html.light .bg-gold\/90 { background-color: #b89248; color: #1a1407; }
-html.light .border-graphite-600 { border-color: #d1c9bc; }
-html.light .border-graphite-500 { border-color: #c2b8a6; }
-html.light .border-gold\/40 { border-color: rgba(150, 113, 38, 0.55); }
-html.light .text-gold { color: #8a6a1f; }
+html.light .bg-gold\/90 { background-color: #b8923a; color: #1b2a4a; }
+html.light .border-graphite-600 { border-color: #dee3ee; }
+html.light .border-graphite-500 { border-color: #c8d0e0; }
+html.light .border-gold\/40 { border-color: rgba(184, 146, 58, 0.55); }
+html.light .text-gold { color: #8f6f22; }

@@ -24,6 +24,20 @@ export function formatINRPrecise(paise: number): string {
   );
 }
 
+/**
+ * Compact Indian money for KPIs/headlines: "₹42.8L" · "₹14.6L" · "₹68K" · "₹920".
+ * Lakh/crore scale (en-IN), 1 decimal max, trailing ".0" dropped, negative-safe.
+ */
+export function formatINRCompact(paise: number): string {
+  const sign = paise < 0 ? "-" : "";
+  const r = Math.abs(paiseToRupees(paise));
+  const trim = (x: number) => (+x.toFixed(1)).toString();
+  if (r >= 1_00_00_000) return `${sign}₹${trim(r / 1_00_00_000)}Cr`;
+  if (r >= 1_00_000) return `${sign}₹${trim(r / 1_00_000)}L`;
+  if (r >= 1_000) return `${sign}₹${trim(r / 1_000)}K`;
+  return `${sign}₹${Math.round(r).toLocaleString("en-IN")}`;
+}
+
 /** Muted suffix label for big figures: "2.4 lakh" / "1.3 crore". "" if < ₹1 lakh. */
 export function formatINRShort(paise: number): string {
   const r = Math.abs(paiseToRupees(paise));

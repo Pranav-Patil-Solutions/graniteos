@@ -51,7 +51,17 @@ const config: Config = {
         gold: {
           DEFAULT: v("--c-gold"),
           soft: v("--c-gold-soft"),
+          tint: "var(--gold-tint)",
+          hairline: "var(--gold-hairline)",
         },
+        // Royal Sapphire: navy is THE action color; gold stays a jewel accent.
+        navy: {
+          DEFAULT: "var(--navy)",
+          2: "var(--navy-2)",
+          on: "var(--on-navy)",
+        },
+        pos: { DEFAULT: "var(--pos)", bg: "var(--pos-bg)" },
+        warn: { DEFAULT: "var(--warn)", bg: "var(--warn-bg)" },
         // ── Premium Stone redesign tokens (spec §2) ──
         shell: {
           base: "#0b0e11",
@@ -75,6 +85,13 @@ const config: Config = {
       },
       boxShadow: {
         slab: "0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px rgba(0,0,0,0.45)",
+        "soft-sm": "var(--shadow-sm)",
+        "soft-md": "var(--shadow-md)",
+        "soft-lg": "var(--shadow-lg)",
+      },
+      borderRadius: {
+        card: "var(--radius-card)",
+        panel: "var(--radius-lg)",
       },
     },
   },

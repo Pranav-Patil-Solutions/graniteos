@@ -2,9 +2,11 @@
 
 // /dev/ui — living preview of the Premium Stone component library (spec §3 / §6).
 // Not linked in the app; a design QA surface.
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import { Boxes, Users, Receipt, Wallet, Factory, FileText } from "lucide-react";
+import { IconDiamond, IconArrowUpRight, IconSun, IconMoon } from "@tabler/icons-react";
+import { formatINRCompact } from "@/lib/money";
 import { AppBar } from "@/components/ui/AppBar";
 import { StatTile } from "@/components/ui/StatTile";
 import { SlabCard } from "@/components/ui/SlabCard";
@@ -40,12 +42,17 @@ export default function DevUiPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-shell-base pb-[calc(env(safe-area-inset-bottom)+88px)]">
+    <div className="app-bg min-h-screen pb-[calc(env(safe-area-inset-bottom)+88px)]">
       <AppBar title="Component library" back="/dashboard" />
       <div className="max-w-lg mx-auto px-4 space-y-8 pt-2">
-        <p className="text-[12px] text-ondark-muted">Premium Stone design system · preview at 390px</p>
+        <div className="flex items-center justify-between">
+          <p className="eyebrow">Royal Sapphire · design system</p>
+          <ThemeFlip />
+        </div>
 
-        <Section label="Typography">
+        <RoyalSapphire />
+
+        <Section label="Typography (legacy demo)">
           <SlabCard className="p-4 space-y-2">
             <p className="font-display text-[32px] leading-9 font-semibold text-onlight tnum">₹2,40,000</p>
             <p className="font-display text-[22px] leading-7 font-semibold text-onlight">Title — Fraunces 600</p>
@@ -140,5 +147,118 @@ function Section({ label, children }: { label: string; children: React.ReactNode
       <h2 className="text-[11px] uppercase tracking-[0.16em] text-gold/70 font-semibold mb-2">{label}</h2>
       {children}
     </section>
+  );
+}
+
+/* ── Royal Sapphire style guide (Step 1 deliverable) ─────────────────────── */
+
+function ThemeFlip() {
+  const [light, setLight] = useState(false);
+  useEffect(() => setLight(document.documentElement.classList.contains("light")), []);
+  return (
+    <button
+      onClick={() => {
+        const next = !light;
+        setLight(next);
+        document.documentElement.classList.toggle("light", next);
+        try { localStorage.setItem("gos-theme", next ? "light" : "dark"); } catch {}
+      }}
+      className="!min-h-0 inline-flex items-center gap-1.5 rounded-xl border border-graphite-600 bg-graphite-800 px-3 py-2 text-xs font-semibold text-ondark hover:border-gold/50"
+    >
+      {light ? <IconMoon size={15} /> : <IconSun size={15} />}
+      {light ? "Dark" : "Light"}
+    </button>
+  );
+}
+
+function Swatch({ name, hex, varName }: { name: string; hex: string; varName?: string }) {
+  return (
+    <div className="space-y-1.5">
+      <div className="h-12 rounded-xl border border-graphite-600" style={{ background: varName ? `var(${varName})` : hex }} />
+      <div className="leading-tight">
+        <p className="text-[11px] font-semibold text-ondark">{name}</p>
+        <p className="text-[10px] text-ondark-muted tnum">{hex}</p>
+      </div>
+    </div>
+  );
+}
+
+function RoyalSapphire() {
+  return (
+    <div className="space-y-7">
+      {/* Palette */}
+      <Section label="Palette">
+        <div className="rounded-card border border-graphite-600 bg-graphite-900 p-4 shadow-soft-md space-y-4">
+          <div className="grid grid-cols-4 gap-3">
+            <Swatch name="Navy" hex="#1B2A4A" varName="--navy" />
+            <Swatch name="Gold" hex="#B8923A" varName="--gold" />
+            <Swatch name="Surface" hex="surface" varName="--bg-elevated" />
+            <Swatch name="Page" hex="page" varName="--bg-base" />
+          </div>
+          <div className="grid grid-cols-4 gap-3">
+            <Swatch name="Gold tint" hex="feature" varName="--gold-tint" />
+            <Swatch name="Positive" hex="green" varName="--pos" />
+            <Swatch name="Warn" hex="amber" varName="--warn" />
+            <Swatch name="Hairline" hex="gold rule" varName="--gold-hairline" />
+          </div>
+        </div>
+      </Section>
+
+      {/* Typography */}
+      <Section label="Typography">
+        <div className="rounded-card border border-graphite-600 bg-graphite-900 p-4 shadow-soft-md space-y-2">
+          <p className="figure text-4xl font-semibold text-ondark">{formatINRCompact(4280000 * 100)}</p>
+          <p className="font-display text-[26px] leading-7 font-semibold text-ondark">Fraunces display — 600</p>
+          <p className="text-base font-bold text-ondark">Manrope heading — 700</p>
+          <p className="text-sm text-ondark-muted">Body — Manrope 400. The quick brown fox jumps over the lazy dog.</p>
+          <p className="eyebrow pt-1">Eyebrow · editorial label</p>
+        </div>
+      </Section>
+
+      {/* Compact INR */}
+      <Section label="Indian currency — formatINRCompact()">
+        <div className="grid grid-cols-4 gap-3">
+          {[427_5000_00, 14_60_000_00, 68_000_00, 920_00].map((p, i) => (
+            <div key={i} className="rounded-xl border border-graphite-600 bg-graphite-900 p-3 text-center shadow-soft-sm">
+              <p className="figure text-lg font-semibold text-gold">{formatINRCompact(p)}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* Depth */}
+      <Section label="Depth — soft layered shadows">
+        <div className="grid grid-cols-3 gap-3">
+          {([
+            ["soft-sm", "shadow-soft-sm"],
+            ["soft-md", "shadow-soft-md"],
+            ["soft-lg", "shadow-soft-lg"],
+          ] as const).map(([name, cls]) => (
+            <div key={name} className={`rounded-card border border-graphite-600 bg-graphite-900 h-20 grid place-items-center ${cls}`}>
+              <span className="text-[11px] text-ondark-muted">{name}</span>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* Buttons + accents */}
+      <Section label="Action color = navy · gold = jewel accent">
+        <div className="rounded-card border border-graphite-600 bg-graphite-900 p-4 shadow-soft-md space-y-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <button className="!min-h-0 inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-navy-on hairline-gold" style={{ background: "linear-gradient(180deg, var(--navy-2), var(--navy))" }}>
+              <IconArrowUpRight size={16} /> Primary action
+            </button>
+            <button className="!min-h-0 rounded-xl border border-graphite-500 bg-transparent px-4 py-2.5 text-sm font-semibold text-ondark hover:border-gold/50">Secondary</button>
+            <span className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-bold" style={{ background: "var(--gold-tint)", color: "var(--gold)" }}>
+              <IconDiamond size={13} /> Gold feature
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <span className="rounded-md px-2 py-1 text-xs font-semibold" style={{ background: "var(--pos-bg)", color: "var(--pos)" }}>Won · +12%</span>
+            <span className="rounded-md px-2 py-1 text-xs font-semibold" style={{ background: "var(--warn-bg)", color: "var(--warn)" }}>Sent · pending</span>
+          </div>
+        </div>
+      </Section>
+    </div>
   );
 }
