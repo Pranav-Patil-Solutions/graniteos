@@ -24,8 +24,9 @@ import { StoneSwatch } from "@/components/inventory/StoneSwatch";
 const L = (n: number) => n * 100; // rupees → paise
 
 export default function DevUiPage() {
-  // Design-QA surface only — never expose in production builds.
-  if (process.env.NODE_ENV === "production") notFound();
+  // Design-QA surface only — visible locally and on Vercel previews, but never
+  // on the live production deployment.
+  if (process.env.NEXT_PUBLIC_VERCEL_ENV === "production") notFound();
 
   const [rate, setRate] = useState("235");
   const [qty, setQty] = useState("48");
