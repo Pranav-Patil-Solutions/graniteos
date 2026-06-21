@@ -47,7 +47,7 @@ export default async function TeamPage() {
     <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold text-white">Team</h1>
+          <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">Team</h1>
           <p className="text-sm text-slate-400">{list.length} member(s)</p>
         </div>
         {maxUsers !== null && (

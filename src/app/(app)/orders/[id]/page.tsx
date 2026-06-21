@@ -51,7 +51,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
         <ChevronLeft className="w-4 h-4" /> Orders
       </Link>
 
-      <h1 className="mt-2 text-2xl font-bold text-white">{order.order_no ?? "Order"}</h1>
+      <h1 className="mt-2 font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">{order.order_no ?? "Order"}</h1>
       <p className="text-sm text-slate-400">
         {customer?.name ?? "—"}
         {customer?.city ? ` · ${customer.city}` : ""}

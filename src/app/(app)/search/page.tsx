@@ -66,7 +66,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
 
   return (
     <div className="px-4 pt-12 pb-8 max-w-2xl lg:max-w-6xl mx-auto">
-      <h1 className="text-2xl font-bold text-white">Search</h1>
+      <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">Search</h1>
       <p className="text-sm text-slate-400 mb-4">One box for everything — names work in Hindi or English.</p>
 
       <form action="/search" method="get" className="relative mb-5">

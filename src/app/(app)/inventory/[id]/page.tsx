@@ -107,7 +107,7 @@ export default async function BlockPage({ params }: { params: Promise<{ id: stri
       </div>
 
       <div className="mt-3">
-        <h1 className="text-2xl font-bold text-white">{block.label}</h1>
+        <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">{block.label}</h1>
         <p className="text-sm text-slate-400">
           {block.material}
           {block.color ? ` · ${block.color}` : ""}

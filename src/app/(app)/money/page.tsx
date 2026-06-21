@@ -74,7 +74,7 @@ export default async function MoneyPage() {
 
   return (
     <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
-      <h1 className="text-2xl font-bold text-white">Money</h1>
+      <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">Money</h1>
       <p className="text-sm text-slate-400">{company?.name ?? ""}</p>
 
       {invs.length === 0 && pays.length === 0 && (

@@ -72,7 +72,7 @@ export default async function LogsPage() {
     <div className="px-4 pt-12 pb-8 max-w-3xl lg:max-w-6xl mx-auto">
       <div className="flex items-end justify-between mb-5">
         <div>
-          <h1 className="text-2xl font-bold text-white">Logs</h1>
+          <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">Logs</h1>
           <p className="text-sm text-slate-400">Every action, newest first — fully timestamped.</p>
         </div>
         <span className="text-xs px-2.5 py-1 rounded-full bg-white/[0.06] text-slate-300 shrink-0">

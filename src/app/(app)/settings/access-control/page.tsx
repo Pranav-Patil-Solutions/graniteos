@@ -39,7 +39,7 @@ export default async function AccessControlPage() {
 
       <div className="mt-2 flex items-center gap-2">
         <ShieldCheck className="w-6 h-6 text-gold" />
-        <h1 className="text-2xl font-bold text-white">Access Control</h1>
+        <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">Access Control</h1>
       </div>
       <p className="mt-1 text-sm text-slate-400">
         Control what each role can see and edit. Changes take effect immediately — no redeploy

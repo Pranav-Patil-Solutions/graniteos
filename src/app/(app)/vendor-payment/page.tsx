@@ -16,7 +16,7 @@ export default async function VendorPaymentPage() {
   return (
     <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <div className="mb-5">
-        <h1 className="text-2xl font-bold text-white">Vendor Payments</h1>
+        <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">Vendor Payments</h1>
         <p className="text-sm text-slate-400">
           Pay a supplier&apos;s open bills — overdue first, auto-allocated oldest bill first.
         </p>

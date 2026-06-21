@@ -106,7 +106,7 @@ export function Button({
         />
         <motion.span
           className="relative z-10"
-          variants={{ rest: { color: "var(--btn-outline-ink)" }, hover: { color: "#1a1407" } }}
+          variants={{ rest: { color: "var(--btn-outline-ink)" }, hover: { color: "#0e1626" } }}
           transition={{ duration: 0.3 }}
         >
           {children}
@@ -127,7 +127,7 @@ export function Button({
       whileTap={{ scale: 0.97 }}
       transition={{ type: "spring", stiffness: 500, damping: 22 }}
       className={`${base} bg-granite-green2 text-white ${className}`}
-      style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,.16), 0 10px 24px -8px rgba(41,163,110,.45)" }}
+      style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,.16), 0 10px 24px -8px rgba(52,201,154,.42)" }}
     >
       {children}
     </motion.button>

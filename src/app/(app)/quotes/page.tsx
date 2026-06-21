@@ -47,7 +47,7 @@ export default async function QuotesPage() {
   return (
     <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Quotes</h1>
+        <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">Quotes</h1>
         {viewOnly ? (
           <span className="inline-flex items-center gap-1.5 rounded-xl bg-blue-500/15 text-blue-300 px-3.5 py-2 text-sm font-semibold border border-blue-500/20">
             <Eye className="w-4 h-4" /> View only

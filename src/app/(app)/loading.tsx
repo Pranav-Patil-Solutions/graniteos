@@ -1,25 +1,17 @@
 // Shown instantly on every (app) navigation while the server component fetches —
-// so tapping a tab feels immediate instead of freezing on the old screen. The
-// AppShell (top ☰ + bottom nav) stays mounted; only this content area swaps.
+// so tapping a section feels immediate instead of freezing on the old screen. The
+// AppShell (sidebar / ☰ / bottom nav) stays mounted; only this content area swaps.
+import { Skeleton, SkeletonKpis, SkeletonList } from "@/components/ui/Skeleton";
+
 export default function Loading() {
   return (
-    <div className="max-w-lg mx-auto px-4 pt-12 pb-8 animate-pulse">
-      <div className="h-8 w-44 rounded-lg bg-white/[0.07]" />
-      <div className="mt-2 h-4 w-28 rounded bg-white/[0.04]" />
+    <div className="max-w-lg lg:max-w-6xl mx-auto px-4 lg:px-8 pt-12 pb-8">
+      <Skeleton className="h-9 w-56 rounded-xl" />
+      <Skeleton className="mt-2.5 h-4 w-32 rounded" />
 
-      <div className="mt-5 grid grid-cols-3 gap-3">
-        {[0, 1, 2].map((i) => (
-          <div key={i} className="h-[88px] rounded-2xl bg-white/[0.05] border border-graphite-600" />
-        ))}
-      </div>
-
-      <div className="mt-4 h-24 rounded-2xl bg-white/[0.04] border border-graphite-600" />
-
-      <div className="mt-4 space-y-2.5">
-        {[0, 1, 2, 3, 4].map((i) => (
-          <div key={i} className="h-16 rounded-2xl bg-white/[0.04] border border-graphite-600" />
-        ))}
-      </div>
+      <SkeletonKpis className="mt-6" />
+      <Skeleton className="mt-4 h-24 rounded-2xl" />
+      <SkeletonList className="mt-4" rows={5} />
     </div>
   );
 }

@@ -3,12 +3,10 @@
 // Global ☰ menu — opens a drawer listing every section (role-aware). Lives in
 // AppShell so it's on every app screen.
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Menu, X, Monitor } from "lucide-react";
 import type { Role } from "@/lib/roles";
 import type { AccessConfig } from "@/lib/access-control";
-import { NAV_GROUPS, allowedFor, isActive } from "@/components/layout/navConfig";
+import NavGroups from "@/components/layout/NavGroups";
 import ThemeToggle from "@/components/layout/ThemeToggle";
 import SignOutButton from "@/components/auth/SignOutButton";
 
@@ -24,7 +22,6 @@ export default function NavDrawer({
   onSwitchToDesktop?: () => void;
 }) {
   const [open, setOpen] = useState(false);
-  const pathname = usePathname();
 
   // Close on Escape key (WCAG 2.1.2 / 4.1.2)
   useEffect(() => {
@@ -61,45 +58,18 @@ export default function NavDrawer({
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="flex items-center justify-between px-4 h-14 border-b border-line-dark">
-          <div className="flex items-center gap-2">
-            <span className="font-display text-2xl font-semibold text-gold leading-none">G</span>
-            <span className="font-display text-lg font-semibold text-white">GraniteOS</span>
-          </div>
+          <span className="flex items-center gap-2.5">
+            <span className="grid place-items-center w-8 h-8 rounded-lg bg-gold/12 hairline-gold font-display text-lg font-bold text-gold leading-none">G</span>
+            <span className="font-display text-xl font-semibold leading-none tracking-tight text-ondark">GraniteOS</span>
+          </span>
           <button onClick={() => setOpen(false)} aria-label="Close" className="w-9 h-9 grid place-items-center text-slate-400 hover:text-white">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <nav className="overflow-y-auto h-[calc(100%-56px-116px)] px-3 py-3">
-          {NAV_GROUPS.map((g) => {
-            const items = g.items.filter((it) =>
-              allowedFor(role, it.need, it.module, accessConfig),
-            );
-            if (items.length === 0) return null;
-            return (
-              <div key={g.group} className="mb-4">
-                <p className="px-2 mb-1 text-[10px] uppercase tracking-[0.16em] text-gold/80 font-semibold">{g.group}</p>
-                {items.map((it) => {
-                  const active = isActive(pathname, it.href);
-                  const Icon = it.icon;
-                  return (
-                    <Link
-                      key={it.href}
-                      href={it.href}
-                      onClick={() => setOpen(false)}
-                      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
-                        active ? "bg-gold/15 text-gold" : "text-slate-300 hover:bg-white/[0.05] hover:text-white"
-                      }`}
-                    >
-                      <Icon className="w-[18px] h-[18px]" />
-                      {it.label}
-                    </Link>
-                  );
-                })}
-              </div>
-            );
-          })}
-        </nav>
+        <div className="overflow-y-auto h-[calc(100%-56px-116px)] px-3 py-3">
+          <NavGroups role={role} accessConfig={accessConfig} onNavigate={() => setOpen(false)} />
+        </div>
 
         <div className="absolute bottom-0 inset-x-0 px-4 py-3 border-t border-line-dark space-y-2">
           <div className="flex items-center gap-2">

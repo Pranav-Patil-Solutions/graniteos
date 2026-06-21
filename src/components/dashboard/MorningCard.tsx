@@ -65,16 +65,16 @@ export default async function MorningCard({ role }: { role: Role }) {
       ? "from-[#241010] to-graphite-800 border-red-500/30 text-red-200"
       : b.primaryAction?.tone === "green"
         ? "from-[#0c2418] to-graphite-800 border-granite-green2/30 text-granite-green2"
-        : "from-[#14110a] to-graphite-800 border-gold/30 text-gold";
+        : "from-[#13203a] to-graphite-800 border-gold/30 text-gold";
 
   return (
     <>
       <CelebrationLayer recentPayments={b.recentPayments} />
 
-      <div className="force-dark relative mt-4 rounded-2xl border border-gold/25 bg-gradient-to-br from-[#14110a] to-[#11161b] p-4 overflow-hidden edge-top elev-2">
+      <div className="force-dark relative mt-5 rounded-2xl border border-gold/25 bg-gradient-to-br from-[#101a30] to-[#0b1120] p-4 overflow-hidden edge-top elev-2">
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(220px 140px at 100% 0%, rgba(201,139,75,.18), transparent 70%)" }}
+          style={{ background: "radial-gradient(240px 150px at 100% 0%, rgba(212,172,84,.16), transparent 70%)" }}
         />
         <div className="relative">
           <div className="flex items-center justify-between gap-2">
@@ -115,7 +115,7 @@ function Tile({ icon: Icon, label, value, href, rupees, tone = "plain" }: TileSp
       : tone === "red"
         ? { text: "text-red-300", chip: "bg-red-500/15 text-red-300", glow: "rgba(248,113,113,.10)" }
         : tone === "gold"
-          ? { text: "text-gold", chip: "bg-gold/15 text-gold", glow: "rgba(201,139,75,.12)" }
+          ? { text: "text-gold", chip: "bg-gold/15 text-gold", glow: "rgba(212,172,84,.12)" }
           : { text: "text-white", chip: "bg-white/[0.08] text-slate-200", glow: "rgba(255,255,255,.05)" };
   return (
     <Link

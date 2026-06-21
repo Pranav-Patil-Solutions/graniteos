@@ -30,7 +30,7 @@ export default async function FabricationPage() {
 
   return (
     <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
-      <h1 className="text-2xl font-bold text-white">Fabrication</h1>
+      <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">Fabrication</h1>
       <p className="text-sm text-slate-400">Cut → polish → edge → QC → ready</p>
 
       <div className="mt-5 grid grid-cols-3 gap-3">

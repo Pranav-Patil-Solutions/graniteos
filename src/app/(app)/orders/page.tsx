@@ -48,7 +48,7 @@ export default async function OrdersPage() {
     <div className="max-w-lg lg:max-w-6xl mx-auto px-4 pt-12 pb-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Orders</h1>
+          <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">Orders</h1>
           <p className="text-sm text-slate-400">Confirmed from quotes</p>
         </div>
         {viewOnly && (

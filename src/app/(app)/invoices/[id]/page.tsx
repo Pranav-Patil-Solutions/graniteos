@@ -68,7 +68,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
 
       <div className="mt-2 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">{invoice.invoice_no ?? "Invoice"}</h1>
+          <h1 className="font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">{invoice.invoice_no ?? "Invoice"}</h1>
           <p className="text-sm text-slate-400">
             {customer?.name ?? "—"}
             {customer?.city ? ` · ${customer.city}` : ""}

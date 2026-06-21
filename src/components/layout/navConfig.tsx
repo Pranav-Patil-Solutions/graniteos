@@ -1,7 +1,7 @@
 // Single source of truth for the section nav — shared by the mobile NavDrawer
 // (hamburger) and the desktop sidebar so they never drift apart.
 import {
-  Home, Boxes, Users, Receipt, FileText, Wallet, Factory,
+  Home, Boxes, Users, Receipt, ReceiptText, FileText, Wallet, Factory,
   Megaphone, Target, Sparkles, BarChart3, Package, Settings, History, Ruler, BookOpen, Banknote,
   HardHat, StickyNote, ShoppingCart, Truck,
 } from "lucide-react";
@@ -19,47 +19,48 @@ export type NavItem = {
   module?: AccessModule;
 };
 
+/**
+ * Three top-level groups, each rendered as an expandable accordion in the nav.
+ * Items map to the app's actual routes; access gating per item is unchanged.
+ */
 export const NAV_GROUPS: { group: string; items: NavItem[] }[] = [
   {
     group: "Business",
     items: [
-      { href: "/dashboard",     label: "Home",              icon: Home },
-      { href: "/inventory",     label: "Stock",             icon: Boxes,    module: "inventory" },
-      { href: "/parties",       label: "Parties",           icon: Users,    module: "parties" },
-      { href: "/quotes",        label: "Quotes",            icon: Receipt,  module: "quotes" },
-      { href: "/orders",        label: "Orders",            icon: FileText, module: "orders" },
-      { href: "/money",         label: "Money",             icon: Wallet,   module: "money" },
-      { href: "/batch-payment", label: "Batch Payment",     icon: Banknote, module: "money" },
-      { href: "/measure",       label: "Measurement Sheet", icon: Ruler },
-      { href: "/fabrication",   label: "Fabrication",       icon: Factory,  module: "fabrication" },
-      { href: "/factory",       label: "Factory Floor",     icon: HardHat,  module: "fabrication" },
-      { href: "/daybook",       label: "Daybook",           icon: BookOpen, need: "owner" },
-      { href: "/notes",         label: "Voice Notes",       icon: StickyNote },
-      { href: "/logs",          label: "Logs",              icon: History },
+      { href: "/dashboard",     label: "Home",          icon: Home },
+      { href: "/inventory",     label: "Stock",         icon: Boxes,      module: "inventory" },
+      { href: "/parties",       label: "Clients",       icon: Users,      module: "parties" },
+      { href: "/quotes",        label: "Quotes",        icon: Receipt,    module: "quotes" },
+      { href: "/orders",        label: "Orders",        icon: FileText,   module: "orders" },
+      { href: "/invoices",      label: "Invoices",      icon: ReceiptText, module: "money" },
+      { href: "/money",         label: "Money",         icon: Wallet,     module: "money" },
+      { href: "/batch-payment", label: "Batch Payment", icon: Banknote,   module: "money" },
+      { href: "/fabrication",   label: "Fabrication",   icon: Factory,    module: "fabrication" },
+      { href: "/factory",       label: "Factory Floor", icon: HardHat,    module: "fabrication" },
+      { href: "/measure",       label: "Measurement",   icon: Ruler },
+      { href: "/daybook",       label: "Daybook",       icon: BookOpen,   need: "owner" },
+      { href: "/notes",         label: "Voice Notes",   icon: StickyNote },
+      { href: "/logs",          label: "Logs",          icon: History },
     ],
   },
   {
     group: "Procurement",
     items: [
-      { href: "/purchase-orders", label: "Purchase Orders", icon: ShoppingCart },
-      { href: "/vendor-payment",  label: "Vendor Payments", icon: Truck },
-    ],
-  },
-  {
-    group: "Growth",
-    items: [
-      { href: "/stock-alert", label: "Stock Alert",      icon: Megaphone, need: "broadcast" },
-      { href: "/marketing",   label: "Marketing Helper", icon: Target,    need: "broadcast" },
-      { href: "/ai-studio",   label: "AI Studio",        icon: Sparkles },
-      { href: "/analytics",   label: "Insights",         icon: BarChart3, need: "owner", module: "analytics" },
+      { href: "/purchase-orders",       label: "Purchase Orders", icon: ShoppingCart },
+      { href: "/parties?tab=suppliers", label: "Suppliers",       icon: Truck,     module: "parties" },
+      { href: "/vendor-payment",        label: "Vendor Payments", icon: Banknote },
+      { href: "/stock-alert",           label: "Stock Alert",     icon: Megaphone, need: "broadcast" },
     ],
   },
   {
     group: "Account",
     items: [
-      { href: "/products",  label: "Products",  icon: Package,  need: "owner", module: "products" },
-      { href: "/team",      label: "Team",      icon: Users,    need: "owner", module: "team" },
-      { href: "/settings",  label: "Settings",  icon: Settings, need: "owner", module: "settings" },
+      { href: "/products",  label: "Products",  icon: Package,   need: "owner", module: "products" },
+      { href: "/team",      label: "Users & Roles", icon: Users, need: "owner", module: "team" },
+      { href: "/analytics", label: "Insights",  icon: BarChart3, need: "owner", module: "analytics" },
+      { href: "/marketing", label: "Marketing", icon: Target,    need: "broadcast" },
+      { href: "/ai-studio", label: "AI Studio", icon: Sparkles },
+      { href: "/settings",  label: "Settings",  icon: Settings,  need: "owner", module: "settings" },
     ],
   },
 ];

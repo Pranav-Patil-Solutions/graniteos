@@ -118,7 +118,7 @@ export default async function AnalyticsPage() {
       <Link href="/dashboard" className="inline-flex items-center gap-1 text-sm text-slate-400 hover:text-slate-200">
         <ChevronLeft className="w-4 h-4" /> Dashboard
       </Link>
-      <h1 className="mt-2 text-2xl font-bold text-white">Business insights</h1>
+      <h1 className="mt-2 font-display text-[1.9rem] lg:text-[2.15rem] font-semibold tracking-tight text-ondark">Business insights</h1>
       <p className="text-sm text-slate-400">Owner view · live across the whole company</p>
 
       {/* KPI grid */}
